@@ -178,15 +178,15 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				#endif
 			} else if (strcmp("\"As you can see, my FPS is around 18 or so, which means we can definitely take this further.\"", randomString) == 0) {
 				#ifndef GEODE_IS_MACOS
-				std::string temp = "\"As you can see, my FPS is around " + std::to_string(fps) + " or so, which means we can definitely take this further.\"";
-				randomString = temp.c_str();
+					std::string temp = "\"As you can see, my FPS is around " + std::to_string(fps) + " or so, which means we can definitely take this further.\"";
+					randomString = temp.c_str();
 				#endif
 			} else if (strcmp("\"If you wish to defeat me, train for another 100 years.\"", randomString) == 0) {
 				#ifndef GEODE_IS_MACOS
-				int forEndString = (jumps * 100);
-				if (jumps == 0) forEndString = 100;
-				std::string temp = "\"If you wish to defeat me, train for another " + std::to_string(forEndString) + " years.\"";
-				randomString = temp.c_str();
+					int forEndString = (jumps * 100);
+					if (jumps == 0) forEndString = 100;
+					std::string temp = "\"If you wish to defeat me, train for another " + std::to_string(forEndString) + " years.\"";
+					randomString = temp.c_str();
 				#endif
 			}
 
