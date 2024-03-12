@@ -70,6 +70,7 @@ class $modify(CCScheduler) {
 	}
 };
 
+#ifndef GEODE_IS_MACOS
 class $modify(PlayLayer) {
 	void onQuit() {
 		PlayLayer::onQuit(); // call the original function
@@ -93,6 +94,7 @@ class $modify(PlayLayer) {
 		jumps += 1;
 	}
 };
+#endif
 
 class $modify(MyEndLevelLayer, EndLevelLayer) {
 	bool isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
@@ -169,17 +171,23 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 					randomString = "Press \"Win + Shift + S\" or \"PrtSc\" to screenshot this win!";
 				#endif
 			} else if (strcmp("\"First try, part two!\"", randomString) == 0) {
-				std::string temp = "\"First try, part " + std::to_string(attempts) + "!\"";
-				if (attempts == 1) temp = "\"First try!\"";
-				randomString = temp.c_str();
+				#ifndef GEODE_IS_MACOS
+					std::string temp = "\"First try, part " + std::to_string(attempts) + "!\"";
+					if (attempts == 1) temp = "\"First try!\"";
+					randomString = temp.c_str();
+				#endif
 			} else if (strcmp("\"As you can see, my FPS is around 18 or so, which means we can definitely take this further.\"", randomString) == 0) {
+				#ifndef GEODE_IS_MACOS
 				std::string temp = "\"As you can see, my FPS is around " + std::to_string(fps) + " or so, which means we can definitely take this further.\"";
 				randomString = temp.c_str();
+				#endif
 			} else if (strcmp("\"If you wish to defeat me, train for another 100 years.\"", randomString) == 0) {
+				#ifndef GEODE_IS_MACOS
 				int forEndString = (jumps * 100);
 				if (jumps == 0) forEndString = 100;
 				std::string temp = "\"If you wish to defeat me, train for another " + std::to_string(forEndString) + " years.\"";
 				randomString = temp.c_str();
+				#endif
 			}
 
             endTextLabel->setString(randomString, true); // set string
