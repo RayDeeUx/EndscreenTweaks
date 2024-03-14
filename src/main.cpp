@@ -172,7 +172,9 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			float windowWidth = getChildByIDRecursive("background")->getContentSize().width;
 			float windowHeight = CCDirector::get()->getWinSize().height;
 			float offset = getChildByIDRecursive("background")->getPositionX();
-			if (auto starContainer = getChildByIDRecursive("star-container")) {
+			auto starContainer = getChildByIDRecursive("star-container");
+			if (starContainer == nullptr) auto starContainer = getChildByIDRecursive("moon-container");
+			if (starContainer) {
 				if (theLevel->m_stars.value() == 1) starContainer->setPositionX((windowWidth * 0.5f) + offset);
 				else starContainer->setPositionX((windowWidth * 0.25f) + offset);
 				starContainer->setPositionY(windowHeight * (285.f / 320.f));
