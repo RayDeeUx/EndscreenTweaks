@@ -129,7 +129,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			auto timeLabel = getChildByIDRecursive("time-label");
 			auto pointsLabel = getChildByIDRecursive("points-label");
 			if (!m_fields->isCompactEndscreen) timeLabel->setPositionY(timeLabel->getPositionY() - 20);
-			if (!m_fields->isCompactEndscreen && pointsLabel) pointsLabel->setPositionY(pointsLabel->getPositionY() - 14);
+			if (pointsLabel) pointsLabel->setPositionY(timeLabel->getPositionY() - 18);
 			auto attemptsLabel = cocos2d::CCLabelBMFont::create(("Attempts: " + std::to_string(attempts)).c_str(), "goldFont.fnt");
 			attemptsLabel->setScale(0.8f);
 			attemptsLabel->setPositionX(timeLabel->getPositionX());
