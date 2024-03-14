@@ -98,6 +98,7 @@ class $modify(PlayLayer) {
 
 class $modify(MyEndLevelLayer, EndLevelLayer) {
 	bool isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
+	bool isGDMO = Loader::get()->isModLoaded("maxnu.gd_mega_overlay");
 	float compactEndscreenFallbackPosition = CCDirector::get()->getWinSize().width * 0.6f;
 	void showLayer(bool p0) {
 		if (!Mod::get()->getSettingValue<bool>("enabled")) {
@@ -144,6 +145,42 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			jumpsLabel->setID("jumps-label"_spr);
 			mainLayer->addChild(jumpsLabel);
 			mainLayer->updateLayout();
+		}
+		if (m_fields->isGDMO) {
+			auto mainLayer = getChildByID("main-layer");
+			if (mainLayer == nullptr) return;
+			// gdmo does this silly thing where they add children without giving them node IDs and i need to release this mod ASAP so please forgive me for using getobjectatindex but getchildoftype doesnt work for this use case because everything in endscreen layer is a child of some other cclayer smh
+			// auto mainLayerChildren = mainLayer->getChildren();
+			auto attemptsLabel = getChildByIDRecursive("attempts-label");
+			// auto jumpsLabel = getChildByIDRecursive("jumps-label");
+			// if (attemptsLabel == nullptr || jumpsLabel == nullptr) {
+			// 	log::info("uhoh! couldnt find labels");
+			// 	attemptsLabel = getChildByIDRecursive("attempts-label"_spr);
+			// 	jumpsLabel = getChildByIDRecursive("jumps-label"_spr);
+			// }
+			// auto iHopeThisIsGDMONoclipAccuracyLabel = typeinfo_cast<CCNode*>(mainLayerChildren->objectAtIndex(3));
+			// auto iHopeThisIsGDMONoclipDeathLabel = typeinfo_cast<CCNode*>(mainLayerChildren->objectAtIndex(4));
+			// if (iHopeThisIsGDMONoclipAccuracyLabel == nullptr || iHopeThisIsGDMONoclipDeathLabel == nullptr) {
+			// 	return;
+			// }
+			// if (strcmp(iHopeThisIsGDMONoclipAccuracyLabel->getID().c_str(), "") != 0 || strcmp(iHopeThisIsGDMONoclipDeathLabel->getID().c_str(), "") != 0) {
+			// 	return;
+			// }
+			// iHopeThisIsGDMONoclipAccuracyLabel->setPositionY(attemptsLabel->getPositionY());
+			// iHopeThisIsGDMONoclipDeathLabel->setPositionY(jumpsLabel->getPositionY());
+			// backup plan starts below
+			float windowWidth = getChildByIDRecursive("background")->getContentSize().width;
+			float windowHeight = CCDirector::get()->getWinSize().height;
+			float offset = getChildByIDRecursive("background")->getPositionX();
+			if (auto starContainer = getChildByIDRecursive("star-container")) {
+				if (theLevel->m_stars.value() == 1) starContainer->setPositionX((windowWidth * 0.5f) + offset);
+				else starContainer->setPositionX((windowWidth * 0.25f) + offset);
+				starContainer->setPositionY(windowHeight * (285.f / 320.f));
+			}
+			if (auto orbContainer = getChildByIDRecursive("orb-container")) {
+				orbContainer->setPositionX((windowWidth * 0.75f) + offset);
+				orbContainer->setPositionY(windowHeight * (285.f / 320.f));
+			}
 		}
 	}
 	void customSetup() {
