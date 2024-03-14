@@ -146,7 +146,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			mainLayer->addChild(jumpsLabel);
 			mainLayer->updateLayout();
 		}
-		if (m_fields->isGDMO && theLevel->m_coins != 0) {
+		if (m_fields->isGDMO && theLevel->m_coins == 0) {
 			auto mainLayer = getChildByID("main-layer");
 			if (mainLayer == nullptr) return;
 			// gdmo does this silly thing where they add children without giving them node IDs and i need to release this mod ASAP so please forgive me for using getobjectatindex but getchildoftype doesnt work for this use case because everything in endscreen layer is a child of some other cclayer smh
