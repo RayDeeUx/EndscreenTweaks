@@ -81,5 +81,12 @@
         "files": [
             "resources/*.txt"
         ]
-    }
+    },
+	"dependencies": [
+		{
+			"id": "geode.node-ids",
+			"version": ">=1.8.0",
+			"importance": "required"
+		}
+	]
 }
