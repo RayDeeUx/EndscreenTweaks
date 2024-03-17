@@ -59,9 +59,15 @@
 			"type": "bool",
 			"default": false
 		},
-		"hideHideEndscreen": {
+		"hideMegahackHideEndscreen": {
 			"name": "Hide MH \"Hide Endscreen\" Button",
 			"description": "Hides MegaHack's \"Hide Endscreen\" button from EndLevelLayer.\n(Still clickable, just invisible.)",
+			"type": "bool",
+			"default": false
+		},
+		"hideQOLModHideEndscreen": {
+			"name": "Hide QOLMod \"Hide Endscreen\" Button",
+			"description": "Hides QOLMod's \"Hide Endscreen\" button from EndLevelLayer.\n(Still clickable, just invisible.)",
 			"type": "bool",
 			"default": false
 		},

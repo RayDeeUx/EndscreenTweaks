@@ -100,6 +100,12 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	bool isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
 	bool isGDMO = Loader::get()->isModLoaded("maxnu.gd_mega_overlay");
 	float compactEndscreenFallbackPosition = CCDirector::get()->getWinSize().width * 0.6f;
+    static void onModify(auto & self)
+    {
+		// i wanted to have compat with relative's endscreen text but better safe than sorry :)
+        self.setHookPriority("EndLevelLayer::showLayer", INT64_MAX - 1);
+        self.setHookPriority("EndLevelLayer::customSetup", INT64_MAX - 1);
+    }
 	void showLayer(bool p0) {
 		if (!Mod::get()->getSettingValue<bool>("enabled")) {
 			EndLevelLayer::showLayer(p0);
@@ -112,8 +118,12 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			getChildByIDRecursive("chain-right")->setVisible(false);
 		}
 		if (Mod::get()->getSettingValue<bool>("hideBackground")) { getChildByIDRecursive("background")->setVisible(false); }
-		if (Mod::get()->getSettingValue<bool>("hideHideEndscreen") && Loader::get()->isModLoaded("absolllute.megahack") && getChildByIDRecursive("absolllute.megahack/hide-endscreen")) {
+		if (Mod::get()->getSettingValue<bool>("hideMegahackHideEndscreen") && Loader::get()->isModLoaded("absolllute.megahack") && getChildByIDRecursive("absolllute.megahack/hide-endscreen")) {
 			typeinfo_cast<CCSprite*>(getChildByIDRecursive("absolllute.megahack/hide-endscreen")->getChildren()->objectAtIndex(0))->setVisible(false); // hide the sprite, not the whole button. otherwise unclickable
+		}
+		if (Mod::get()->getSettingValue<bool>("hideQOLModHideEndscreen") && (Loader::get()->isModLoaded("TheSillyDoggo.Cheats") || Loader::get()->isModLoaded("thesillydoggo.cheats")) && getChildByIDRecursive("hideButton")) {
+			typeinfo_cast<CCSprite*>(getChildByIDRecursive("hideButton")->getChildren()->objectAtIndex(0))->setVisible(false); // hide the sprite, not the whole button. otherwise unclickable
+			typeinfo_cast<CCSprite*>(getChildByIDRecursive("showButton")->getChildren()->objectAtIndex(0))->setVisible(false); // hide the sprite, not the whole button. otherwise unclickable
 		}
 		if (Mod::get()->getSettingValue<bool>("spaceUK")) {
 			auto levelCompleteText = getChildByIDRecursive("level-complete-text");
@@ -147,27 +157,29 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			mainLayer->updateLayout();
 		}
 		if (m_fields->isGDMO && theLevel->m_coins == 0 && Loader::get()->getLoadedMod("maxnu.gd_mega_overlay")->getSavedValue<bool>("level/endlevellayerinfo/enabled")) {
+			/* 
+			gdmo does this silly thing where they add children without giving them node IDs and i need to release this mod ASAP so please forgive me for using getobjectatindex but getchildoftype doesnt work for this use case because everything in endscreen layer is a child of some other cclayer smh
 			auto mainLayer = getChildByID("main-layer");
 			if (mainLayer == nullptr) return;
-			// gdmo does this silly thing where they add children without giving them node IDs and i need to release this mod ASAP so please forgive me for using getobjectatindex but getchildoftype doesnt work for this use case because everything in endscreen layer is a child of some other cclayer smh
-			// auto mainLayerChildren = mainLayer->getChildren();
+			auto mainLayerChildren = mainLayer->getChildren();
 			auto attemptsLabel = getChildByIDRecursive("attempts-label");
-			// auto jumpsLabel = getChildByIDRecursive("jumps-label");
-			// if (attemptsLabel == nullptr || jumpsLabel == nullptr) {
-			// 	log::info("uhoh! couldnt find labels");
-			// 	attemptsLabel = getChildByIDRecursive("attempts-label"_spr);
-			// 	jumpsLabel = getChildByIDRecursive("jumps-label"_spr);
-			// }
-			// auto iHopeThisIsGDMONoclipAccuracyLabel = typeinfo_cast<CCNode*>(mainLayerChildren->objectAtIndex(3));
-			// auto iHopeThisIsGDMONoclipDeathLabel = typeinfo_cast<CCNode*>(mainLayerChildren->objectAtIndex(4));
-			// if (iHopeThisIsGDMONoclipAccuracyLabel == nullptr || iHopeThisIsGDMONoclipDeathLabel == nullptr) {
-			// 	return;
-			// }
-			// if (strcmp(iHopeThisIsGDMONoclipAccuracyLabel->getID().c_str(), "") != 0 || strcmp(iHopeThisIsGDMONoclipDeathLabel->getID().c_str(), "") != 0) {
-			// 	return;
-			// }
-			// iHopeThisIsGDMONoclipAccuracyLabel->setPositionY(attemptsLabel->getPositionY());
-			// iHopeThisIsGDMONoclipDeathLabel->setPositionY(jumpsLabel->getPositionY());
+			auto jumpsLabel = getChildByIDRecursive("jumps-label");
+			if (attemptsLabel == nullptr || jumpsLabel == nullptr) {
+				log::info("uhoh! couldnt find labels");
+				attemptsLabel = getChildByIDRecursive("attempts-label"_spr);
+				jumpsLabel = getChildByIDRecursive("jumps-label"_spr);
+			}
+			auto iHopeThisIsGDMONoclipAccuracyLabel = typeinfo_cast<CCNode*>(mainLayerChildren->objectAtIndex(3));
+			auto iHopeThisIsGDMONoclipDeathLabel = typeinfo_cast<CCNode*>(mainLayerChildren->objectAtIndex(4));
+			if (iHopeThisIsGDMONoclipAccuracyLabel == nullptr || iHopeThisIsGDMONoclipDeathLabel == nullptr) {
+				return;
+			}
+			if (strcmp(iHopeThisIsGDMONoclipAccuracyLabel->getID().c_str(), "") != 0 || strcmp(iHopeThisIsGDMONoclipDeathLabel->getID().c_str(), "") != 0) {
+				return;
+			}
+			iHopeThisIsGDMONoclipAccuracyLabel->setPositionY(attemptsLabel->getPositionY());
+			iHopeThisIsGDMONoclipDeathLabel->setPositionY(jumpsLabel->getPositionY());
+			*/
 			// backup plan starts below
 			float windowWidth = getChildByIDRecursive("background")->getContentSize().width;
 			float windowHeight = CCDirector::get()->getWinSize().height;
