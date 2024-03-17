@@ -193,7 +193,10 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			// ensure that no one's up to any funny business by hardcoding the scale and contents of vanilla complete messages 
 			completeMessage->setScale(0.55f);
 			if (getChildByIDRecursive("level-complete-text")) { completeMessage->setString("Level Verified!"); }
-			else { completeMessage->setString("Complete the level in normal mode\nto verify it!"); }
+			else {
+				if (theLevel->m_levelID.value() == 0) { completeMessage->setString("Complete the level in normal mode\nto verify it!"); }
+				else { completeMessage->setString("Well done... Now try to complete\nit without any checkpoints!"); }
+			}
 			if (m_fields->isCompactEndscreen) completeMessage->setPositionX(m_fields->compactEndscreenFallbackPosition);
 			return;
 		}
