@@ -186,14 +186,24 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			float offset = getChildByIDRecursive("background")->getPositionX();
 			auto starContainer = getChildByIDRecursive("star-container");
 			if (starContainer == nullptr) starContainer = getChildByIDRecursive("moon-container");
+			float gdmoHeight = windowHeight * (285.f / 320.f);
+			float gdmoTwentyFivePercentX = (windowWidth * .25f) + offset;
+			float gdmoFiftyPercentX = (windowWidth * .5f) + offset;
+			float gdmoSeventyFivePercentX = (windowWidth * .75f) + offset;
 			if (starContainer) {
-				if (theLevel->m_stars.value() == 1) starContainer->setPositionX((windowWidth * 0.5f) + offset);
-				else starContainer->setPositionX((windowWidth * 0.25f) + offset);
-				starContainer->setPositionY(windowHeight * (285.f / 320.f));
+				if (theLevel->m_stars.value() == 1) starContainer->setPositionX(gdmoFiftyPercentX);
+				else starContainer->setPositionX(gdmoTwentyFivePercentX);
+				starContainer->setPositionY(gdmoHeight);
 			}
 			if (auto orbContainer = getChildByIDRecursive("orb-container")) {
-				orbContainer->setPositionX((windowWidth * 0.75f) + offset);
-				orbContainer->setPositionY(windowHeight * (285.f / 320.f));
+				orbContainer->setPositionY(gdmoHeight);
+				if (auto diamondContainer = getChildByIDRecursive("diamond-container")) {
+					diamondContainer->setPositionX(gdmoSeventyFivePercentX);
+					diamondContainer->setPositionY(gdmoHeight);
+					orbContainer->setPositionX(gdmoFiftyPercentX);
+				} else {
+					orbContainer->setPositionX(gdmoSeventyFivePercentX);
+				}
 			}
 		}
 	}

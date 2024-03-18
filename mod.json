@@ -20,7 +20,7 @@
 		},
 		"custom": {
 			"name": "Include Custom Messages",
-			"description": "<cp>[REQUIRES RESTART TO APPLY]</c>\n\nIncludes your own custom \"New Best\" text.\nPlease edit the \"custom.txt\" file by opening this mod's config directory (look for the golden pencil button at the bottom left of the mod's introductory screen).",
+			"description": "<cp>[REQUIRES RESTART TO APPLY]</c>\n\nIncludes your own custom \"Level Complete\" text.\nPlease edit the \"custom.txt\" file by opening this mod's config directory (look for the golden pencil button at the bottom left of the mod's introductory screen).",
 			"type": "bool",
 			"default": false
 		},
