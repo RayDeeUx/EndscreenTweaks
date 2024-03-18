@@ -12,6 +12,8 @@ Quotes originated from a variety of sources, including various members of the Ge
 
 End text positioning, sizing, and wrapping by [sofabeddd](https://gdbrowser.com/u/7976112).
 
+Note that if you have `relative`'s Custom Endscreen Text mod installed, you *will* need to copy and paste your custom end text messages from the txt file you've set for that mod over to this mod's config, as this mod *will* override those messages.
+
 This [Geode mod](https://geode-sdk.org) is licensed under LGPLv2.
 
 ![demo](https://github.com/RayDeeUx/WholesomeEndTexts/blob/main/demoOne.png)
