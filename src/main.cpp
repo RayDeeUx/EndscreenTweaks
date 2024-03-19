@@ -210,12 +210,15 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	void customSetup() {
 		EndLevelLayer::customSetup();
 		if (!Mod::get()->getSettingValue<bool>("enabled")) { return; }
-		auto theLevel = GameManager::sharedState()->getPlayLayer()->m_level;
+		auto playLayer = GameManager::sharedState()->getPlayLayer();
+		auto theLevel = playLayer->m_level;
 		if (auto completeMessage = typeinfo_cast<TextArea*>(getChildByIDRecursive("complete-message"))) {
 			// ensure that no one's up to any funny business by hardcoding the scale and contents of vanilla complete messages 
 			completeMessage->setScale(0.55f);
-			if (getChildByIDRecursive("level-complete-text")) { completeMessage->setString("Level Verified!"); }
-			else {
+			if (getChildByIDRecursive("level-complete-text")) {
+				if (!playLayer->m_isTestMode) { completeMessage->setString("Level Verified!"); }
+				else { completeMessage->setString("You cannot verify a level if it\nhas a start pos."); }
+			} else {
 				if (theLevel->m_levelID.value() == 0) { completeMessage->setString("Complete the level in normal mode\nto verify it!"); }
 				else { completeMessage->setString("Well done... Now try to complete\nit without any checkpoints!"); }
 			}
@@ -236,25 +239,25 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				#ifdef GEODE_IS_WINDOWS
 					randomString = "Press \"Win + Shift + S\" or \"PrtSc\" to screenshot this win!";
 				#endif
-			} else if (strcmp("\"First try, part two!\"", randomString) == 0) {
-				#ifndef GEODE_IS_MACOS
+			}
+			#ifndef GEODE_IS_MACOS
+				else if (strcmp("\"First try, part two!\"", randomString) == 0) {
 					std::string temp = "\"First try, part " + std::to_string(attempts) + "!\"";
 					if (attempts == 1) temp = "\"First try!\"";
 					randomString = temp.c_str();
-				#endif
-			} else if (strcmp("\"As you can see, my FPS is around 18 or so, which means we can definitely take this further.\"", randomString) == 0) {
-				#ifndef GEODE_IS_MACOS
+				} else if (strcmp("\"As you can see, my FPS is around 18 or so, which means we can definitely take this further.\"", randomString) == 0) {
 					std::string temp = "\"As you can see, my FPS is around " + std::to_string(fps) + " or so, which means we can definitely take this further.\"";
 					randomString = temp.c_str();
-				#endif
-			} else if (strcmp("\"If you wish to defeat me, train for another 100 years.\"", randomString) == 0) {
-				#ifndef GEODE_IS_MACOS
+				} else if (strcmp("\"If you wish to defeat me, train for another 100 years.\"", randomString) == 0) {
 					int forEndString = (jumps * 100);
 					if (jumps == 0) forEndString = 100;
 					std::string temp = "\"If you wish to defeat me, train for another " + std::to_string(forEndString) + " years.\"";
 					randomString = temp.c_str();
-				#endif
-			}
+				} else if (strcmp("Good luck on that statgrinding session!", randomString) == 0 && theLevel->m_stars.value() != 0) {
+					if (theLevel->isPlatformer()) { randomString = "Good luck on that moongrinding session!"; }
+					else { randomString = "Good luck on that stargrinding session!"; }
+				}
+			#endif
 
             endTextLabel->setString(randomString, true); // set string
             endTextLabel->setAlignment(CCTextAlignment::kCCTextAlignmentCenter); // center text
