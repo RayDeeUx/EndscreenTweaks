@@ -210,13 +210,12 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	void customSetup() {
 		EndLevelLayer::customSetup();
 		if (!Mod::get()->getSettingValue<bool>("enabled")) { return; }
-		auto playLayer = GameManager::sharedState()->getPlayLayer();
-		auto theLevel = playLayer->m_level;
+		auto theLevel = GameManager::sharedState()->getPlayLayer()->m_level;
 		if (auto completeMessage = typeinfo_cast<TextArea*>(getChildByIDRecursive("complete-message"))) {
 			// ensure that no one's up to any funny business by hardcoding the scale and contents of vanilla complete messages 
 			completeMessage->setScale(0.55f);
 			if (getChildByIDRecursive("level-complete-text")) {
-				if (!playLayer->m_isTestMode) { completeMessage->setString("Level Verified!"); }
+				if (theLevel->m_isVerifiedRaw) { completeMessage->setString("Level Verified!"); }
 				else { completeMessage->setString("You cannot verify a level if it\nhas a start pos."); }
 			} else {
 				if (theLevel->m_levelID.value() == 0) { completeMessage->setString("Complete the level in normal mode\nto verify it!"); }
