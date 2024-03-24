@@ -18,7 +18,7 @@ int attempts;
 int jumps = 0;
 int fps = -1;
 
-$execute {
+$on_mod(Loaded) {
 	auto path = (Mod::get()->getResourcesDir() / "default.txt").string();
 	std::ifstream file(path);
 	std::string str;
