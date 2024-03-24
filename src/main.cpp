@@ -257,10 +257,9 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 					else { randomString = "Good luck on that stargrinding session!"; }
 				}
 			#endif
-
-            endTextLabel->setString(randomString, true); // set string
             endTextLabel->setAlignment(CCTextAlignment::kCCTextAlignmentCenter); // center text
-
+            endTextLabel->setString(randomString, true); // set string
+            
             float scale = 0.36f * (228.f / strlen(randomString));
 			if (strcmp("BELIEVE", randomString) == 0) scale = 1.5f;
 			else if (strcmp("endTextLabel->setString(randomString.c_str(), true);", randomString) == 0) scale = 0.4f;
