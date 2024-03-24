@@ -21,8 +21,8 @@ int fps = -1;
 $execute {
 	auto path = (Mod::get()->getResourcesDir() / "default.txt").string();
 	std::ifstream file(path);
-    std::string str;
-    while (std::getline(file, str)) { quotes.push_back(str); }
+	std::string str;
+	while (std::getline(file, str)) { quotes.push_back(str); }
 
 	if (Mod::get()->getSettingValue<bool>("technoblade")) {
 		auto pathRogers = (Mod::get()->getResourcesDir() / "technoblade.txt").string();
@@ -46,7 +46,7 @@ gg gaming)";
 		utils::file::writeString(path3, content);
 	}
 	
-    if (Mod::get()->getSettingValue<bool>("custom")) {
+	if (Mod::get()->getSettingValue<bool>("custom")) {
 		auto pathCustom = (Mod::get()->getConfigDir() / "custom.txt").string();
 		std::ifstream file(pathCustom);
 		std::string str;
@@ -100,12 +100,12 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	bool isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
 	bool isGDMO = Loader::get()->isModLoaded("maxnu.gd_mega_overlay");
 	float compactEndscreenFallbackPosition = CCDirector::get()->getWinSize().width * 0.6f;
-    static void onModify(auto & self)
-    {
+	static void onModify(auto & self)
+	{
 		// i wanted to have compat with relative's endscreen text but better safe than sorry :)
-        self.setHookPriority("EndLevelLayer::showLayer", INT64_MAX - 1);
-        self.setHookPriority("EndLevelLayer::customSetup", INT64_MAX - 1);
-    }
+		self.setHookPriority("EndLevelLayer::showLayer", INT64_MAX - 1);
+		self.setHookPriority("EndLevelLayer::customSetup", INT64_MAX - 1);
+	}
 	void showLayer(bool p0) {
 		if (!Mod::get()->getSettingValue<bool>("enabled")) {
 			EndLevelLayer::showLayer(p0);
@@ -158,27 +158,27 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		}
 		if (m_fields->isGDMO && theLevel->m_coins == 0 && Loader::get()->getLoadedMod("maxnu.gd_mega_overlay")->getSavedValue<bool>("level/endlevellayerinfo/enabled")) {
 			/* 
-			gdmo does this silly thing where they add children without giving them node IDs and i need to release this mod ASAP so please forgive me for using getobjectatindex but getchildoftype doesnt work for this use case because everything in endscreen layer is a child of some other cclayer smh
-			auto mainLayer = getChildByID("main-layer");
-			if (mainLayer == nullptr) return;
-			auto mainLayerChildren = mainLayer->getChildren();
-			auto attemptsLabel = getChildByIDRecursive("attempts-label");
-			auto jumpsLabel = getChildByIDRecursive("jumps-label");
-			if (attemptsLabel == nullptr || jumpsLabel == nullptr) {
-				log::info("uhoh! couldnt find labels");
-				attemptsLabel = getChildByIDRecursive("attempts-label"_spr);
-				jumpsLabel = getChildByIDRecursive("jumps-label"_spr);
-			}
-			auto iHopeThisIsGDMONoclipAccuracyLabel = typeinfo_cast<CCNode*>(mainLayerChildren->objectAtIndex(3));
-			auto iHopeThisIsGDMONoclipDeathLabel = typeinfo_cast<CCNode*>(mainLayerChildren->objectAtIndex(4));
-			if (iHopeThisIsGDMONoclipAccuracyLabel == nullptr || iHopeThisIsGDMONoclipDeathLabel == nullptr) {
-				return;
-			}
-			if (strcmp(iHopeThisIsGDMONoclipAccuracyLabel->getID().c_str(), "") != 0 || strcmp(iHopeThisIsGDMONoclipDeathLabel->getID().c_str(), "") != 0) {
-				return;
-			}
-			iHopeThisIsGDMONoclipAccuracyLabel->setPositionY(attemptsLabel->getPositionY());
-			iHopeThisIsGDMONoclipDeathLabel->setPositionY(jumpsLabel->getPositionY());
+				gdmo does this silly thing where they add children without giving them node IDs and i need to release this mod ASAP so please forgive me for using getobjectatindex but getchildoftype doesnt work for this use case because everything in endscreen layer is a child of some other cclayer smh
+				auto mainLayer = getChildByID("main-layer");
+				if (mainLayer == nullptr) return;
+				auto mainLayerChildren = mainLayer->getChildren();
+				auto attemptsLabel = getChildByIDRecursive("attempts-label");
+				auto jumpsLabel = getChildByIDRecursive("jumps-label");
+				if (attemptsLabel == nullptr || jumpsLabel == nullptr) {
+					log::info("uhoh! couldnt find labels");
+					attemptsLabel = getChildByIDRecursive("attempts-label"_spr);
+					jumpsLabel = getChildByIDRecursive("jumps-label"_spr);
+				}
+				auto iHopeThisIsGDMONoclipAccuracyLabel = typeinfo_cast<CCNode*>(mainLayerChildren->objectAtIndex(3));
+				auto iHopeThisIsGDMONoclipDeathLabel = typeinfo_cast<CCNode*>(mainLayerChildren->objectAtIndex(4));
+				if (iHopeThisIsGDMONoclipAccuracyLabel == nullptr || iHopeThisIsGDMONoclipDeathLabel == nullptr) {
+					return;
+				}
+				if (strcmp(iHopeThisIsGDMONoclipAccuracyLabel->getID().c_str(), "") != 0 || strcmp(iHopeThisIsGDMONoclipDeathLabel->getID().c_str(), "") != 0) {
+					return;
+				}
+				iHopeThisIsGDMONoclipAccuracyLabel->setPositionY(attemptsLabel->getPositionY());
+				iHopeThisIsGDMONoclipDeathLabel->setPositionY(jumpsLabel->getPositionY());
 			*/
 			// backup plan starts below
 			float windowWidth = getChildByIDRecursive("background")->getContentSize().width;
@@ -225,8 +225,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			return;
 		}
 		auto randomString = grabRandomQuote();
-        if (auto endText = getChildByIDRecursive("end-text")) {
-            auto endTextLabel = typeinfo_cast<CCLabelBMFont*>(endText);
+		if (auto endText = getChildByIDRecursive("end-text")) {
+			auto endTextLabel = typeinfo_cast<CCLabelBMFont*>(endText);
 			
 			if (strcmp("Make sure to screenshot this win!", randomString) == 0) {
 				#ifdef GEODE_IS_MACOS
@@ -258,18 +258,18 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				}
 			#endif
 
-            endTextLabel->setString(randomString, true); // set string
-            endTextLabel->setAlignment(CCTextAlignment::kCCTextAlignmentCenter); // center text
+			endTextLabel->setString(randomString, true); // set string
+			endTextLabel->setAlignment(CCTextAlignment::kCCTextAlignmentCenter); // center text
 
-            float scale = 0.36f * (228.f / strlen(randomString));
+			float scale = 0.36f * (228.f / strlen(randomString));
 			if (strcmp("BELIEVE", randomString) == 0) scale = 1.5f;
 			else if (strcmp("endTextLabel->setString(randomString.c_str(), true);", randomString) == 0) scale = 0.4f;
 			else if (scale > Mod::get()->getSettingValue<double>("maxScale")) scale = Mod::get()->getSettingValue<double>("maxScale");
 			endTextLabel->setScale(scale);
-            endTextLabel->setWidth(336.f); // width of end screen minus 20px
+			endTextLabel->setWidth(336.f); // width of end screen minus 20px
 
 			if (m_fields->isCompactEndscreen) endTextLabel->setPositionX(m_fields->compactEndscreenFallbackPosition);
 			if (strcmp("", randomString) == 0) { endTextLabel->setString(fallbackString, true); } // fallback string
-        }
+		}
 	}
 };

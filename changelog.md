@@ -1,4 +1,6 @@
 # WholesomeEndTexts Changelog
+## v1.1.1
+- A single line swap to properly enforce text alignment.
 ## v1.1.0
 - Added compat with GDMO's "Endscreen Info" option.
 - Added option to hide QOLMod's "Hide Endscreen" buttons.
