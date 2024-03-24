@@ -29,7 +29,7 @@ $on_mod(Loaded) {
 		std::ifstream file(pathRogers);
 		std::string technoblade;
 		while (std::getline(file, technoblade)) {
-			std::string tThePig = "\"" + technoblade + "\"";
+			std::string tThePig = std::format("\"{}\"", technoblade);
 			quotes.push_back(tThePig);
 		} // technically i can write two one-time use boolean variables to allow people to toggle these things on and off as they please without the quotes adding themselves multiple times into the vector, but i'd rather add the "restart required" barrier just to be extra safe
 	}
