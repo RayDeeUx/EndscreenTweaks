@@ -257,6 +257,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 					else { randomString = "Good luck on that stargrinding session!"; }
 				}
 			#endif
+			
             endTextLabel->setString(randomString, true); // set string
             endTextLabel->setAlignment(CCTextAlignment::kCCTextAlignmentCenter); // center text
 
