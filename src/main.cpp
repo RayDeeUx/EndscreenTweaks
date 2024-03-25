@@ -7,6 +7,7 @@
 #include <fstream>
 #include <algorithm>
 #include <random>
+#include <regex>
 
 using namespace geode::prelude;
 
@@ -29,8 +30,7 @@ $on_mod(Loaded) {
 		std::ifstream file(pathRogers);
 		std::string technoblade;
 		while (std::getline(file, technoblade)) {
-			std::string tThePig = fmt::format("\"{}\"", technoblade);
-			quotes.push_back(tThePig);
+			quotes.push_back(technoblade);
 		} // technically i can write two one-time use boolean variables to allow people to toggle these things on and off as they please without the quotes adding themselves multiple times into the vector, but i'd rather add the "restart required" barrier just to be extra safe
 	}
 
@@ -224,7 +224,9 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			if (m_fields->isCompactEndscreen) completeMessage->setPositionX(m_fields->compactEndscreenFallbackPosition);
 			return;
 		}
+		
 		auto randomString = grabRandomQuote();
+		
 		if (auto endText = getChildByIDRecursive("end-text")) {
 			auto endTextLabel = typeinfo_cast<CCLabelBMFont*>(endText);
 			
@@ -257,16 +259,21 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 					else { randomString = "Good luck on that stargrinding session!"; }
 				}
 			#endif
-			
-            endTextLabel->setString(randomString, true); // set string
-            endTextLabel->setAlignment(CCTextAlignment::kCCTextAlignmentCenter); // center text
-
-            float scale = 0.36f * (228.f / strlen(randomString));
+		
+			float scale = 0.36f * (228.f / strlen(randomString));
 			if (strcmp("BELIEVE", randomString) == 0) scale = 1.5f;
 			else if (strcmp("endTextLabel->setString(randomString.c_str(), true);", randomString) == 0) scale = 0.4f;
 			else if (scale > Mod::get()->getSettingValue<double>("maxScale")) scale = Mod::get()->getSettingValue<double>("maxScale");
+			#ifdef GEODE_IS_MOBILE
+				std::regex quotePattern("\".+\"");
+				if (std::regex_match(std::string(randomString), quotePattern)) { scale = scale * .85f; }
+			#endif
+
 			endTextLabel->setScale(scale);
 			endTextLabel->setWidth(336.f); // width of end screen minus 20px
+			
+			endTextLabel->setString(randomString, true); // set string
+			endTextLabel->setAlignment(CCTextAlignment::kCCTextAlignmentCenter); // center text
 
 			if (m_fields->isCompactEndscreen) endTextLabel->setPositionX(m_fields->compactEndscreenFallbackPosition);
 			if (strcmp("", randomString) == 0) { endTextLabel->setString(fallbackString, true); } // fallback string
