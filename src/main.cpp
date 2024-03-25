@@ -29,8 +29,7 @@ $on_mod(Loaded) {
 		std::ifstream file(pathRogers);
 		std::string technoblade;
 		while (std::getline(file, technoblade)) {
-			std::string tThePig = fmt::format("\"{}\"", technoblade);
-			quotes.push_back(tThePig);
+			quotes.push_back(technoblade);
 		} // technically i can write two one-time use boolean variables to allow people to toggle these things on and off as they please without the quotes adding themselves multiple times into the vector, but i'd rather add the "restart required" barrier just to be extra safe
 	}
 
@@ -265,6 +264,9 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			if (strcmp("BELIEVE", randomString) == 0) scale = 1.5f;
 			else if (strcmp("endTextLabel->setString(randomString.c_str(), true);", randomString) == 0) scale = 0.4f;
 			else if (scale > Mod::get()->getSettingValue<double>("maxScale")) scale = Mod::get()->getSettingValue<double>("maxScale");
+			#ifdef GEODE_IS_MOBILE
+				scale = scale * .85f;
+			#endif
 			endTextLabel->setScale(scale);
 			endTextLabel->setWidth(336.f); // width of end screen minus 20px
 
