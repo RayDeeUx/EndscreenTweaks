@@ -19,6 +19,10 @@ int attempts;
 int jumps = 0;
 int fps = -1;
 
+bool isCompactEndscreen;
+bool isGDMO;
+float compactEndscreenFallbackPosition = CCDirector::get()->getWinSize().width * 0.6f;
+
 $on_mod(Loaded) {
 	auto path = (Mod::get()->getResourcesDir() / "default.txt").string();
 	std::ifstream file(path);
@@ -97,9 +101,6 @@ class $modify(PlayLayer) {
 #endif
 
 class $modify(MyEndLevelLayer, EndLevelLayer) {
-	bool isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
-	bool isGDMO = Loader::get()->isModLoaded("maxnu.gd_mega_overlay");
-	float compactEndscreenFallbackPosition = CCDirector::get()->getWinSize().width * 0.6f;
 	static void onModify(auto & self)
 	{
 		// i wanted to have compat with relative's endscreen text but better safe than sorry :)
@@ -111,6 +112,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			EndLevelLayer::showLayer(p0);
 			return;
 		}
+		isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
+		isGDMO = Loader::get()->isModLoaded("maxnu.gd_mega_overlay");
 		EndLevelLayer::showLayer(Mod::get()->getSettingValue<bool>("noTransition"));
 		auto theLevel = GameManager::sharedState()->getPlayLayer()->m_level;
 		if (Mod::get()->getSettingValue<bool>("hideChains")) {
@@ -128,9 +131,9 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		if (Mod::get()->getSettingValue<bool>("spaceUK")) {
 			auto levelCompleteText = getChildByIDRecursive("level-complete-text");
 			if (levelCompleteText == nullptr) levelCompleteText = getChildByIDRecursive("practice-complete-text"); // grab practice mode complete text as fallback node
-			if (m_fields->isCompactEndscreen) {
+			if (isCompactEndscreen) {
 				levelCompleteText->setVisible(true);
-				levelCompleteText->setPositionX(m_fields->compactEndscreenFallbackPosition);
+				levelCompleteText->setPositionX(compactEndscreenFallbackPosition);
 			}
 			levelCompleteText->setScale(0.8f * (940.f / 1004.f)); // original scale of this node is 0.8 according to logs. hardcoding it here in case other mods decide to scale it to whatever else
 		}
@@ -139,7 +142,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			if (mainLayer == nullptr) return;
 			auto timeLabel = getChildByIDRecursive("time-label");
 			auto pointsLabel = getChildByIDRecursive("points-label");
-			if (!m_fields->isCompactEndscreen) timeLabel->setPositionY(timeLabel->getPositionY() - 20);
+			if (!isCompactEndscreen) timeLabel->setPositionY(timeLabel->getPositionY() - 20);
 			if (pointsLabel) pointsLabel->setPositionY(timeLabel->getPositionY() - 18);
 			auto attemptsLabel = cocos2d::CCLabelBMFont::create(("Attempts: " + std::to_string(attempts)).c_str(), "goldFont.fnt");
 			attemptsLabel->setScale(0.8f);
@@ -156,7 +159,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			mainLayer->addChild(jumpsLabel);
 			mainLayer->updateLayout();
 		}
-		if (m_fields->isGDMO && theLevel->m_coins == 0 && Loader::get()->getLoadedMod("maxnu.gd_mega_overlay")->getSavedValue<bool>("level/endlevellayerinfo/enabled")) {
+		if (isGDMO && theLevel->m_coins == 0 && Loader::get()->getLoadedMod("maxnu.gd_mega_overlay")->getSavedValue<bool>("level/endlevellayerinfo/enabled")) {
 			/* 
 				gdmo does this silly thing where they add children without giving them node IDs and i need to release this mod ASAP so please forgive me for using getobjectatindex but getchildoftype doesnt work for this use case because everything in endscreen layer is a child of some other cclayer smh
 				auto mainLayer = getChildByID("main-layer");
@@ -210,6 +213,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	void customSetup() {
 		EndLevelLayer::customSetup();
 		if (!Mod::get()->getSettingValue<bool>("enabled")) { return; }
+		isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
 		auto theLevel = GameManager::sharedState()->getPlayLayer()->m_level;
 		if (auto completeMessage = typeinfo_cast<TextArea*>(getChildByIDRecursive("complete-message"))) {
 			// ensure that no one's up to any funny business by hardcoding the scale and contents of vanilla complete messages 
@@ -221,7 +225,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				if (theLevel->m_levelID.value() == 0) { completeMessage->setString("Complete the level in normal mode\nto verify it!"); }
 				else { completeMessage->setString("Well done... Now try to complete\nit without any checkpoints!"); }
 			}
-			if (m_fields->isCompactEndscreen) completeMessage->setPositionX(m_fields->compactEndscreenFallbackPosition);
+			if (isCompactEndscreen) completeMessage->setPositionX(compactEndscreenFallbackPosition);
 			return;
 		}
 		
@@ -275,7 +279,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			endTextLabel->setString(randomString, true); // set string
 			endTextLabel->setAlignment(CCTextAlignment::kCCTextAlignmentCenter); // center text
 
-			if (m_fields->isCompactEndscreen) endTextLabel->setPositionX(m_fields->compactEndscreenFallbackPosition);
+			if (isCompactEndscreen) endTextLabel->setPositionX(compactEndscreenFallbackPosition);
 			if (strcmp("", randomString) == 0) { endTextLabel->setString(fallbackString, true); } // fallback string
 		}
 	}
