@@ -279,7 +279,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			else if (scale > Mod::get()->getSettingValue<double>("maxScale")) { scale = Mod::get()->getSettingValue<double>("maxScale"); }
 			#ifdef GEODE_IS_MOBILE
 				std::regex quotePattern("\".+\"");
-				if (std::regex_match(std::string(randomString), quotePattern)) { scale = scale * .75f; }
+				if (std::regex_match(std::string(randomString), quotePattern)) { scale = scale * .5f; }
 			#endif
 
 			endTextLabel->setScale(scale);
