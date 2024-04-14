@@ -267,8 +267,10 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			float scale = 0.36f * (228.f / strlen(randomString));
 			if (strcmp("BELIEVE", randomString) == 0) { scale = 1.5f; }
 			else if (strcmp("endTextLabel->setString(randomString.c_str(), true);", randomString) == 0) { scale = 0.4f;}
+			#ifndef GEODE_IS_MOBILE
 			else if (scale > Mod::get()->getSettingValue<double>("maxScale")) { scale = Mod::get()->getSettingValue<double>("maxScale"); }
-			#ifdef GEODE_IS_MOBILE
+			#else
+			else if (scale < Mod::get()->getSettingValue<double>("maxScale")) { scale = Mod::get()->getSettingValue<double>("maxScale"); }
 				std::regex quotePattern("\".+\"");
 				if (std::regex_match(std::string(randomString), quotePattern)) { scale = scale * .75f; }
 			#endif
