@@ -34,7 +34,7 @@ $on_mod(Loaded) {
 		std::ifstream file(pathRogers);
 		std::string technoblade;
 		while (std::getline(file, technoblade)) {
-			quotes.push_back(fmt::format("\"{}\"", technoblade));
+			quotes.push_back(fmt::format("''{}''", technoblade));
 		} // technically i can write two one-time use boolean variables to allow people to toggle these things on and off as they please without the quotes adding themselves multiple times into the vector, but i'd rather add the "restart required" barrier just to be extra safe
 	}
 
@@ -264,23 +264,14 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				}
 			#endif
 		
-			float fraction = 228.f / strlen(randomString);
-			float scale = 0.36f * fraction;
-			// if (fraction > 1.f) { scale = 1.f; }
-			// log::info("---------");
-			// log::info("randomString: {}", randomString);
-			// log::info("scale: {}", scale);
-			// log::info("strlen(randomString): {}", strlen(randomString));
-			// log::info("fraction: {}", fraction);
-			// log::info("scale > Mod::get()->getSettingValue<double>(\"maxScale\"): {}", scale > Mod::get()->getSettingValue<double>("maxScale"));
-			// log::info("---------");
+			float scale = 0.36f * 228.f / strlen(randomString);
 			if (strcmp("BELIEVE", randomString) == 0) { scale = 1.5f; }
 			else if (strcmp("endTextLabel->setString(randomString.c_str(), true);", randomString) == 0) { scale = 0.4f;}
 			else if (scale > Mod::get()->getSettingValue<double>("maxScale")) { scale = Mod::get()->getSettingValue<double>("maxScale"); }
-			#ifdef GEODE_IS_MOBILE
-				std::regex quotePattern("\".+\"");
-				if (std::regex_match(std::string(randomString), quotePattern)) { scale = scale * .5f; }
-			#endif
+			// #ifdef GEODE_IS_MOBILE
+			// 	std::regex quotePattern("\".+\"");
+			// 	if (std::regex_match(std::string(randomString), quotePattern)) { scale = scale * .5f; }
+			// #endif
 
 			endTextLabel->setScale(scale);
 			endTextLabel->setWidth(336.f); // width of end screen minus 20px
