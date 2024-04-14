@@ -264,13 +264,20 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				}
 			#endif
 		
-			float scale = 0.36f * (228.f / strlen(randomString));
+			float fraction = 228.f / strlen(randomString);
+			float scale = 0.36f * fraction;
+			// if (fraction > 1.f) { scale = 1.f; }
+			// log::info("---------");
+			// log::info("randomString: {}", randomString);
+			// log::info("scale: {}", scale);
+			// log::info("strlen(randomString): {}", strlen(randomString));
+			// log::info("fraction: {}", fraction);
+			// log::info("scale > Mod::get()->getSettingValue<double>(\"maxScale\"): {}", scale > Mod::get()->getSettingValue<double>("maxScale"));
+			// log::info("---------");
 			if (strcmp("BELIEVE", randomString) == 0) { scale = 1.5f; }
 			else if (strcmp("endTextLabel->setString(randomString.c_str(), true);", randomString) == 0) { scale = 0.4f;}
-			#ifndef GEODE_IS_MOBILE
 			else if (scale > Mod::get()->getSettingValue<double>("maxScale")) { scale = Mod::get()->getSettingValue<double>("maxScale"); }
-			#else
-			else if (scale < Mod::get()->getSettingValue<double>("maxScale")) { scale = Mod::get()->getSettingValue<double>("maxScale"); }
+			#ifdef GEODE_IS_MOBILE
 				std::regex quotePattern("\".+\"");
 				if (std::regex_match(std::string(randomString), quotePattern)) { scale = scale * .75f; }
 			#endif
