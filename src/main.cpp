@@ -1,4 +1,3 @@
-#include <Geode/Geode.hpp>
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/CCScheduler.hpp>
 #include <Geode/modify/EndLevelLayer.hpp>
@@ -69,7 +68,7 @@ const char* grabRandomQuote() {
 
 class $modify(CCScheduler) {
 	void update(float dt) {
-		if (GameManager::sharedState()->getPlayLayer() != nullptr) fps = (int)(CCScheduler::get()->getTimeScale() / dt) + 1;
+		if (PlayLayer::get()) fps = (int)(CCScheduler::get()->getTimeScale() / dt) + 1;
 		CCScheduler::update(dt);
 	}
 };
@@ -115,7 +114,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
 		isGDMO = Loader::get()->isModLoaded("maxnu.gd_mega_overlay");
 		EndLevelLayer::showLayer(Mod::get()->getSettingValue<bool>("noTransition"));
-		auto theLevel = GameManager::sharedState()->getPlayLayer()->m_level;
+		auto theLevel = PlayLayer::get()->m_level;
 		if (Mod::get()->getSettingValue<bool>("hideChains")) {
 			getChildByIDRecursive("chain-left")->setVisible(false);
 			getChildByIDRecursive("chain-right")->setVisible(false);
@@ -214,7 +213,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		EndLevelLayer::customSetup();
 		if (!Mod::get()->getSettingValue<bool>("enabled")) { return; }
 		isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
-		auto theLevel = GameManager::sharedState()->getPlayLayer()->m_level;
+		auto theLevel = PlayLayer::get()->m_level;
 		if (auto completeMessage = typeinfo_cast<TextArea*>(getChildByIDRecursive("complete-message"))) {
 			// ensure that no one's up to any funny business by hardcoding the scale and contents of vanilla complete messages 
 			completeMessage->setScale(0.55f);
