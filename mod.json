@@ -79,6 +79,7 @@
 		},
 		"spaceUK": {
 			"name": "SpaceUK",
+			"description": "940px. Any questions?",
 			"type": "bool",
 			"default": false
 		}
@@ -91,8 +92,12 @@
 	"dependencies": [
 		{
 			"id": "geode.node-ids",
-			"version": ">=1.11.0",
+			"version": ">=1.12.0",
 			"importance": "required"
 		}
-	]
+	],
+	"issues": {
+		"url": "https://discord.com/channels/911701438269386882/1205523212444639292",
+		"info": "Ping me <cl>(@erymanthus)</c> in the Geode SDK Discord server's <cl>#help</c> channel if you need help. <cr>DMs are NOT accepted.</c>"
+	}
 }
