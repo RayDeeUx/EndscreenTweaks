@@ -43,35 +43,13 @@ $on_mod(Loaded) {
 		} // technically i can write two one-time use boolean variables to allow people to toggle these things on and off as they please without the quotes adding themselves multiple times into the vector, but i'd rather add the "restart required" barrier just to be extra safe
 	}
 
-	bool isWET = Loader::get()->isModInstalled("raydeeux.wholesomeendtexts");
 
-	if (isWET) {
-		log::info("WholesomeEndTexts was detected.");
-		if (!Mod::get()->setSavedValue("hasMigratedFromWholesome", true)) {
-		log::info("Starting to migrate settings and custom messages from WholesomeEndTexts, if possible.");
-			if (auto wET = Loader::get()->getInstalledMod("raydeeux.wholesomeendtexts")) {
-				auto thisMod = Mod::get();
-				auto wETPath = (Mod::get()->getConfigDir() / "custom.txt").string();
-				if (std::filesystem::exists(wETPath)) {
-					std::ifstream wETFile(wETPath);
-					std::string wETStr;
-					while (std::getline(wETFile, wETStr)) {
-						wETMigration.push_back(wETStr);
-					}
-				}
-				thisMod->setSettingValue<bool>("enabled", wET->getSettingValue<bool>("enabled"));
-				thisMod->setSettingValue<bool>("custom", wET->getSettingValue<bool>("custom"));
-				thisMod->setSettingValue<bool>("technoblade", wET->getSettingValue<bool>("technoblade"));
-				thisMod->setSettingValue<double>("maxScale", wET->getSettingValue<bool>("maxScale"));
-				thisMod->setSettingValue<bool>("platAttemptsAndJumps", wET->getSettingValue<bool>("platAttemptsAndJumps"));
-				thisMod->setSettingValue<bool>("hideChains", wET->getSettingValue<bool>("hideChains"));
-				thisMod->setSettingValue<bool>("hideBackground", wET->getSettingValue<bool>("hideBackground"));
-				thisMod->setSettingValue<bool>("noTransition", wET->getSettingValue<bool>("noTransition"));
-				thisMod->setSettingValue<bool>("spaceUK", wET->getSettingValue<bool>("spaceUK"));
-				log::info("Finished migrating settings from WholesomeEndTexts. Now for custom messages.");
-			} else {
-				log::error("Something went wrong with migrating content from WholesomeEndTexts. Report this ASAP.");
-			}
+	auto oldWETMessages = (Mod::get()->getConfigDir() / ".." / "raydeeux.wholesomeendtexts" / "custom.txt" ).string();
+	if (std::filesystem::exists(oldWETMessages)) {
+		std::ifstream wETFile(oldWETMessages);
+		std::string wETStr;
+		while (std::getline(wETFile, wETStr)) {
+			wETMigration.push_back(wETStr);
 		}
 	}
 
@@ -85,13 +63,21 @@ abc def
 u beat the level
 gg gaming)";
 			utils::file::writeString(path3, content);
-		} else if (isWET && !wETMigration.empty()) {
-			log::info("Starting to migrate custom messages from WholesomeEndTexts.");
-			for (auto i : wETMigration) {
-				// std::string stringToMigrate = wETMigration[i];
-				utils::file::writeString(path3,  fmt::format("{}\n", i));
+		} else if (std::filesystem::exists(oldWETMessages)) {
+			if (!wETMigration.empty()) {
+				log::info("Starting to migrate custom messages from WholesomeEndTexts.");
+				for (auto i : wETMigration) {
+					// std::string stringToMigrate = wETMigration[i];
+					utils::file::writeString(path3,  fmt::format("{}\n", i));
+				}
+				log::info("Finished migrating messages from WholesomeEndTexts. Confirm nothing went terribly wrong.");
+			} else {
+				std::string content = R"(migration failed, womp womp
+migration failed, womp womp
+migration failed, womp womp
+migration failed, womp womp)";
+			utils::file::writeString(path3, content);
 			}
-			log::info("Finished migrating messages from WholesomeEndTexts. Confirm nothing went terribly wrong.");
 		}
 	}
 	
