@@ -51,7 +51,7 @@ $on_mod(Loaded) {
 		log::info("Starting to migrate settings and custom messages from WholesomeEndTexts, if possible.");
 			if (auto wET = Loader::get()->getInstalledMod("raydeeux.wholesomeendtexts")) {
 				auto thisMod = Mod::get();
-				auto wETPath = (Mod::get()->getConfigDir() / "custom.txt").string()
+				auto wETPath = (Mod::get()->getConfigDir() / "custom.txt").string();
 				if (std::filesystem::exists(wETPath)) {
 					std::ifstream wETFile(wETPath);
 					std::string wETStr;
