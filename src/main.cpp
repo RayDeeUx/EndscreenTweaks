@@ -95,10 +95,12 @@ class $modify(PlayLayer) {
 		attempts = 1;
 		jumps = 0;
 	}
+#ifndef __APPLE__
 	void updateAttempts() {
 		PlayLayer::updateAttempts();
 		attempts += 1;
 	}
+#endif
 	void onEnterTransitionDidFinish() {
 		PlayLayer::onEnterTransitionDidFinish();
 		attempts = 1;
