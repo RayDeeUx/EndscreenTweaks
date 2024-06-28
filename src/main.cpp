@@ -43,13 +43,13 @@ $on_mod(Loaded) {
 		} // technically i can write two one-time use boolean variables to allow people to toggle these things on and off as they please without the quotes adding themselves multiple times into the vector, but i'd rather add the "restart required" barrier just to be extra safe
 	}
 
-	bool isWET = Loader::isModInstalled("raydeeux.wholesomeendtexts");
+	bool isWET = Loader::::get()->isModInstalled("raydeeux.wholesomeendtexts");
 
 	if (isWET) {
 		log::info("WholesomeEndTexts was detected.");
 		if (!Mod::get()->setSavedValue("hasMigratedFromWholesome", true)) {
 		log::info("Starting to migrate settings and custom messages from WholesomeEndTexts, if possible.");
-			if (auto wET = Loader::getInstalledMod("raydeeux.wholesomeendtexts")) {
+			if (auto wET = Loader::::get()->getInstalledMod("raydeeux.wholesomeendtexts")) {
 				auto thisMod = Mod::get();
 				auto wETPath = (Mod::get()->getConfigDir() / "custom.txt").string()
 				if (std::filesystem::exists(wETPath)) {
@@ -87,9 +87,9 @@ gg gaming)";
 			utils::file::writeString(path3, content);
 		} else if (isWET && !wETMigration.empty()) {
 			log::info("Starting to migrate custom messages from WholesomeEndTexts.");
-			for (auto i = wETMigration.begin(); it != wETMigration.end(); ++i) {
-				std::string stringToMigrate = wETMigration[i];
-				utils::file::writeString(path3,  fmt::format("{}\n", stringToMigrate));
+			for (auto i = wETMigration.begin(); i != wETMigration.end(); ++i) {
+				// std::string stringToMigrate = wETMigration[i];
+				utils::file::writeString(path3,  fmt::format("{}\n", i));
 			}
 			log::info("Finished migrating messages from WholesomeEndTexts. Confirm nothing went terribly wrong.");
 		}
