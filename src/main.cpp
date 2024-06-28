@@ -95,7 +95,7 @@ class $modify(GJBaseGameLayer) {
 			attempts = 0;
 		}
 	}
-}
+};
 #endif
 
 class $modify(PlayLayer) {
