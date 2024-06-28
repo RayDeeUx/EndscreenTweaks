@@ -1,3 +1,6 @@
+#ifdef GEODE_IS_WINDOWS
+#include <Geode/modify/PlayerObject.hpp>
+#endif
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/CCScheduler.hpp>
 #include <Geode/modify/EndLevelLayer.hpp>
@@ -73,7 +76,15 @@ class $modify(CCScheduler) {
 	}
 };
 
-#ifndef GEODE_IS_MACOS
+#ifdef GEODE_IS_WINDOWS
+class $modify(PlayerObject) {
+	void incrementJumps() {
+		PlayerObject::incrementJumps();
+		jumps += 1;
+	}
+};
+#endif
+
 class $modify(PlayLayer) {
 	void onQuit() {
 		PlayLayer::onQuit(); // call the original function
@@ -92,12 +103,13 @@ class $modify(PlayLayer) {
 		PlayLayer::onEnterTransitionDidFinish();
 		attempts = 1;
 	}
+#ifndef GEODE_IS_WINDOWS
 	void incrementJumps() {
 		PlayLayer::incrementJumps();
 		jumps += 1;
 	}
-};
 #endif
+};
 
 class $modify(MyEndLevelLayer, EndLevelLayer) {
 	static void onModify(auto & self)
