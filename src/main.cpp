@@ -21,6 +21,8 @@ std::vector<std::string> quotes;
 
 auto fallbackString = "We've got too many players to congratulate on level completions. Beat this level again for an actual message.";
 
+int fps = -1;
+
 bool isCompactEndscreen;
 bool isGDMO;
 float compactEndscreenFallbackPosition = CCDirector::get()->getWinSize().width * 0.6f;
@@ -79,7 +81,6 @@ class $modify(CCScheduler) {
 /*
 int attempts;
 int jumps = 0;
-int fps = -1;
 
 #ifdef GEODE_IS_WINDOWS
 class $modify(PlayerObject) {
@@ -134,8 +135,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	static void onModify(auto & self)
 	{
 		// i wanted to have compat with relative's endscreen text but better safe than sorry :)
-		self.setHookPriority("EndLevelLayer::showLayer", INT64_MAX - 1);
-		self.setHookPriority("EndLevelLayer::customSetup", INT64_MAX - 1);
+		self.setHookPriority("EndLevelLayer::showLayer", INT32_MAX - 1);
+		self.setHookPriority("EndLevelLayer::customSetup", INT32_MAX - 1);
 	}
 	void showLayer(bool p0) {
 		if (!Mod::get()->getSettingValue<bool>("enabled")) {
@@ -247,7 +248,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		if (!Mod::get()->getSettingValue<bool>("enabled")) { return; }
 		isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
 		auto playLayer = PlayLayer::get();
-		if (playLayer == nullptr) return;
+		if (playLayer == nullptr) { return; }
 		auto theLevel = playLayer->m_level;
 		if (auto completeMessage = typeinfo_cast<TextArea*>(getChildByIDRecursive("complete-message"))) {
 			// ensure that no one's up to any funny business by hardcoding the scale and contents of vanilla complete messages 
@@ -278,25 +279,18 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				#ifdef GEODE_IS_WINDOWS
 					randomString = "Press \"Win + Shift + S\" or \"PrtSc\" to screenshot this win!";
 				#endif
+			} else if (strcmp("\"First try, part two!\"", randomString) == 0) {
+				std::string temp = fmt::format("\'\'First try, part {}!\"", playLayer->m_attempts);
+				if (playLayer->m_attempts == 1) { temp = "\"First try!\""; }
+				randomString = temp.c_str();
+			} else if (strcmp("\'\'As you can see, my FPS is around 18 or so, which means we can definitely take this further.\"", randomString) == 0) {
+				randomString = fmt::format("\'\'As you can see, my FPS is around {} or so, which means we can definitely take this further.\"", fps).c_str();
+			} else if (strcmp("\'\'If you wish to defeat me, train for another 100 years.\"", randomString) == 0) {
+				randomString = fmt::format("\'\'If you wish to defeat me, train for another {} years.\"", std::max(100, (playLayer->m_jumps * 100))).c_str();
+			} else if (strcmp("Good luck on that statgrinding session!", randomString) == 0 && theLevel->m_stars.value() != 0) {
+				if (theLevel->isPlatformer()) { randomString = "Good luck on that moongrinding session!"; }
+				else { randomString = "Good luck on that stargrinding session!"; }
 			}
-			#ifndef GEODE_IS_MACOS
-				else if (strcmp("\"First try, part two!\"", randomString) == 0) {
-					std::string temp = "\'\'First try, part " + std::to_string(playLayer->m_attempts) + "!\"";
-					if (playLayer->m_attempts == 1) temp = "\"First try!\"";
-					randomString = temp.c_str();
-				} else if (strcmp("\'\'As you can see, my FPS is around 18 or so, which means we can definitely take this further.\"", randomString) == 0) {
-					std::string temp = "\'\'As you can see, my FPS is around " + std::to_string(fps) + " or so, which means we can definitely take this further.\"";
-					randomString = temp.c_str();
-				} else if (strcmp("\'\'If you wish to defeat me, train for another 100 years.\"", randomString) == 0) {
-					int forEndString = (jumps * 100);
-					if (jumps == 0) forEndString = 100;
-					std::string temp = "\'\'If you wish to defeat me, train for another " + std::to_string(forEndString) + " years.\"";
-					randomString = temp.c_str();
-				} else if (strcmp("Good luck on that statgrinding session!", randomString) == 0 && theLevel->m_stars.value() != 0) {
-					if (theLevel->isPlatformer()) { randomString = "Good luck on that moongrinding session!"; }
-					else { randomString = "Good luck on that stargrinding session!"; }
-				}
-			#endif
 		
 			float scale = 0.36f * 228.f / strlen(randomString);
 			if (strcmp("BELIEVE", randomString) == 0) { scale = 1.5f; }
