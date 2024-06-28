@@ -1,5 +1,7 @@
 #ifdef GEODE_IS_WINDOWS
 #include <Geode/modify/PlayerObject.hpp>
+#elif __APPLE__
+#include <Geode/modify/GJBaseGameLayer.hpp>
 #endif
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/CCScheduler.hpp>
@@ -83,6 +85,17 @@ class $modify(PlayerObject) {
 		jumps += 1;
 	}
 };
+#elif __APPLE__
+class $modify(GJBaseGameLayer) {
+	void toggleDualMode(GameObject* p0, bool p1, PlayerObject* p2, bool p3) {
+		GJBaseGameLayer::toggleDualMode(p0, p1, p2, p3);
+		if (PlayLayer::get()) {
+			attempts += 1;
+		} else {
+			attempts = 0;
+		}
+	}
+}
 #endif
 
 class $modify(PlayLayer) {
