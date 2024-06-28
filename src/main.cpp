@@ -1,8 +1,10 @@
+/*
 #ifdef GEODE_IS_WINDOWS
 #include <Geode/modify/PlayerObject.hpp>
 #elif __APPLE__
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #endif
+*/
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/CCScheduler.hpp>
 #include <Geode/modify/EndLevelLayer.hpp>
@@ -18,10 +20,6 @@ using namespace geode::prelude;
 std::vector<std::string> quotes;
 
 auto fallbackString = "We've got too many players to congratulate on level completions. Beat this level again for an actual message.";
-
-int attempts;
-int jumps = 0;
-int fps = -1;
 
 bool isCompactEndscreen;
 bool isGDMO;
@@ -78,6 +76,11 @@ class $modify(CCScheduler) {
 	}
 };
 
+/*
+int attempts;
+int jumps = 0;
+int fps = -1;
+
 #ifdef GEODE_IS_WINDOWS
 class $modify(PlayerObject) {
 	void incrementJumps() {
@@ -125,6 +128,7 @@ class $modify(PlayLayer) {
 	}
 #endif
 };
+*/
 
 class $modify(MyEndLevelLayer, EndLevelLayer) {
 	static void onModify(auto & self)
@@ -166,18 +170,20 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		if (Mod::get()->getSettingValue<bool>("platAttemptsAndJumps") && theLevel->isPlatformer()) {
 			auto mainLayer = getChildByID("main-layer");
 			if (mainLayer == nullptr) return;
+			auto playLayer = PlayLayer::get();
+			if (playLayer == nullptr) return;
 			auto timeLabel = getChildByIDRecursive("time-label");
 			auto pointsLabel = getChildByIDRecursive("points-label");
 			if (!isCompactEndscreen) timeLabel->setPositionY(timeLabel->getPositionY() - 20);
 			if (pointsLabel) pointsLabel->setPositionY(timeLabel->getPositionY() - 18);
-			auto attemptsLabel = cocos2d::CCLabelBMFont::create(("Attempts: " + std::to_string(attempts)).c_str(), "goldFont.fnt");
+			auto attemptsLabel = cocos2d::CCLabelBMFont::create(("Attempts: " + std::to_string(playLayer->m_attempts)).c_str(), "goldFont.fnt");
 			attemptsLabel->setScale(0.8f);
 			attemptsLabel->setPositionX(timeLabel->getPositionX());
 			attemptsLabel->setPositionY(timeLabel->getPositionY() + 40);
 			attemptsLabel->setID("attempts-label"_spr);
 			mainLayer->addChild(attemptsLabel);
 			mainLayer->updateLayout();
-			auto jumpsLabel = cocos2d::CCLabelBMFont::create(("Jumps: " + std::to_string(jumps)).c_str(), "goldFont.fnt");
+			auto jumpsLabel = cocos2d::CCLabelBMFont::create(("Jumps: " + std::to_string(playLayer->m_jumps)).c_str(), "goldFont.fnt");
 			jumpsLabel->setScale(0.8f);
 			jumpsLabel->setPositionX(timeLabel->getPositionX());
 			jumpsLabel->setPositionY(timeLabel->getPositionY() + 20);
@@ -240,7 +246,9 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		EndLevelLayer::customSetup();
 		if (!Mod::get()->getSettingValue<bool>("enabled")) { return; }
 		isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
-		auto theLevel = PlayLayer::get()->m_level;
+		auto playLayer = PlayLayer::get();
+		if (playLayer == nullptr) return;
+		auto theLevel = playLayer->m_level;
 		if (auto completeMessage = typeinfo_cast<TextArea*>(getChildByIDRecursive("complete-message"))) {
 			// ensure that no one's up to any funny business by hardcoding the scale and contents of vanilla complete messages 
 			completeMessage->setScale(0.55f);
@@ -273,16 +281,16 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			}
 			#ifndef GEODE_IS_MACOS
 				else if (strcmp("\"First try, part two!\"", randomString) == 0) {
-					std::string temp = "\"First try, part " + std::to_string(attempts) + "!\"";
-					if (attempts == 1) temp = "\"First try!\"";
+					std::string temp = "\'\'First try, part " + std::to_string(playLayer->m_attempts) + "!\"";
+					if (playLayer->m_attempts == 1) temp = "\"First try!\"";
 					randomString = temp.c_str();
-				} else if (strcmp("\"As you can see, my FPS is around 18 or so, which means we can definitely take this further.\"", randomString) == 0) {
-					std::string temp = "\"As you can see, my FPS is around " + std::to_string(fps) + " or so, which means we can definitely take this further.\"";
+				} else if (strcmp("\'\'As you can see, my FPS is around 18 or so, which means we can definitely take this further.\"", randomString) == 0) {
+					std::string temp = "\'\'As you can see, my FPS is around " + std::to_string(fps) + " or so, which means we can definitely take this further.\"";
 					randomString = temp.c_str();
-				} else if (strcmp("\"If you wish to defeat me, train for another 100 years.\"", randomString) == 0) {
+				} else if (strcmp("\'\'If you wish to defeat me, train for another 100 years.\"", randomString) == 0) {
 					int forEndString = (jumps * 100);
 					if (jumps == 0) forEndString = 100;
-					std::string temp = "\"If you wish to defeat me, train for another " + std::to_string(forEndString) + " years.\"";
+					std::string temp = "\'\'If you wish to defeat me, train for another " + std::to_string(forEndString) + " years.\"";
 					randomString = temp.c_str();
 				} else if (strcmp("Good luck on that statgrinding session!", randomString) == 0 && theLevel->m_stars.value() != 0) {
 					if (theLevel->isPlatformer()) { randomString = "Good luck on that moongrinding session!"; }
