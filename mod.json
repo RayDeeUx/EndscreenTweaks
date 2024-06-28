@@ -6,11 +6,11 @@
 		"win": "2.206"
 	},
 	"version": "v1.2.0",
-	"id": "raydeeux.wholesomeendtexts",
-	"name": "WholesomeEndTexts",
-	"developers": ["RayDeeUx", "sofabeddd"],
-	"description": "Replaces \"Level Complete\" texts with wholesome ones, including those of your own choice.",
-	"repository": "https://github.com/RayDeeUx/WholesomeEndTexts",
+	"id": "raydeeux.endscreentweaks",
+	"name": "EndscreenTweaks",
+	"developers": ["RayDeeUx", "sofabeddd", "Relative"],
+	"description": "Various tweaks to the endscreen. (Formerly WholesomeEndTexts.)",
+	"repository": "https://github.com/RayDeeUx/EndscreenTweaks",
 	"settings": {
 		"enabled": {
 			"name": "Enabled",
@@ -59,15 +59,9 @@
 			"type": "bool",
 			"default": false
 		},
-		"hideMegahackHideEndscreen": {
-			"name": "Hide MH \"Hide Endscreen\" Button",
-			"description": "Hides MegaHack's \"Hide Endscreen\" button from EndLevelLayer.\n(Still clickable, just invisible.)",
-			"type": "bool",
-			"default": false
-		},
-		"hideQOLModHideEndscreen": {
-			"name": "Hide QOLMod \"Hide Endscreen\" Button",
-			"description": "Hides QOLMod's \"Hide Endscreen\" button from EndLevelLayer.\n(Still clickable, just invisible.)",
+		"hideHideEndscreen": {
+			"name": "Hide \"Hide Endscreen\" Button",
+			"description": "Hides the \"Hide Endscreen\" button from EndLevelLayer.\n(Still clickable, just invisible.)",
 			"type": "bool",
 			"default": false
 		},
@@ -94,6 +88,23 @@
 			"id": "geode.node-ids",
 			"version": ">=1.12.0",
 			"importance": "required"
+		}
+	],
+	"incompatibilities": [
+		{
+			"id": "relative.custom_endscreen_text",
+			"version": "*",
+			"importance": "superseded"
+		},
+		{
+			"id": "raydeeux.wholesomeendtexts",
+			"version": "*",
+			"importance": "superseded"
+		},
+		{
+			"id": "1257plays.spaceuk_mode",
+			"version": "*",
+			"importance": "superseded"
 		}
 	],
 	"issues": {

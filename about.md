@@ -1,4 +1,6 @@
-# WholesomeEndTexts
+# EndscreenTweaks
+
+Various tweaks to the endscreen. (Formerly WholesomeEndTexts.)
 
 Replaces "Level Complete" texts with wholesome ones, including those of your own choice. The antithesis of DisturbingNewBests.
 
@@ -12,6 +14,6 @@ Quotes originated from a variety of sources, including various members of the Ge
 
 End text positioning, sizing, and wrapping by [sofabeddd](user:7976112).
 
-Note that if you have `relative`'s Custom Endscreen Text mod installed, you *will* need to copy and paste your custom end text messages from the txt file you've set for that mod over to this mod's config, as this mod *will* override those messages.
+This mod supersedes past copies of both Relative's Custom Endscreen Text mod and my WholesomeEndTexts mod from the old index.
 
 This [Geode mod](https://geode-sdk.org) is licensed under LGPLv2.

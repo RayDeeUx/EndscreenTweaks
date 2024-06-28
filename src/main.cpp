@@ -18,6 +18,7 @@
 using namespace geode::prelude;
 
 std::vector<std::string> quotes;
+std::vector<std::string> wETMigration;
 
 auto fallbackString = "We've got too many players to congratulate on level completions. Beat this level again for an actual message.";
 
@@ -42,16 +43,56 @@ $on_mod(Loaded) {
 		} // technically i can write two one-time use boolean variables to allow people to toggle these things on and off as they please without the quotes adding themselves multiple times into the vector, but i'd rather add the "restart required" barrier just to be extra safe
 	}
 
+	bool isWET = Loader::isModInstalled("raydeeux.wholesomeendtexts");
+
+	if (isWET) {
+		log::info("WholesomeEndTexts was detected.");
+		if (!Mod::get()->setSavedValue("hasMigratedFromWholesome", true)) {
+		log::info("Starting to migrate settings and custom messages from WholesomeEndTexts, if possible.");
+			if (auto wET = Loader::getInstalledMod("raydeeux.wholesomeendtexts")) {
+				auto thisMod = Mod::get();
+				auto wETPath = (Mod::get()->getConfigDir() / "custom.txt").string()
+				if (std::filesystem::exists(wETPath)) {
+					std::ifstream wETFile(wETPath);
+					std::string wETStr;
+					while (std::getline(wETFile, wETStr)) {
+						wETMigration.push_back(wETStr);
+					}
+				}
+				thisMod->setSettingValue<bool>("enabled", wET->getSettingValue<bool>("enabled"));
+				thisMod->setSettingValue<bool>("custom", wET->getSettingValue<bool>("custom"));
+				thisMod->setSettingValue<bool>("technoblade", wET->getSettingValue<bool>("technoblade"));
+				thisMod->setSettingValue<double>("maxScale", wET->getSettingValue<bool>("maxScale"));
+				thisMod->setSettingValue<bool>("platAttemptsAndJumps", wET->getSettingValue<bool>("platAttemptsAndJumps"));
+				thisMod->setSettingValue<bool>("hideChains", wET->getSettingValue<bool>("hideChains"));
+				thisMod->setSettingValue<bool>("hideBackground", wET->getSettingValue<bool>("hideBackground"));
+				thisMod->setSettingValue<bool>("noTransition", wET->getSettingValue<bool>("noTransition"));
+				thisMod->setSettingValue<bool>("spaceUK", wET->getSettingValue<bool>("spaceUK"));
+				log::info("Finished migrating settings from WholesomeEndTexts. Now for custom messages.");
+			} else {
+				log::error("Something went wrong with migrating content from WholesomeEndTexts. Report this ASAP.");
+			}
+		}
+	}
 
 	// code adapted with permission from dialouge handler original author thesillydoggo: https://discord.com/channels/911701438269386882/911702535373475870/1212633554345918514 --erymanthus | raydeeux
 
 	auto path3 = (Mod::get()->getConfigDir() / "custom.txt").string();
 	if (!std::filesystem::exists(path3)) {
-		std::string content = R"(lorem ipsum
+		if (wETMigration.empty()) {
+			std::string content = R"(lorem ipsum
 abc def
 u beat the level
 gg gaming)";
-		utils::file::writeString(path3, content);
+			utils::file::writeString(path3, content);
+		} else if (isWET && !wETMigration.empty()) {
+			log::info("Starting to migrate custom messages from WholesomeEndTexts.");
+			for (auto i = wETMigration.begin(); it != wETMigration.end(); ++i) {
+				std::string stringToMigrate = wETMigration[i];
+				utils::file::writeString(path3,  fmt::format("{}\n", stringToMigrate));
+			}
+			log::info("Finished migrating messages from WholesomeEndTexts. Confirm nothing went terribly wrong.");
+		}
 	}
 	
 	if (Mod::get()->getSettingValue<bool>("custom")) {
@@ -152,12 +193,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			getChildByIDRecursive("chain-right")->setVisible(false);
 		}
 		if (Mod::get()->getSettingValue<bool>("hideBackground")) { getChildByIDRecursive("background")->setVisible(false); }
-		if (Mod::get()->getSettingValue<bool>("hideMegahackHideEndscreen") && Loader::get()->isModLoaded("absolllute.megahack") && getChildByIDRecursive("absolllute.megahack/hide-endscreen")) {
-			typeinfo_cast<CCSprite*>(getChildByIDRecursive("absolllute.megahack/hide-endscreen")->getChildren()->objectAtIndex(0))->setVisible(false); // hide the sprite, not the whole button. otherwise unclickable
-		}
-		if (Mod::get()->getSettingValue<bool>("hideQOLModHideEndscreen") && (Loader::get()->isModLoaded("TheSillyDoggo.Cheats") || Loader::get()->isModLoaded("thesillydoggo.cheats")) && getChildByIDRecursive("hideButton")) {
-			typeinfo_cast<CCSprite*>(getChildByIDRecursive("hideButton")->getChildren()->objectAtIndex(0))->setVisible(false); // hide the sprite, not the whole button. otherwise unclickable
-			typeinfo_cast<CCSprite*>(getChildByIDRecursive("showButton")->getChildren()->objectAtIndex(0))->setVisible(false); // hide the sprite, not the whole button. otherwise unclickable
+		if (Mod::get()->getSettingValue<bool>("hideHideEndscreen") && Loader::get()->isModLoaded("absolllute.megahack") && getChildByIDRecursive("absolllute.megahack/hide-endscreen")) {
+			getChildByIDRecursive("hide-button")->setVisible(false);
 		}
 		if (Mod::get()->getSettingValue<bool>("spaceUK")) {
 			auto levelCompleteText = getChildByIDRecursive("level-complete-text");
@@ -274,10 +311,10 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 					randomString = "Press Command + Shift + 3 to screenshot this win!";
 				#endif
 				#ifdef GEODE_IS_ANDROID
-					randomString = "Press the \"Volume Down\" and \"Power\" buttons to screenshot this win!";
+					randomString = "Press the \"Volume Down\'\' and \"Power\'\' buttons to screenshot this win!";
 				#endif
 				#ifdef GEODE_IS_WINDOWS
-					randomString = "Press \"Win + Shift + S\" or \"PrtSc\" to screenshot this win!";
+					randomString = "Press \"Win + Shift + S\'\' or \"PrtSc\'\' to screenshot this win!";
 				#endif
 			} else if (strcmp("\"First try, part two!\"", randomString) == 0) {
 				std::string temp = fmt::format("\'\'First try, part {}!\"", playLayer->m_attempts);
