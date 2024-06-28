@@ -87,9 +87,9 @@ gg gaming)";
 			utils::file::writeString(path3, content);
 		} else if (isWET && !wETMigration.empty()) {
 			log::info("Starting to migrate custom messages from WholesomeEndTexts.");
-			for (auto i = wETMigration.begin(); i != wETMigration.end(); ++i) {
-				std::string stringToMigrate = wETMigration[i];
-				utils::file::writeString(path3,  fmt::format("{}\n", stringToMigrate));
+			for (auto i : wETMigration) {
+				// std::string stringToMigrate = wETMigration[i];
+				utils::file::writeString(path3,  fmt::format("{}\n", i));
 			}
 			log::info("Finished migrating messages from WholesomeEndTexts. Confirm nothing went terribly wrong.");
 		}
