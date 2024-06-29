@@ -43,9 +43,8 @@ $on_mod(Loaded) {
 		} // technically i can write two one-time use boolean variables to allow people to toggle these things on and off as they please without the quotes adding themselves multiple times into the vector, but i'd rather add the "restart required" barrier just to be extra safe
 	}
 
-
 	auto oldWETMessages = (Mod::get()->getConfigDir() / ".." / "raydeeux.wholesomeendtexts" / "custom.txt" ).string();
-	if (std::filesystem::exists(oldWETMessages)) {
+	if (std::filesystem::exists(oldWETMessages) && !Mod::get()->setSavedValue("hasMigratedFromWET", true)) {
 		std::ifstream wETFile(oldWETMessages);
 		std::string wETStr;
 		while (std::getline(wETFile, wETStr)) {
