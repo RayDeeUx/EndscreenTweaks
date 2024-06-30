@@ -192,10 +192,14 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			mainLayer->setVisible(!mainLayer->isVisible());
 		}
 		if (auto hideButtonSprite = MyEndLevelLayer::getHideButtonSprite()) {
-			hideButtonSprite->setVisible(hideButtonSprite->isVisible());
+			if (!MyEndLevelLayer::getModBool("hideHideEndscreen")) {
+				hideButtonSprite->setVisible(!hideButtonSprite->isVisible());
+			}
 		}
 		if (auto hideELLSprite = getChildByIDRecursive("hide-endlevellayer-sprite"_spr)) {
-			hideELLSprite->setVisible(hideELLSprite->isVisible());
+			if (!MyEndLevelLayer::getModBool("hideHideEndscreen")) {
+				hideELLSprite->setVisible(!hideELLSprite->isVisible());
+			}
 		}
 	}
 	void applySpaceUK() {
@@ -215,7 +219,9 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			float desiredSpriteScaleX = 0.f;
 			float desiredSpriteScaleY = 0.f;
 			if (auto hideButtonSprite = MyEndLevelLayer::getHideButtonSprite()) {
-				hideButtonSprite->setVisible(!MyEndLevelLayer::getModBool("hideHideEndscreen")); //hide sprite, not the button itself
+				if (MyEndLevelLayer::getModBool("hideHideEndscreen")) {
+					hideButtonSprite->setVisible(false); //hide sprite, not the button itself
+				}
 				desiredButtonScale = hideLayerMenu->getChildByIDRecursive("hide-button")->getScale();
 				desiredSpriteScaleX = hideButtonSprite->getScaleX();
 				desiredSpriteScaleY = hideButtonSprite->getScaleY();
@@ -229,6 +235,9 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				hideELLSprite->setScaleX(desiredSpriteScaleX);
 				hideELLSprite->setScaleY(desiredSpriteScaleY);
 				hideELLSprite->setID("hide-endlevellayer-sprite"_spr);
+				if (MyEndLevelLayer::getModBool("hideHideEndscreen")) {
+					hdieELLSprite->setVisible(false);
+				}
 				auto hideELLBtn = CCMenuItemSpriteExtra::create(hideELLSprite, this, menu_selector(MyEndLevelLayer::toggleMainLayerVisibility));
 				hideELLBtn->setScale(desiredButtonScale);
 				hideELLBtn->setID("hide-endlevellayer-button"_spr);
@@ -239,13 +248,19 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	}
 	void applyHideChainsBackground() {
 		if (auto left = getChildByIDRecursive("chain-left")) {
-			left->setVisible(!MyEndLevelLayer::getModBool("hideChains"));
+			if (MyEndLevelLayer::getModBool("hideChains")) {
+				left->setVisible(false);
+			}
 		}
 		if (auto right = getChildByIDRecursive("chain-right")) {
-			right->setVisible(!MyEndLevelLayer::getModBool("hideChains"));
+			if (MyEndLevelLayer::getModBool("hideChains")) {
+				right->setVisible(false);
+			}
 		}
 		if (auto bg = getChildByIDRecursive("background")) {
-			bg->setVisible(!MyEndLevelLayer::getModBool("hideBackground"));
+			if (MyEndLevelLayer::getModBool("hideBackground")) {
+				bg->setVisible(false);
+			}
 		}
 	}
 	void applyPlatAttemptsAndJumps(GJGameLevel* theLevel) {
