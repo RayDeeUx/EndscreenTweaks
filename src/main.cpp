@@ -20,7 +20,7 @@ using namespace geode::prelude;
 std::vector<std::string> quotes;
 std::vector<std::string> wETMigration;
 
-auto fallbackString = "We've got too many players to congratulate on level completions. Beat this level again for an actual message.";
+std::string fallbackString = "We've got too many players to congratulate on level completions. Beat this level again for an actual message.";
 
 int fps = -1;
 
@@ -342,42 +342,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			}
 		}
 	}
-	void showLayer(bool p0) {
-		if (!MyEndLevelLayer::getModBool("enabled")) {
-			EndLevelLayer::showLayer(p0);
-			return;
-		}
-		EndLevelLayer::showLayer(MyEndLevelLayer::getModBool("noTransition"));
-		if (auto playLayer = PlayLayer::get()) {
-			auto theLevel = playLayer->m_level;
-			MyEndLevelLayer::applyHideEndLevelLayerHideBtn();
-			MyEndLevelLayer::applyHideChainsBackground();
-			MyEndLevelLayer::applySpaceUK();
-			MyEndLevelLayer::applyPlatAttemptsAndJumps(theLevel);
-			MyEndLevelLayer::applyGDMOCompatShowLayer(theLevel);
-		}
-	}
-	void customSetup() {
-		EndLevelLayer::customSetup();
-		if (!MyEndLevelLayer::getModBool("enabled")) { return; }
-		isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
-		auto playLayer = PlayLayer::get();
-		if (playLayer == nullptr) { return; }
-		auto theLevel = playLayer->m_level;
-		if (auto completeMessage = typeinfo_cast<TextArea*>(getChildByIDRecursive("complete-message"))) {
-			// ensure that no one's up to any funny business by hardcoding the scale and contents of vanilla complete messages 
-			completeMessage->setScale(0.55f);
-			if (getChildByIDRecursive("level-complete-text")) {
-				if (theLevel->m_isVerifiedRaw) { completeMessage->setString("Level Verified!"); }
-				else { completeMessage->setString("You cannot verify a level if it\nhas a start pos."); }
-			} else {
-				if (theLevel->m_levelID.value() == 0) { completeMessage->setString("Complete the level in normal mode\nto verify it!"); }
-				else { completeMessage->setString("Well done... Now try to complete\nit without any checkpoints!"); }
-			}
-			if (isCompactEndscreen) completeMessage->setPositionX(compactEndscreenFallbackPosition);
-			return;
-		}
-		
+	void applyRandomQuote(GJGameLevel* theLevel) {
 		auto randomString = grabRandomQuote();
 		
 		if (auto endText = getChildByIDRecursive("end-text")) {
@@ -418,7 +383,45 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			endTextLabel->setAlignment(CCTextAlignment::kCCTextAlignmentCenter); // center text
 
 			if (isCompactEndscreen) endTextLabel->setPositionX(compactEndscreenFallbackPosition);
-			if (strcmp("", randomString) == 0) { endTextLabel->setString(fallbackString, true); } // fallback string
+			if (strcmp("", randomString) == 0) { endTextLabel->setString(fallbackString.c_str(), true); } // fallback string
 		}
+	}
+	void showLayer(bool p0) {
+		if (!MyEndLevelLayer::getModBool("enabled")) {
+			EndLevelLayer::showLayer(p0);
+			return;
+		}
+		EndLevelLayer::showLayer(MyEndLevelLayer::getModBool("noTransition"));
+		if (auto playLayer = PlayLayer::get()) {
+			auto theLevel = playLayer->m_level;
+			MyEndLevelLayer::applyHideEndLevelLayerHideBtn();
+			MyEndLevelLayer::applyHideChainsBackground();
+			MyEndLevelLayer::applySpaceUK();
+			MyEndLevelLayer::applyPlatAttemptsAndJumps(theLevel);
+			MyEndLevelLayer::applyGDMOCompatShowLayer(theLevel);
+		}
+	}
+	void customSetup() {
+		EndLevelLayer::customSetup();
+		if (!MyEndLevelLayer::getModBool("enabled")) { return; }
+		isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
+		auto playLayer = PlayLayer::get();
+		if (playLayer == nullptr) { return; }
+		auto theLevel = playLayer->m_level;
+		if (auto completeMessage = typeinfo_cast<TextArea*>(getChildByIDRecursive("complete-message"))) {
+			// ensure that no one's up to any funny business by hardcoding the scale and contents of vanilla complete messages 
+			completeMessage->setScale(0.55f);
+			if (getChildByIDRecursive("level-complete-text")) {
+				if (theLevel->m_isVerifiedRaw) { completeMessage->setString("Level Verified!"); }
+				else { completeMessage->setString("You cannot verify a level if it\nhas a start pos."); }
+			} else {
+				if (theLevel->m_levelID.value() == 0) { completeMessage->setString("Complete the level in normal mode\nto verify it!"); }
+				else { completeMessage->setString("Well done... Now try to complete\nit without any checkpoints!"); }
+			}
+			if (isCompactEndscreen) completeMessage->setPositionX(compactEndscreenFallbackPosition);
+			return;
+		}
+		if (!MyEndLevelLayer::getModBool("endTexts")) { return; }
+		MyEndLevelLayer::applyRandomQuote(theLevel);
 	}
 };
