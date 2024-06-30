@@ -342,7 +342,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			}
 		}
 	}
-	void applyRandomQuote(GJGameLevel* theLevel) {
+	void applyRandomQuote(PlayLayer* playLayer, GJGameLevel* theLevel) {
 		auto randomString = grabRandomQuote();
 		
 		if (auto endText = getChildByIDRecursive("end-text")) {
@@ -422,6 +422,6 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			return;
 		}
 		if (!MyEndLevelLayer::getModBool("endTexts")) { return; }
-		MyEndLevelLayer::applyRandomQuote(theLevel);
+		MyEndLevelLayer::applyRandomQuote(playLayer, theLevel);
 	}
 };
