@@ -34,7 +34,7 @@ $on_mod(Loaded) {
 	std::string str;
 	while (std::getline(file, str)) { quotes.push_back(str); }
 
-	if (Mod::get()->getSettingValue<bool>("technoblade")) {
+	if (MyEndLevelLayer::getModBool("technoblade")) {
 		auto pathTechnoblade = (Mod::get()->getResourcesDir() / "technoblade.txt");
 		std::ifstream file(pathTechnoblade);
 		std::string technoblade;
@@ -89,7 +89,7 @@ migration failed, womp womp)";
 		}
 	}
 	
-	if (Mod::get()->getSettingValue<bool>("custom")) {
+	if (MyEndLevelLayer::getModBool("custom")) {
 		auto pathCustom = (Mod::get()->getConfigDir() / "custom.txt");
 		std::ifstream file(pathCustom);
 		std::string str;
@@ -175,24 +175,20 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		self.setHookPriority("EndLevelLayer::customSetup", INT32_MAX - 1);
 	}
 	*/
-	void showLayer(bool p0) {
-		if (!Mod::get()->getSettingValue<bool>("enabled")) {
-			EndLevelLayer::showLayer(p0);
+	bool getModBool(std::string setting) {
+		return Mod::get()->getSettingValue<bool>(setting);
+	}
+	void toggleMainLayerVisibility() {
+		if (!MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
 			return;
 		}
-		isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
-		isGDMO = Loader::get()->isModLoaded("maxnu.gd_mega_overlay");
-		EndLevelLayer::showLayer(Mod::get()->getSettingValue<bool>("noTransition"));
-		auto theLevel = PlayLayer::get()->m_level;
-		if (Mod::get()->getSettingValue<bool>("hideChains")) {
-			getChildByIDRecursive("chain-left")->setVisible(false);
-			getChildByIDRecursive("chain-right")->setVisible(false);
+		if (auto mainLayer = getChildByIDRecursive("main-layer")) {
+			mainLayer->setVisible(!mainLayer->isVisible());
+			hideLayerMenu->setVisible(!hideLayerMenu->isVisible());
 		}
-		if (Mod::get()->getSettingValue<bool>("hideBackground")) { getChildByIDRecursive("background")->setVisible(false); }
-		if (Mod::get()->getSettingValue<bool>("hideHideEndscreen") && Loader::get()->isModLoaded("absolllute.megahack") && getChildByIDRecursive("absolllute.megahack/hide-endscreen")) {
-			getChildByIDRecursive("hide-button")->setVisible(false);
-		}
-		if (Mod::get()->getSettingValue<bool>("spaceUK")) {
+	}
+	void applySpaceUK() {
+		if (MyEndLevelLayer::getModBool("spaceUK")) {
 			auto levelCompleteText = getChildByIDRecursive("level-complete-text");
 			if (levelCompleteText == nullptr) levelCompleteText = getChildByIDRecursive("practice-complete-text"); // grab practice mode complete text as fallback node
 			if (isCompactEndscreen) {
@@ -201,7 +197,47 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			}
 			levelCompleteText->setScale(0.8f * (940.f / 1004.f)); // original scale of this node is 0.8 according to logs. hardcoding it here in case other mods decide to scale it to whatever else
 		}
-		if (Mod::get()->getSettingValue<bool>("platAttemptsAndJumps") && theLevel->isPlatformer()) {
+	}
+	void applyHideEndLevelLayerHideBtn() {
+		if (auto hideLayerMenu = getChildByIDRecursive("hide-layer-menu")) {
+			float desiredButtonScale = 0.f;
+			float desiredSpriteScaleX = 0.f;
+			float desiredSpriteScaleY = 0.f;
+			if (auto hideButtonSprite = hideLayerMenu->getChildByIDRecursive("hide-button")->getChildren()->objectAtIndex(0)) {
+				hideButtonSprite->setVisible(!MyEndLevelLayer::getModBool("hideHideEndscreen")); //hide sprite, not the button itself
+				desiredButtonScale = hideLayerMenu->getChildByIDRecursive("hide-button")->getScale();
+				desiredSpriteScaleX = hideButtonSprite->getScaleX();
+				desiredSpriteScaleY = hideButtonSprite->getScaleY();
+			}
+			if (MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
+				if (auto mainLayer = getChildByIDRecursive("main-layer")) {
+					mainLayer->setVisible(false);
+					hideLayerMenu->setVisible(false);
+				}
+				auto hideELLSprite = CCSprite::create("btn.png"_spr);
+				hideELLSprite->setScale({desiredSpriteScaleX, desiredSpriteScaleY});
+				hideELLSprite->setID("hide-endlevellayer-sprite"_spr);
+				auto hideELLBtn = CCMenuItemSpriteExtra::create(hideELLSprite, this, menu_selector(MyEndLevelLayer::toggleMainLayerVisibility));
+				hideELLBtn->setScale(desiredButtonScale);
+				hideELLBtn->setID("hide-endlevellayer-button"_spr);
+				hideLayerMenu->addChild(hideELLBtn);
+				hideLayerMenu->updateLayout();
+			}
+		}
+	}
+	void applyHideChainsBackground() {
+		if (auto left = getChildByIDRecursive("chain-left")) {
+			left->setVisible(!MyEndLevelLayer::getModBool("hideChains"));
+		}
+		if (auto right = getChildByIDRecursive("chain-right")) {
+			right->setVisible(!MyEndLevelLayer::getModBool("hideChains"));
+		}
+		if (auto bg = getChildByIDRecursive("background")) {
+			bg->setVisible(!MyEndLevelLayer::getModBool("hideBackground"));
+		}
+	}
+	void applyPlatAttemptsAndJumps(GJGameLevel* theLevel) {
+		if (MyEndLevelLayer::getModBool("platAttemptsAndJumps") && theLevel->isPlatformer()) {
 			auto mainLayer = getChildByID("main-layer");
 			if (mainLayer == nullptr) return;
 			auto playLayer = PlayLayer::get();
@@ -225,6 +261,9 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			mainLayer->addChild(jumpsLabel);
 			mainLayer->updateLayout();
 		}
+	}
+	void applyGDMOCompatShowLayer(GJGameLevel* theLevel) {
+		isGDMO = Loader::get()->isModLoaded("maxnu.gd_mega_overlay");
 		if (isGDMO && theLevel->m_coins == 0 && Loader::get()->getLoadedMod("maxnu.gd_mega_overlay")->getSavedValue<bool>("level/endlevellayerinfo/enabled")) {
 			/* 
 				gdmo does this silly thing where they add children without giving them node IDs and i need to release this mod ASAP so please forgive me for using getobjectatindex but getchildoftype doesnt work for this use case because everything in endscreen layer is a child of some other cclayer smh
@@ -276,9 +315,24 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			}
 		}
 	}
+	void showLayer(bool p0) {
+		if (!MyEndLevelLayer::getModBool("enabled")) {
+			EndLevelLayer::showLayer(p0);
+			return;
+		}
+		EndLevelLayer::showLayer(MyEndLevelLayer::getModBool("noTransition"));
+		if (auto playLayer = PlayLayer::get()) {
+			auto theLevel = playLayer->m_level;
+			MyEndLevelLayer::applyHideEndLevelLayerHideBtn();
+			MyEndLevelLayer::applyHideChainsBackground();
+			MyEndLevelLayer::applySpaceUK();
+			MyEndLevelLayer::applyPlatAttemptsAndJumps(theLevel);
+			MyEndLevelLayer::applyGDMOCompatShowLayer(theLevel);
+		}
+	}
 	void customSetup() {
 		EndLevelLayer::customSetup();
-		if (!Mod::get()->getSettingValue<bool>("enabled")) { return; }
+		if (!MyEndLevelLayer::getModBool("enabled")) { return; }
 		isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
 		auto playLayer = PlayLayer::get();
 		if (playLayer == nullptr) { return; }

@@ -61,7 +61,13 @@
 		},
 		"hideHideEndscreen": {
 			"name": "Hide \"Hide Endscreen\" Button",
-			"description": "Hides the \"Hide Endscreen\" button from EndLevelLayer.\n(Still clickable, just invisible.)",
+			"description": "Hides the \"Hide Endscreen\" button from EndLevelLayer. (Still clickable, just invisible.)\n\n<cy>(Enabling this option will also hide the sprite of the extra button added from enabling the \"Hide EndLevelLayer\" option.)</c>",
+			"type": "bool",
+			"default": false
+		},
+		"hideEndLevelLayer": {
+			"name": "Hide EndLevelLayer",
+			"description": "Hides the EndLevelLayer, and adds an extra button to toggle the EndLevelLayer's visibility.",
 			"type": "bool",
 			"default": false
 		},
@@ -81,6 +87,9 @@
 	"resources": {
 		"files": [
 			"resources/*.txt"
+		],
+		"sprites": [
+			"resources/btn.png"
 		]
 	},
 	"dependencies": [
