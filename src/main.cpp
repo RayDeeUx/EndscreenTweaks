@@ -264,15 +264,16 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		}
 	}
 	void applyPlatAttemptsAndJumps(GJGameLevel* theLevel) {
+		isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
 		if (MyEndLevelLayer::getModBool("platAttemptsAndJumps") && theLevel->isPlatformer()) {
 			auto mainLayer = getChildByID("main-layer");
-			if (mainLayer == nullptr) return;
+			if (mainLayer == nullptr) { return; }
 			auto playLayer = PlayLayer::get();
-			if (playLayer == nullptr) return;
+			if (playLayer == nullptr) { return; }
 			auto timeLabel = getChildByIDRecursive("time-label");
 			auto pointsLabel = getChildByIDRecursive("points-label");
-			if (!isCompactEndscreen) timeLabel->setPositionY(timeLabel->getPositionY() - 20);
-			if (pointsLabel) pointsLabel->setPositionY(timeLabel->getPositionY() - 18);
+			if (!isCompactEndscreen) { timeLabel->setPositionY(timeLabel->getPositionY() - 20); }
+			if (pointsLabel) { pointsLabel->setPositionY(timeLabel->getPositionY() - 18); }
 			auto attemptsLabel = cocos2d::CCLabelBMFont::create(("Attempts: " + std::to_string(playLayer->m_attempts)).c_str(), "goldFont.fnt");
 			attemptsLabel->setScale(0.8f);
 			attemptsLabel->setPositionX(timeLabel->getPositionX());
@@ -320,14 +321,14 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			float windowHeight = CCDirector::get()->getWinSize().height;
 			float offset = getChildByIDRecursive("background")->getPositionX();
 			auto starContainer = getChildByIDRecursive("star-container");
-			if (starContainer == nullptr) starContainer = getChildByIDRecursive("moon-container");
+			if (starContainer == nullptr) { starContainer = getChildByIDRecursive("moon-container"); }
 			float gdmoHeight = windowHeight * (285.f / 320.f);
 			float gdmoTwentyFivePercentX = (windowWidth * .25f) + offset;
 			float gdmoFiftyPercentX = (windowWidth * .5f) + offset;
 			float gdmoSeventyFivePercentX = (windowWidth * .75f) + offset;
 			if (starContainer) {
-				if (theLevel->m_stars.value() == 1) starContainer->setPositionX(gdmoFiftyPercentX);
-				else starContainer->setPositionX(gdmoTwentyFivePercentX);
+				if (theLevel->m_stars.value() == 1) { starContainer->setPositionX(gdmoFiftyPercentX); }
+				else { starContainer->setPositionX(gdmoTwentyFivePercentX); }
 				starContainer->setPositionY(gdmoHeight);
 			}
 			if (auto orbContainer = getChildByIDRecursive("orb-container")) {
@@ -343,11 +344,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		}
 	}
 	void applyRandomQuote(PlayLayer* playLayer, GJGameLevel* theLevel) {
-		auto randomString = grabRandomQuote();
-		
-		if (auto endText = getChildByIDRecursive("end-text")) {
-			auto endTextLabel = typeinfo_cast<CCLabelBMFont*>(endText);
-			
+		if (auto endTextLabel = typeinfo_cast<CCLabelBMFont*>(getChildByIDRecursive("end-text"))) {
+			auto randomString = grabRandomQuote();
 			if (strcmp("Make sure to screenshot this win!", randomString) == 0) {
 				#ifdef GEODE_IS_MACOS
 					randomString = "Press Command + Shift + 3 to screenshot this win!";
@@ -388,8 +386,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	}
 	void showLayer(bool p0) {
 		if (!MyEndLevelLayer::getModBool("enabled")) {
-			EndLevelLayer::showLayer(p0);
-			return;
+			return EndLevelLayer::showLayer(p0);
 		}
 		EndLevelLayer::showLayer(MyEndLevelLayer::getModBool("noTransition"));
 		if (auto playLayer = PlayLayer::get()) {
