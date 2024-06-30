@@ -68,7 +68,7 @@ gg gaming)";
 			utils::file::writeString(path3, content);
 		} else if (std::filesystem::exists(oldWETMessages)) {
 			if (!wETMigration.empty()) {
-				log::info("Starting to migrate custom messages from WholesomeEndTexts.");
+				log::info("Migrating custom messages from WholesomeEndTexts. Buckle up!");
 				/*
 				for (std::string wETCustomMessage : wETMigration) {
 					// std::string stringToMigrate = wETCustomMessage;
