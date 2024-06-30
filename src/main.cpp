@@ -34,7 +34,7 @@ $on_mod(Loaded) {
 	std::string str;
 	while (std::getline(file, str)) { quotes.push_back(str); }
 
-	if (MyEndLevelLayer::getModBool("technoblade")) {
+	if (Mod::get()->getSettingValue<bool>("technoblade")) {
 		auto pathTechnoblade = (Mod::get()->getResourcesDir() / "technoblade.txt");
 		std::ifstream file(pathTechnoblade);
 		std::string technoblade;
@@ -89,7 +89,7 @@ migration failed, womp womp)";
 		}
 	}
 	
-	if (MyEndLevelLayer::getModBool("custom")) {
+	if (Mod::get()->getSettingValue<bool>("custom")) {
 		auto pathCustom = (Mod::get()->getConfigDir() / "custom.txt");
 		std::ifstream file(pathCustom);
 		std::string str;
@@ -178,13 +178,24 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	bool getModBool(std::string setting) {
 		return Mod::get()->getSettingValue<bool>(setting);
 	}
+	CCNode* getHideButtonSprite() {
+		if (auto hideButtonSprite = typeinfo_cast<CCNode*>(getChildByIDRecursive("hide-button")->getChildren()->objectAtIndex(0))) {
+			return hideButtonSprite;
+		}
+		return nullptr;
+	}
 	void toggleMainLayerVisibility() {
 		if (!MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
 			return;
 		}
 		if (auto mainLayer = getChildByIDRecursive("main-layer")) {
 			mainLayer->setVisible(!mainLayer->isVisible());
-			hideLayerMenu->setVisible(!hideLayerMenu->isVisible());
+		}
+		if (auto hideButtonSprite = MyEndLevelLayer::getHideButtonSprite()) {
+			hideButtonSprite->setVisible(hideButtonSprite->isVisible());
+		}
+		if (auto hideELLSprite = getChildByIDRecursive("hide-endlevellayer-sprite"_spr)) {
+			hideELLSprite->setVisible(hideELLSprite->isVisible());
 		}
 	}
 	void applySpaceUK() {
@@ -203,7 +214,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			float desiredButtonScale = 0.f;
 			float desiredSpriteScaleX = 0.f;
 			float desiredSpriteScaleY = 0.f;
-			if (auto hideButtonSprite = hideLayerMenu->getChildByIDRecursive("hide-button")->getChildren()->objectAtIndex(0)) {
+			if (auto hideButtonSprite = MyEndLevelLayer::getHideButtonSprite()) {
 				hideButtonSprite->setVisible(!MyEndLevelLayer::getModBool("hideHideEndscreen")); //hide sprite, not the button itself
 				desiredButtonScale = hideLayerMenu->getChildByIDRecursive("hide-button")->getScale();
 				desiredSpriteScaleX = hideButtonSprite->getScaleX();
@@ -215,7 +226,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 					hideLayerMenu->setVisible(false);
 				}
 				auto hideELLSprite = CCSprite::create("btn.png"_spr);
-				hideELLSprite->setScale({desiredSpriteScaleX, desiredSpriteScaleY});
+				hideELLSprite->setScaleX(desiredSpriteScaleX);
+				hideELLSprite->setScaleY(desiredSpriteScaleY);
 				hideELLSprite->setID("hide-endlevellayer-sprite"_spr);
 				auto hideELLBtn = CCMenuItemSpriteExtra::create(hideELLSprite, this, menu_selector(MyEndLevelLayer::toggleMainLayerVisibility));
 				hideELLBtn->setScale(desiredButtonScale);
