@@ -184,7 +184,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		}
 		return nullptr;
 	}
-	void toggleMainLayerVisibility() {
+	void toggleMainLayerVisibility(cocos2d::CCObject* sender) {
 		if (!MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
 			return;
 		}
