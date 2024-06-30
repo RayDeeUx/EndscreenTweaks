@@ -1,7 +1,7 @@
 # EndscreenTweaks Changelog
 ## v1.2.0
 - Rebranded to `EndscreenTweaks`, and supersede past copies of Relative's Custom Endscreen Text and my WholesomeEndTexts mod.
-- Port to 2.206.
+- Port to 2.206, with big help from Cvolton, Fleym, and dankmeme.
 - A few more optimizations and fixes for visual errors.
 - Replace `Hide "Hide Endscreen" Button` toggles (for both MHv8 and QOLMod) with a similar toggle for the same button from vanilla GD.
 ## v1.1.3

@@ -29,13 +29,13 @@ bool isGDMO;
 float compactEndscreenFallbackPosition = CCDirector::get()->getWinSize().width * 0.6f;
 
 $on_mod(Loaded) {
-	auto path = (Mod::get()->getResourcesDir() / "default.txt").string();
+	auto path = (Mod::get()->getResourcesDir() / "default.txt");
 	std::ifstream file(path);
 	std::string str;
 	while (std::getline(file, str)) { quotes.push_back(str); }
 
 	if (Mod::get()->getSettingValue<bool>("technoblade")) {
-		auto pathRogers = (Mod::get()->getResourcesDir() / "technoblade.txt").string();
+		auto pathRogers = (Mod::get()->getResourcesDir() / "technoblade.txt");
 		std::ifstream file(pathRogers);
 		std::string technoblade;
 		while (std::getline(file, technoblade)) {
@@ -90,7 +90,7 @@ migration failed, womp womp)";
 	}
 	
 	if (Mod::get()->getSettingValue<bool>("custom")) {
-		auto pathCustom = (Mod::get()->getConfigDir() / "custom.txt").string();
+		auto pathCustom = (Mod::get()->getConfigDir() / "custom.txt");
 		std::ifstream file(pathCustom);
 		std::string str;
 		while (std::getline(file, str)) {
