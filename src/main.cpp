@@ -43,13 +43,16 @@ $on_mod(Loaded) {
 		} // technically i can write two one-time use boolean variables to allow people to toggle these things on and off as they please without the quotes adding themselves multiple times into the vector, but i'd rather add the "restart required" barrier just to be extra safe
 	}
 
-	auto oldWETMessages = (Mod::get()->getConfigDir() / ".." / "raydeeux.wholesomeendtexts" / "custom.txt" ).string();
-	if (std::filesystem::exists(oldWETMessages) && !Mod::get()->setSavedValue("hasMigratedFromWET", true)) {
+	auto oldWETMessages = (dirs::getModConfigDir() / "raydeeux.wholesomeendtexts" / "custom.txt").string();
+	if (std::filesystem::exists(oldWETMessages) && !Mod::get()->getSavedValue<bool>("migrationFromWETSuccess")) {
+		log::info("std::filesystem::exists(oldWETMessages): {}", std::filesystem::exists(oldWETMessages));
+		log::info("Storing oldWETMessages now.");
 		std::ifstream wETFile(oldWETMessages);
 		std::string wETStr;
 		while (std::getline(wETFile, wETStr)) {
 			wETMigration.push_back(wETStr);
 		}
+		log::info("Finished storing oldWETMessages.");
 	}
 
 	// code adapted with permission from dialouge handler original author thesillydoggo: https://discord.com/channels/911701438269386882/911702535373475870/1212633554345918514 --erymanthus | raydeeux
@@ -57,6 +60,7 @@ $on_mod(Loaded) {
 	auto path3 = (Mod::get()->getConfigDir() / "custom.txt").string();
 	if (!std::filesystem::exists(path3)) {
 		if (wETMigration.empty()) {
+			log::info("wETMigration was empty. Confirm \"std::filesystem::exists(oldWETMessages)\" didn't appear earlier in the logs.");
 			std::string content = R"(lorem ipsum
 abc def
 u beat the level
@@ -65,12 +69,14 @@ gg gaming)";
 		} else if (std::filesystem::exists(oldWETMessages)) {
 			if (!wETMigration.empty()) {
 				log::info("Starting to migrate custom messages from WholesomeEndTexts.");
-				for (auto i : wETMigration) {
-					// std::string stringToMigrate = wETMigration[i];
-					utils::file::writeString(path3,  fmt::format("{}\n", i));
+				for (std::string wETCustomMessage : wETMigration) {
+					// std::string stringToMigrate = wETCustomMessage;
+					utils::file::writeString(path3,  fmt::format("{}\n", wETCustomMessage));
 				}
 				log::info("Finished migrating messages from WholesomeEndTexts. Confirm nothing went terribly wrong.");
+				Mod::get()->setSavedValue("migrationFromWETSuccess", true);
 			} else {
+				log::error("Migration failed! What happened?");
 				std::string content = R"(migration failed, womp womp
 migration failed, womp womp
 migration failed, womp womp
@@ -158,12 +164,14 @@ class $modify(PlayLayer) {
 */
 
 class $modify(MyEndLevelLayer, EndLevelLayer) {
+	/*
 	static void onModify(auto & self)
 	{
 		// i wanted to have compat with relative's endscreen text but better safe than sorry :)
 		self.setHookPriority("EndLevelLayer::showLayer", INT32_MAX - 1);
 		self.setHookPriority("EndLevelLayer::customSetup", INT32_MAX - 1);
 	}
+	*/
 	void showLayer(bool p0) {
 		if (!Mod::get()->getSettingValue<bool>("enabled")) {
 			EndLevelLayer::showLayer(p0);
