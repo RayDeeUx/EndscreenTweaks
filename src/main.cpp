@@ -29,14 +29,14 @@ bool isGDMO;
 float compactEndscreenFallbackPosition = CCDirector::get()->getWinSize().width * 0.6f;
 
 $on_mod(Loaded) {
-	auto path = (Mod::get()->getResourcesDir() / "default.txt");
-	std::ifstream file(path);
+	auto pathDefault = (Mod::get()->getResourcesDir() / "default.txt");
+	std::ifstream file(pathDefault);
 	std::string str;
 	while (std::getline(file, str)) { quotes.push_back(str); }
 
 	if (Mod::get()->getSettingValue<bool>("technoblade")) {
-		auto pathRogers = (Mod::get()->getResourcesDir() / "technoblade.txt");
-		std::ifstream file(pathRogers);
+		auto pathTechnoblade = (Mod::get()->getResourcesDir() / "technoblade.txt");
+		std::ifstream file(pathTechnoblade);
 		std::string technoblade;
 		while (std::getline(file, technoblade)) {
 			quotes.push_back(technoblade);
@@ -57,25 +57,25 @@ $on_mod(Loaded) {
 
 	// code adapted with permission from dialouge handler original author thesillydoggo: https://discord.com/channels/911701438269386882/911702535373475870/1212633554345918514 --erymanthus | raydeeux
 
-	auto path3 = (Mod::get()->getConfigDir() / "custom.txt");
-	if (!std::filesystem::exists(path3)) {
+	auto pathCustom = (Mod::get()->getConfigDir() / "custom.txt");
+	if (!std::filesystem::exists(pathCustom)) {
 		if (wETMigration.empty()) {
 			log::info("wETMigration was empty. Confirm \"std::filesystem::exists(oldWETMessages)\" didn't appear earlier in the logs.");
 			std::string content = R"(lorem ipsum
 abc def
 u beat the level
 gg gaming)";
-			utils::file::writeString(path3, content);
+			utils::file::writeString(pathCustom, content);
 		} else if (std::filesystem::exists(oldWETMessages)) {
 			if (!wETMigration.empty()) {
 				log::info("Migrating custom messages from WholesomeEndTexts. Buckle up!");
 				/*
 				for (std::string wETCustomMessage : wETMigration) {
 					// std::string stringToMigrate = wETCustomMessage;
-					utils::file::writeString(path3,  fmt::format("{}\n", wETCustomMessage));
+					utils::file::writeString(pathCustom,  fmt::format("{}\n", wETCustomMessage));
 				}
 				*/
-				std::filesystem::copy(oldWETMessages, path3);
+				std::filesystem::copy(oldWETMessages, pathCustom);
 				log::info("Finished migrating messages from WholesomeEndTexts. Confirm nothing went terribly wrong.");
 				Mod::get()->setSavedValue("migrationFromWETSuccess", true);
 			} else {
@@ -84,7 +84,7 @@ gg gaming)";
 migration failed, womp womp
 migration failed, womp womp
 migration failed, womp womp)";
-				utils::file::writeString(path3, content);
+				utils::file::writeString(pathCustom, content);
 			}
 		}
 	}
