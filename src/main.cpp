@@ -84,7 +84,7 @@ gg gaming)";
 migration failed, womp womp
 migration failed, womp womp
 migration failed, womp womp)";
-			utils::file::writeString(path3, content);
+				utils::file::writeString(path3, content);
 			}
 		}
 	}
