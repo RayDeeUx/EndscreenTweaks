@@ -236,7 +236,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				hideELLSprite->setScaleY(desiredSpriteScaleY);
 				hideELLSprite->setID("hide-endlevellayer-sprite"_spr);
 				if (MyEndLevelLayer::getModBool("hideHideEndscreen")) {
-					hdieELLSprite->setVisible(false);
+					hideELLSprite->setVisible(false);
 				}
 				auto hideELLBtn = CCMenuItemSpriteExtra::create(hideELLSprite, this, menu_selector(MyEndLevelLayer::toggleMainLayerVisibility));
 				hideELLBtn->setScale(desiredButtonScale);
