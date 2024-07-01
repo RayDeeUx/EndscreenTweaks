@@ -78,7 +78,7 @@
 			"default": false
 		},
 		"noTransition": {
-			"name": "No Transition",
+			"name": "No Bouncing Transition",
 			"description": "Disables the bouncing transition when showing EndLevelLayer.",
 			"type": "bool",
 			"default": false
