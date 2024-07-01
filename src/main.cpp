@@ -356,9 +356,9 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				#ifdef GEODE_IS_WINDOWS
 					randomString = "Press \"Win + Shift + S\'\' or \"PrtSc\'\' to screenshot this win!";
 				#endif
-			} else if (strcmp("\"First try, part two!\"", randomString) == 0) {
+			} else if (strcmp("\'\'First try, part two!\"", randomString) == 0) {
 				std::string temp = fmt::format("\'\'First try, part {}!\"", playLayer->m_attempts);
-				if (playLayer->m_attempts == 1) { temp = "\"First try!\""; }
+				if (playLayer->m_attempts == 1) { temp = "\'\'First try!\""; }
 				randomString = temp.c_str();
 			} else if (strcmp("\'\'As you can see, my FPS is around 18 or so, which means we can definitely take this further.\"", randomString) == 0) {
 				randomString = fmt::format("\'\'As you can see, my FPS is around {} or so, which means we can definitely take this further.\"", fps).c_str();
