@@ -51,7 +51,7 @@ $on_mod(Loaded) {
 		std::string wETStr;
 		while (std::getline(wETFile, wETStr)) {
 			wETMigration.push_back(wETStr);
-			log::info("{}", wETStr):
+			log::info("{}", wETStr);
 		}
 		log::info("Finished storing oldWETMessages.");
 	}
