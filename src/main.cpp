@@ -51,6 +51,7 @@ $on_mod(Loaded) {
 		std::string wETStr;
 		while (std::getline(wETFile, wETStr)) {
 			wETMigration.push_back(wETStr);
+			log::info("{}", wETStr):
 		}
 		log::info("Finished storing oldWETMessages.");
 	}
@@ -59,12 +60,14 @@ $on_mod(Loaded) {
 
 	auto pathCustom = (Mod::get()->getConfigDir() / "custom.txt");
 	if (!std::filesystem::exists(pathCustom)) {
+		log::info("customtxt does not exist. wETMigration.empty(): {} | std::filesystem::exists(oldWETMessages): {}", wETMigration.empty(), std::filesystem::exists(oldWETMessages));
 		if (wETMigration.empty()) {
 			log::info("wETMigration was empty. Confirm \"std::filesystem::exists(oldWETMessages)\" didn't appear earlier in the logs.");
 			std::string content = R"(lorem ipsum
 abc def
 u beat the level
-gg gaming)";
+gg gaming
+[this text file was brought to you by endscreentweaks. if you're seeing this in the config directory for wholesomeendtexts, something has gone terribly TERRIBLY wrong-simply ping @erymanthus in the geode sdk discord server and do not panic!])";
 			utils::file::writeString(pathCustom, content);
 		} else if (std::filesystem::exists(oldWETMessages)) {
 			if (!wETMigration.empty()) {
