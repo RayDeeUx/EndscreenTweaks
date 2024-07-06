@@ -253,8 +253,10 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				hideELLBtn->setScale(desiredButtonScale);
 				hideELLBtn->setID("hide-endlevellayer-button"_spr);
 				hideELLBtn->setPositionY(desiredSpriteYPosition);
-				hideLayerMenu->addChild(hideELLBtn);
-				hideLayerMenu->updateLayout();
+				if (auto hideLayerCCMenu = typeinfo_cast<CCMenu*>(hideLayerMenu)) {
+					hideLayerCCMenu->addChild(hideELLBtn);
+					hideLayerCCMenu->updateLayout();
+				}
 			}
 		}
 	}
