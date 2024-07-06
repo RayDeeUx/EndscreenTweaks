@@ -192,6 +192,11 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			return;
 		}
 		if (auto mainLayer = getChildByIDRecursive("main-layer")) {
+			if (mainLayer->isVisible()) {
+				this->setOpacity(0);
+			} else {
+				this->setOpacity(255);
+			}
 			mainLayer->setVisible(!mainLayer->isVisible());
 		}
 		if (auto hideButtonSprite = MyEndLevelLayer::getHideButtonSprite()) {
@@ -221,13 +226,16 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			float desiredButtonScale = 0.f;
 			float desiredSpriteScaleX = 0.f;
 			float desiredSpriteScaleY = 0.f;
+			float desiredSpriteYPosition = 0.f;
 			if (auto hideButtonSprite = MyEndLevelLayer::getHideButtonSprite()) {
 				if (MyEndLevelLayer::getModBool("hideHideEndscreen")) {
 					hideButtonSprite->setVisible(false); //hide sprite, not the button itself
 				}
-				desiredButtonScale = hideLayerMenu->getChildByIDRecursive("hide-button")->getScale();
+				auto hideButtonButton = hideLayerMenu->getChildByIDRecursive("hide-button");
+				desiredButtonScale = hideButtonButton->getScale();
 				desiredSpriteScaleX = hideButtonSprite->getScaleX();
 				desiredSpriteScaleY = hideButtonSprite->getScaleY();
+				desiredSpriteYPosition = hideButtonButton->getPositionY() - hideButtonButton->getContentHeight();
 			}
 			if (MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
 				if (auto mainLayer = getChildByIDRecursive("main-layer")) {
@@ -244,6 +252,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				auto hideELLBtn = CCMenuItemSpriteExtra::create(hideELLSprite, this, menu_selector(MyEndLevelLayer::toggleMainLayerVisibility));
 				hideELLBtn->setScale(desiredButtonScale);
 				hideELLBtn->setID("hide-endlevellayer-button"_spr);
+				hideELLBtn->setPositionY(desiredSpriteYPosition);
 				hideLayerMenu->addChild(hideELLBtn);
 				hideLayerMenu->updateLayout();
 			}
