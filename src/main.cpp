@@ -181,8 +181,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	bool getModBool(std::string setting) {
 		return Mod::get()->getSettingValue<bool>(setting);
 	}
-	CCNode* getHideButtonSprite() {
-		if (auto hideButtonSprite = typeinfo_cast<CCNode*>(getChildByIDRecursive("hide-button")->getChildren()->objectAtIndex(0))) {
+	CCSprite* getHideButtonSprite() {
+		if (auto hideButtonSprite = typeinfo_cast<CCSprite*>(getChildByIDRecursive("hide-button")->getChildren()->objectAtIndex(0))) {
 			return hideButtonSprite;
 		}
 		return nullptr;
@@ -192,11 +192,6 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			return;
 		}
 		if (auto mainLayer = getChildByIDRecursive("main-layer")) {
-			if (mainLayer->isVisible()) {
-				this->setOpacity(0);
-			} else {
-				this->setOpacity(255);
-			}
 			mainLayer->setVisible(!mainLayer->isVisible());
 		}
 		if (auto hideButtonSprite = MyEndLevelLayer::getHideButtonSprite()) {

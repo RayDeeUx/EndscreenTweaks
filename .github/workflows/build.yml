@@ -38,7 +38,7 @@ jobs:
           # build-config: RelWithDebInfo # comment this out (and the line below!) to Release mode
           # export-pdb: true # comment this (and the line above!) out to Release mode
           # bindings: "RayDeeUx/bindings" # comment this out to swap to "geode-sdk/bindings"
-          # bindings-ref: "infolabeltweaks" # comment this out to use default branch
+          # bindings-ref: "endscreentweaks" # comment this out to use default branch
           # sdk: nightly # comment this out to use stable Geode SDK version
           combine: true
           target: ${{ matrix.config.target }}
