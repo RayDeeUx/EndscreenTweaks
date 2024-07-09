@@ -235,7 +235,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			if (MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
 				if (auto mainLayer = getChildByIDRecursive("main-layer")) {
 					mainLayer->setVisible(false);
-					hideLayerMenu->setVisible(false);
+					MyEndLevelLayer::getHideButtonSprite()->setVisible(false); // NEVER set hideLayerMenu as invisible!
 				}
 				auto hideELLSprite = CCSprite::create("btn.png"_spr);
 				hideELLSprite->setScaleX(desiredSpriteScaleX);
@@ -250,7 +250,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				hideELLBtn->setPositionY(desiredSpriteYPosition);
 				if (auto hideLayerCCMenu = typeinfo_cast<CCMenu*>(hideLayerMenu)) {
 					hideLayerCCMenu->addChild(hideELLBtn);
-					// hideLayerCCMenu->updateLayout(); // is this even necessary
+					hideLayerCCMenu->updateLayout(); // in case there is a layout in future node IDs updates
 				}
 			}
 		}
