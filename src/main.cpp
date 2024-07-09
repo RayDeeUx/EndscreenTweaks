@@ -208,7 +208,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	void applySpaceUK() {
 		if (MyEndLevelLayer::getModBool("spaceUK")) {
 			auto levelCompleteText = getChildByIDRecursive("level-complete-text");
-			if (levelCompleteText == nullptr) levelCompleteText = getChildByIDRecursive("practice-complete-text"); // grab practice mode complete text as fallback node
+			if (levelCompleteText == nullptr) { levelCompleteText = getChildByIDRecursive("practice-complete-text"); } // grab practice mode complete text as fallback node
 			if (isCompactEndscreen) {
 				levelCompleteText->setVisible(true);
 				levelCompleteText->setPositionX(compactEndscreenFallbackPosition);
@@ -250,7 +250,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				hideELLBtn->setPositionY(desiredSpriteYPosition);
 				if (auto hideLayerCCMenu = typeinfo_cast<CCMenu*>(hideLayerMenu)) {
 					hideLayerCCMenu->addChild(hideELLBtn);
-					hideLayerCCMenu->updateLayout();
+					// hideLayerCCMenu->updateLayout(); // is this even necessary
 				}
 			}
 		}
