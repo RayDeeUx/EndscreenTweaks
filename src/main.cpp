@@ -223,7 +223,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			float desiredSpriteScaleY = 0.f;
 			float desiredSpriteYPosition = 0.f;
 			if (auto hideButtonSprite = MyEndLevelLayer::getHideButtonSprite()) {
-				if (MyEndLevelLayer::getModBool("hideHideEndscreen")) {
+				if (MyEndLevelLayer::getModBool("hideHideEndscreen") || MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
 					hideButtonSprite->setVisible(false); //hide sprite, not the button itself
 				}
 				auto hideButtonButton = hideLayerMenu->getChildByIDRecursive("hide-button");
