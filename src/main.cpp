@@ -235,15 +235,12 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			if (MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
 				if (auto mainLayer = getChildByIDRecursive("main-layer")) {
 					mainLayer->setVisible(false);
-					MyEndLevelLayer::getHideButtonSprite()->setVisible(false); // NEVER set hideLayerMenu as invisible!
 				}
 				auto hideELLSprite = CCSprite::create("btn.png"_spr);
 				hideELLSprite->setScaleX(desiredSpriteScaleX);
 				hideELLSprite->setScaleY(desiredSpriteScaleY);
 				hideELLSprite->setID("hide-endlevellayer-sprite"_spr);
-				if (MyEndLevelLayer::getModBool("hideHideEndscreen")) {
-					hideELLSprite->setVisible(false);
-				}
+				hideELLSprite->setVisible(MyEndLevelLayer::getHideButtonSprite()->isVisible());
 				auto hideELLBtn = CCMenuItemSpriteExtra::create(hideELLSprite, this, menu_selector(MyEndLevelLayer::toggleMainLayerVisibility));
 				hideELLBtn->setScale(desiredButtonScale);
 				hideELLBtn->setID("hide-endlevellayer-button"_spr);
