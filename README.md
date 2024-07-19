@@ -2,6 +2,15 @@
 
 Various tweaks to the endscreen. (Formerly WholesomeEndTexts.)
 
+Features:
+* Showing attempt and jump counts in platformer levels.
+* Auto-hiding the endscreen on level completion (unfortunately, the gray background still persists.)
+* Hiding the chains or background from the endscreen
+* Enabling the bouncing transition, even if "Fast Menu" from ingame is disabled.
+* Various checks to ensure compatibility with other mods that modify the endscreen
+
+And now, for the big one...
+
 Replaces "Level Complete" texts with wholesome ones, including those of your own choice. The antithesis of DisturbingNewBests.
 
 Allows three sets of messages: a default set, custom text from the config folder, and Technoblade quotes.
