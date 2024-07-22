@@ -1,7 +1,7 @@
 # EndscreenTweaks Changelog
 ## v1.2.0
 - Rebranded to `EndscreenTweaks`, and supersede past copies of Relative's Custom Endscreen Text and my WholesomeEndTexts mod.
-- Port to 2.206, with big help from Cvolton, Fleym, and dankmeme.
+- Port to 2.206, with big help from Cvolton, Fleym, and dankmeme. Big thanks to CatXus, Aktimoose, ninXout, and hiimjustin000 for helping out with testing!
 - Several optimizations and fixes for visual errors.
 - Add a toggle for custom endscreen messages.
 - Add a button to toggle the EndLevelLayer's visibility.
