@@ -25,4 +25,4 @@ End text positioning, sizing, and wrapping by [sofabeddd](user:7976112).
 
 This mod supersedes past copies of both Relative's Custom Endscreen Text mod and my WholesomeEndTexts mod from the old index.
 
-This [Geode mod](https://geode-sdk.org) is licensed under LGPLv2. To report bugs or get help with using my mods, press the Discord button at the lower left corner.
+This [Geode mod](https://geode-sdk.org) is licensed under LGPLv2. To report bugs or get help with using my mods, press the Discord button in the lower left corner.
