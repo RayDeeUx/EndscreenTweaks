@@ -23,6 +23,7 @@ std::vector<std::string> wETMigration;
 std::string fallbackString = "We've got too many players to congratulate on level completions. Beat this level again for an actual message.";
 
 int fps = -1;
+int64_t originalOpacity = 0;
 
 bool isCompactEndscreen;
 bool isGDMO;
@@ -200,7 +201,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		}
 		if (auto mainLayer = getChildByIDRecursive("main-layer")) {
 			mainLayer->setVisible(!mainLayer->isVisible());
-			if (mainLayer->isVisible()) { this->setOpacity(255); }
+			if (mainLayer->isVisible()) { this->setOpacity(originalOpacity); }
 			else { this->setOpacity(0); }
 		}
 		if (auto hideButtonSprite = MyEndLevelLayer::getHideButtonSprite()) {
@@ -242,6 +243,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				desiredSpriteYPosition = hideButtonButton->getPositionY() - hideButtonButton->getContentHeight();
 			}
 			if (MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
+				originalOpacity = this->getOpacity();
 				this->setOpacity(0);
 				if (auto mainLayer = getChildByIDRecursive("main-layer")) {
 					mainLayer->setVisible(false);
