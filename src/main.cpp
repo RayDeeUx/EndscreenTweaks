@@ -356,7 +356,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			}
 		}
 	}
-	void applyRandomQuote(PlayLayer* playLayer, GJGameLevel* theLevel) {
+	void applyRandomQuoteAndFont(PlayLayer* playLayer, GJGameLevel* theLevel) {
 		if (auto endTextLabel = typeinfo_cast<CCLabelBMFont*>(getChildByIDRecursive("end-text"))) {
 			auto randomString = grabRandomQuote();
 			if (strcmp("Make sure to screenshot this win!", randomString) == 0) {
@@ -391,6 +391,16 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			endTextLabel->setWidth(336.f); // width of end screen minus 20px
 			
 			endTextLabel->setString(randomString, true); // set string
+
+			int64_t fontID = Mod::get()->getSettingValue<int64_t>("customFont");
+			if (fontID == -2) {
+				endTextLabel->setFntFile("chatFont.fnt");
+			} else if (fontID == -1) {
+				endTextLabel->setFntFile("goldFont.fnt");
+			} else if (fontID != 0) {
+				endTextLabel->setFntFile(fmt::format("gjFont{}.fnt", fontID).c_str());
+			}
+
 			endTextLabel->setAlignment(CCTextAlignment::kCCTextAlignmentCenter); // center text
 
 			if (isCompactEndscreen) endTextLabel->setPositionX(compactEndscreenFallbackPosition);
@@ -432,6 +442,6 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			return;
 		}
 		if (!MyEndLevelLayer::getModBool("endTexts")) { return; }
-		MyEndLevelLayer::applyRandomQuote(playLayer, theLevel);
+		MyEndLevelLayer::applyRandomQuoteAndFont(playLayer, theLevel);
 	}
 };
