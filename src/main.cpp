@@ -200,6 +200,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		}
 		if (auto mainLayer = getChildByIDRecursive("main-layer")) {
 			mainLayer->setVisible(!mainLayer->isVisible());
+			if (mainLayer->isVisible()) { this->setOpacity(255); }
+			else { this->setOpacity(0); }
 		}
 		if (auto hideButtonSprite = MyEndLevelLayer::getHideButtonSprite()) {
 			if (!MyEndLevelLayer::getModBool("hideHideEndscreen")) {
@@ -240,6 +242,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				desiredSpriteYPosition = hideButtonButton->getPositionY() - hideButtonButton->getContentHeight();
 			}
 			if (MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
+				this->setOpacity(0);
 				if (auto mainLayer = getChildByIDRecursive("main-layer")) {
 					mainLayer->setVisible(false);
 				}

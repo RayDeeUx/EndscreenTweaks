@@ -7,6 +7,7 @@ Features:
 * Auto-hiding the endscreen on level completion (unfortunately, the gray background still persists.)
 * Hiding the chains or background from the endscreen
 * Enabling the bouncing transition, even if "Fast Menu" from ingame is disabled.
+* Changing the font of the "Level Complete" text message.
 * Various checks to ensure compatibility with other mods that modify the endscreen
 
 And now, for the big one...
