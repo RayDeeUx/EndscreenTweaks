@@ -219,7 +219,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		}
 		CurrencyRewardLayer* currencyLayer = nullptr;
 		currencyLayer = getChildOfType<CurrencyRewardLayer>(this, 0);
-		if (!currencyLayer) { getChildOfType<CurrencyRewardLayer*>(getParent(), 0); }
+		if (!currencyLayer) { getChildOfType<CurrencyRewardLayer>(getParent(), 0); }
 		if (currencyLayer) { currencyLayer->setVisible(!currencyLayer->isVisible()); }
 	}
 	void applySpaceUK() {
