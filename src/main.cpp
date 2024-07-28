@@ -8,7 +8,6 @@
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/CCScheduler.hpp>
 #include <Geode/modify/EndLevelLayer.hpp>
-#include <Geode/modify/CurrencyRewardLayer.hpp>
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -272,7 +271,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		}
 		CurrencyRewardLayer* currencyLayer = nullptr;
 		currencyLayer = getChildOfType<CurrencyRewardLayer>(this, 0);
-		if (!currencyLayer) { getChildOfType<CurrencyRewardLayer*>(getParent(), 0); }
+		if (!currencyLayer) { getChildOfType<CurrencyRewardLayer>(getParent(), 0); }
 		if (currencyLayer) { currencyLayer->setVisible(false); }
 	}
 	void applyHideChainsBackground() {
