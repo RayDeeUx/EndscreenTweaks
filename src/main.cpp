@@ -8,6 +8,7 @@
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/CCScheduler.hpp>
 #include <Geode/modify/EndLevelLayer.hpp>
+#include <Geode/modify/CurrencyRewardLayer.hpp>
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -27,6 +28,8 @@ int64_t originalOpacity = 0;
 
 bool isCompactEndscreen;
 bool isGDMO;
+bool isLevelComplete = false;
+
 float compactEndscreenFallbackPosition = CCDirector::get()->getWinSize().width * 0.6f;
 
 $on_mod(Loaded) {
@@ -214,6 +217,10 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				hideELLSprite->setVisible(!hideELLSprite->isVisible());
 			}
 		}
+		CurrencyRewardLayer* currencyLayer = nullptr;
+		currencyLayer = getChildOfType<CurrencyRewardLayer>(this, 0);
+		if (!currencyLayer) { getChildOfType<CurrencyRewardLayer*>(getParent(), 0); }
+		if (currencyLayer) { currencyLayer->setVisible(false); }
 	}
 	void applySpaceUK() {
 		if (MyEndLevelLayer::getModBool("spaceUK")) {
@@ -263,6 +270,10 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				}
 			}
 		}
+		CurrencyRewardLayer* currencyLayer = nullptr;
+		currencyLayer = getChildOfType<CurrencyRewardLayer>(this, 0);
+		if (!currencyLayer) { getChildOfType<CurrencyRewardLayer*>(getParent(), 0); }
+		if (currencyLayer) { currencyLayer->setVisible(false); }
 	}
 	void applyHideChainsBackground() {
 		if (auto left = getChildByIDRecursive("chain-left")) {
