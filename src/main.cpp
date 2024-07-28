@@ -122,7 +122,7 @@ const char* grabRandomQuote() {
 
 class $modify(CCScheduler) {
 	void update(float dt) {
-		if (PlayLayer::get()) fps = (int)(CCScheduler::get()->getTimeScale() / dt) + 1;
+		fps = static_cast<int>(getTimeScale() / dt) + 1;
 		CCScheduler::update(dt);
 	}
 };
