@@ -183,7 +183,7 @@ class $modify(PlayLayer) {
 class $modify(MyCurrencyRewardLayer, CurrencyRewardLayer) {
 	bool init(int orbs, int stars, int moons, int diamonds, CurrencySpriteType demonKey, int keyCount, CurrencySpriteType shardType, int shardsCount, cocos2d::CCPoint position, CurrencyRewardType p9, float p10, float time) {
 		bool result = CurrencyRewardLayer::init(orbs, stars, moons, diamonds, demonkey, keyCount, shardType, shardsCount, position, p9, p10, time);
-		if (this->getParent()->getID() == "EndLevelLayer" && MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
+		if (this->getParent()->getID() == "EndLevelLayer" && Mod::get()->getSettingValue<bool>("hideEndLevelLayer")) {
 			this->setVisible(false);
 		}
 		return result;
