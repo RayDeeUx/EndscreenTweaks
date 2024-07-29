@@ -7,6 +7,7 @@
 */
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/CCScheduler.hpp>
+#include <Geode/modify/CurrencyRewardLayer.hpp>
 #include <Geode/modify/EndLevelLayer.hpp>
 #include <iostream>
 #include <vector>
@@ -179,6 +180,16 @@ class $modify(PlayLayer) {
 };
 */
 
+class $modify(MyCurrencyRewardLayer, CurrencyRewardLayer) {
+	bool init(int orbs, int stars, int moons, int diamonds, CurrencySpriteType demonKey, int keyCount, CurrencySpriteType shardType, int shardsCount, cocos2d::CCPoint position, CurrencyRewardType p9, float p10, float time) {
+		bool result = CurrencyRewardLayer::init(orbs, stars, moons, diamonds, demonkey, keyCount, shardType, shardsCount, position, p9, p10, time);
+		if (this->getParent()->getID() == "EndLevelLayer" && MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
+			this->setVisible(false);
+		}
+		return result;
+	}
+};
+
 class $modify(MyEndLevelLayer, EndLevelLayer) {
 	/*
 	static void onModify(auto & self)
@@ -216,10 +227,12 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				hideELLSprite->setVisible(!hideELLSprite->isVisible());
 			}
 		}
-		CurrencyRewardLayer* currencyLayer = nullptr;
-		currencyLayer = getChildOfType<CurrencyRewardLayer>(this, 0);
-		if (!currencyLayer) { getChildOfType<CurrencyRewardLayer>(getParent(), 0); }
-		if (currencyLayer) { currencyLayer->setVisible(!currencyLayer->isVisible()); }
+		auto endLevelLayerChildren = CCArrayExt<CCNode*>(this->getChildren());
+		for (CCNode* node : endLevelLayerChildren) {
+			if (auto currencyLayer = typeinfo_cast<CurrencyRewardLayer*>(node)) {
+				currencyLayer->setVisible(!currencyLayer->isVisible());
+			}
+		}
 	}
 	void applySpaceUK() {
 		if (MyEndLevelLayer::getModBool("spaceUK")) {
@@ -269,10 +282,6 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				}
 			}
 		}
-		CurrencyRewardLayer* currencyLayer = nullptr;
-		currencyLayer = getChildOfType<CurrencyRewardLayer>(this, 0);
-		if (!currencyLayer) { getChildOfType<CurrencyRewardLayer>(getParent(), 0); }
-		if (currencyLayer) { currencyLayer->setVisible(false); }
 	}
 	void applyHideChainsBackground() {
 		if (auto left = getChildByIDRecursive("chain-left")) {
