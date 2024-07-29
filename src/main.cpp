@@ -181,14 +181,13 @@ class $modify(PlayLayer) {
 */
 
 class $modify(MyCurrencyRewardLayer, CurrencyRewardLayer) {
-	bool init(int orbs, int stars, int moons, int diamonds, CurrencySpriteType demonKey, int keyCount, CurrencySpriteType shardType, int shardsCount, cocos2d::CCPoint position, CurrencyRewardType p9, float p10, float time) {
-		bool result = CurrencyRewardLayer::init(orbs, stars, moons, diamonds, demonKey, keyCount, shardType, shardsCount, position, p9, p10, time);
+	void createObjects(CurrencySpriteType type, int count, CCPoint position, float time) {
 		if (Mod::get()->getSettingValue<bool>("hideEndLevelLayer")) {
 			if (typeinfo_cast<EndLevelLayer*>(this->getParent())) {
 				this->setVisible(false);
 			}
 		}
-		return result;
+		CurrencyRewardLayer::createObjects(type, count, position, time);
 	}
 };
 
@@ -197,8 +196,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	static void onModify(auto & self)
 	{
 		// i wanted to have compat with relative's endscreen text but better safe than sorry :)
-		self.setHookPriority("EndLevelLayer::showLayer", INT32_MAX - 1);
-		self.setHookPriority("EndLevelLayer::customSetup", INT32_MAX - 1);
+		self.setHookPriority("EndLevelLayer::showLayer", INT16_MAX - 1);
+		self.setHookPriority("EndLevelLayer::customSetup", INT16_MAX - 1);
 	}
 	*/
 	bool getModBool(std::string setting) {
