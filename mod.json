@@ -89,8 +89,8 @@
 			"default": false
 		},
 		"hideEndLevelLayer": {
-			"name": "Hide EndLevelLayer",
-			"description": "Hides the EndLevelLayer, and adds an extra button to toggle the EndLevelLayer's visibility.",
+			"name": "Auto Hide EndLevelLayer",
+			"description": "Hides the EndLevelLayer on level completion. Adds an extra button to toggle the EndLevelLayer's visibility.\n\n<cy>This also hides the rewards animation on completing levels.</c>",
 			"type": "bool",
 			"default": false
 		},
@@ -118,7 +118,7 @@
 	"dependencies": [
 		{
 			"id": "geode.node-ids",
-			"version": ">=1.11.0",
+			"version": ">=1.13.1",
 			"importance": "required"
 		}
 	],

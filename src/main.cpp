@@ -181,13 +181,16 @@ class $modify(PlayLayer) {
 */
 
 class $modify(MyCurrencyRewardLayer, CurrencyRewardLayer) {
-	void createObjects(CurrencySpriteType type, int count, CCPoint position, float time) {
-		if (Mod::get()->getSettingValue<bool>("hideEndLevelLayer")) {
-			if (typeinfo_cast<EndLevelLayer*>(this->getParent())) {
-				this->setVisible(false);
-			}
-		}
-		CurrencyRewardLayer::createObjects(type, count, position, time);
+	/*
+	THIS is apparently what i need to hook
+	for hiding the CurrencyRewardLayer consistently.
+	what the hell, robtop?
+	*/
+	void update(float p0) {
+		bool isHideEndLevelLayer = Mod::get()->getSettingValue<bool>("hideEndLevelLayer");
+		bool isChildOfEndLevelLayer = typeinfo_cast<EndLevelLayer*>(this->getParent());
+		if (isHideEndLevelLayer && isChildOfEndLevelLayer) { this->setVisible(false); }
+		CurrencyRewardLayer::update(p0);
 	}
 };
 
@@ -213,7 +216,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		if (!MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
 			return;
 		}
-		if (auto mainLayer = getChildByIDRecursive("main-layer")) {
+		if (auto mainLayer = MyEndLevelLayer::getMainLayer()) {
 			mainLayer->setVisible(!mainLayer->isVisible());
 			if (mainLayer->isVisible()) { this->setOpacity(originalOpacity); }
 			else { this->setOpacity(0); }
@@ -228,87 +231,73 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				hideELLSprite->setVisible(!hideELLSprite->isVisible());
 			}
 		}
+		/*
 		auto endLevelLayerChildren = CCArrayExt<CCNode*>(this->getChildren());
 		for (CCNode* node : endLevelLayerChildren) {
 			if (auto currencyLayer = typeinfo_cast<CurrencyRewardLayer*>(node)) {
 				currencyLayer->setVisible(!currencyLayer->isVisible());
 			}
 		}
+		*/
 	}
 	void applySpaceUK() {
 		if (MyEndLevelLayer::getModBool("spaceUK")) {
 			auto levelCompleteText = getChildByIDRecursive("level-complete-text");
 			if (levelCompleteText == nullptr) { levelCompleteText = getChildByIDRecursive("practice-complete-text"); } // grab practice mode complete text as fallback node
-			if (isCompactEndscreen) {
-				levelCompleteText->setVisible(true);
-				levelCompleteText->setPositionX(compactEndscreenFallbackPosition);
+			if (levelCompleteText) {
+				if (isCompactEndscreen) {
+					levelCompleteText->setVisible(true);
+					levelCompleteText->setPositionX(compactEndscreenFallbackPosition);
+				}
+				levelCompleteText->setScale(0.8f * (940.f / 1004.f)); // original scale of this node is 0.8 according to logs. hardcoding it here in case other mods decide to scale it to whatever else
 			}
-			levelCompleteText->setScale(0.8f * (940.f / 1004.f)); // original scale of this node is 0.8 according to logs. hardcoding it here in case other mods decide to scale it to whatever else
 		}
 	}
 	void applyHideEndLevelLayerHideBtn() {
-		if (auto hideLayerMenu = getChildByIDRecursive("hide-layer-menu")) {
-			float desiredButtonScale = 0.f;
-			float desiredSpriteScaleX = 0.f;
-			float desiredSpriteScaleY = 0.f;
-			float desiredSpriteYPosition = 0.f;
-			if (auto hideButtonSprite = MyEndLevelLayer::getHideButtonSprite()) {
-				if (MyEndLevelLayer::getModBool("hideHideEndscreen") || MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
-					hideButtonSprite->setVisible(false); //hide sprite, not the button itself
-				}
-				auto hideButtonButton = hideLayerMenu->getChildByIDRecursive("hide-button");
-				desiredButtonScale = hideButtonButton->getScale();
-				desiredSpriteScaleX = hideButtonSprite->getScaleX();
-				desiredSpriteScaleY = hideButtonSprite->getScaleY();
-				desiredSpriteYPosition = hideButtonButton->getPositionY() - hideButtonButton->getContentHeight();
-			}
-			if (MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
-				originalOpacity = this->getOpacity();
-				this->setOpacity(0);
-				if (auto mainLayer = getChildByIDRecursive("main-layer")) {
-					mainLayer->setVisible(false);
-				}
-				auto hideELLSprite = CCSprite::create("btn.png"_spr);
-				hideELLSprite->setScaleX(desiredSpriteScaleX);
-				hideELLSprite->setScaleY(desiredSpriteScaleY);
-				hideELLSprite->setID("hide-endlevellayer-sprite"_spr);
-				hideELLSprite->setVisible(MyEndLevelLayer::getHideButtonSprite()->isVisible());
-				auto hideELLBtn = CCMenuItemSpriteExtra::create(hideELLSprite, this, menu_selector(MyEndLevelLayer::toggleMainLayerVisibility));
-				hideELLBtn->setScale(desiredButtonScale);
-				hideELLBtn->setID("hide-endlevellayer-button"_spr);
-				hideELLBtn->setPositionY(desiredSpriteYPosition);
-				if (auto hideLayerCCMenu = typeinfo_cast<CCMenu*>(hideLayerMenu)) {
-					hideLayerCCMenu->addChild(hideELLBtn);
-					hideLayerCCMenu->updateLayout(); // in case there is a layout in future node IDs updates
-				}
-			}
+		auto mainLayer = MyEndLevelLayer::getMainLayer();
+		auto hideLayerMenu = typeinfo_cast<CCMenu*>(getChildByIDRecursive("hide-layer-menu"));
+		auto hideButtonSprite = MyEndLevelLayer::getHideButtonSprite();
+		auto hideButtonButton = hideButtonSprite->getParent();
+		if (!hideLayerMenu || !mainLayer || !hideButtonSprite || !hideButtonButton) { return; }
+		if (MyEndLevelLayer::getModBool("hideHideEndscreen") || MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
+			hideButtonSprite->setVisible(false);
+		}
+		float desiredSpriteYPosition = hideButtonButton->getPositionY() - hideButtonButton->getContentHeight();
+		if (MyEndLevelLayer::getModBool("hideEndLevelLayer")) {
+			originalOpacity = this->getOpacity();
+			this->setOpacity(0);
+			mainLayer->setVisible(false);
+			auto hideELLSprite = CCSprite::create("btn.png"_spr);
+			hideELLSprite->setScaleX(hideButtonSprite->getScaleX());
+			hideELLSprite->setScaleY(hideButtonSprite->getScaleY());
+			hideELLSprite->setID("hide-endlevellayer-sprite"_spr);
+			hideELLSprite->setVisible(MyEndLevelLayer::getHideButtonSprite()->isVisible());
+			auto hideELLBtn = CCMenuItemSpriteExtra::create(hideELLSprite, this, menu_selector(MyEndLevelLayer::toggleMainLayerVisibility));
+			hideELLBtn->setScale(hideButtonButton->getScale());
+			hideELLBtn->setPositionY(hideButtonButton->getPositionY() - hideButtonButton->getContentHeight());
+			hideELLBtn->setID("hide-endlevellayer-button"_spr);
+			hideLayerMenu->addChild(hideELLBtn);
+			hideLayerMenu->updateLayout(); // in case there is a layout in future node IDs updates
 		}
 	}
 	void applyHideChainsBackground() {
-		if (auto left = getChildByIDRecursive("chain-left")) {
-			if (MyEndLevelLayer::getModBool("hideChains")) {
-				left->setVisible(false);
-			}
+		if (MyEndLevelLayer::getModBool("hideChains")) {
+			if (auto left = getChildByIDRecursive("chain-left")) { left->setVisible(false); }
+			if (auto right = getChildByIDRecursive("chain-right")) { right->setVisible(false); }
 		}
-		if (auto right = getChildByIDRecursive("chain-right")) {
-			if (MyEndLevelLayer::getModBool("hideChains")) {
-				right->setVisible(false);
-			}
-		}
-		if (auto bg = getChildByIDRecursive("background")) {
-			if (MyEndLevelLayer::getModBool("hideBackground")) {
-				bg->setVisible(false);
-			}
+		if (MyEndLevelLayer::getModBool("hideBackground")) {
+			if (auto bg = getChildByIDRecursive("background")) { bg->setVisible(false); }
 		}
 	}
 	void applyPlatAttemptsAndJumps(GJGameLevel* theLevel) {
 		isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
 		if (MyEndLevelLayer::getModBool("platAttemptsAndJumps") && theLevel->isPlatformer()) {
-			auto mainLayer = getChildByID("main-layer");
+			auto mainLayer = MyEndLevelLayer::getMainLayer();
 			if (mainLayer == nullptr) { return; }
 			auto playLayer = PlayLayer::get();
 			if (playLayer == nullptr) { return; }
 			auto timeLabel = getChildByIDRecursive("time-label");
+			if (timeLabel == nullptr) { return; }
 			auto pointsLabel = getChildByIDRecursive("points-label");
 			if (!isCompactEndscreen) { timeLabel->setPositionY(timeLabel->getPositionY() - 20); }
 			if (pointsLabel) { pointsLabel->setPositionY(timeLabel->getPositionY() - 18); }
@@ -333,7 +322,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		if (isGDMO && theLevel->m_coins == 0 && Loader::get()->getLoadedMod("maxnu.gd_mega_overlay")->getSavedValue<bool>("level/endlevellayerinfo/enabled")) {
 			/* 
 				gdmo does this silly thing where they add children without giving them node IDs and i need to release this mod ASAP so please forgive me for using getobjectatindex but getchildoftype doesnt work for this use case because everything in endscreen layer is a child of some other cclayer smh
-				auto mainLayer = getChildByID("main-layer");
+				auto mainLayer = MyEndLevelLayer::getMainLayer();
 				if (mainLayer == nullptr) return;
 				auto mainLayerChildren = mainLayer->getChildren();
 				auto attemptsLabel = getChildByIDRecursive("attempts-label");
@@ -394,13 +383,13 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				#ifdef GEODE_IS_WINDOWS
 					randomString = "Press \"Win + Shift + S\'\' or \"PrtSc\'\' to screenshot this win!";
 				#endif
-			} else if (strcmp("\'\'First try, part two!\"", randomString) == 0) {
+			} else if (strcmp(R"(''First try, part two!")", randomString) == 0) {
 				std::string temp = fmt::format("\'\'First try, part {}!\"", playLayer->m_attempts);
-				if (playLayer->m_attempts == 1) { temp = "\'\'First try!\""; }
+				if (playLayer->m_attempts == 1) { temp = R"(''First try!")"; }
 				randomString = temp.c_str();
-			} else if (strcmp("\'\'As you can see, my FPS is around 18 or so, which means we can definitely take this further.\"", randomString) == 0) {
+			} else if (strcmp(R"(''As you can see, my FPS is around 18 or so, which means we can definitely take this further.")", randomString) == 0) {
 				randomString = fmt::format("\'\'As you can see, my FPS is around {} or so, which means we can definitely take this further.\"", fps).c_str();
-			} else if (strcmp("\'\'If you wish to defeat me, train for another 100 years.\"", randomString) == 0) {
+			} else if (strcmp(R"(''If you wish to defeat me, train for another 100 years.")", randomString) == 0) {
 				randomString = fmt::format("\'\'If you wish to defeat me, train for another {} years.\"", std::max(100, (playLayer->m_jumps * 100))).c_str();
 			} else if (strcmp("Good luck on that statgrinding session!", randomString) == 0 && theLevel->m_stars.value() != 0) {
 				if (theLevel->isPlatformer()) { randomString = "Good luck on that moongrinding session!"; }
@@ -431,6 +420,10 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			if (isCompactEndscreen) endTextLabel->setPositionX(compactEndscreenFallbackPosition);
 			if (strcmp("", randomString) == 0) { endTextLabel->setString(fallbackString.c_str(), true); } // fallback string
 		}
+	}
+	CCNode* getMainLayer() {
+		if (auto mainLayer = getChildByIDRecursive("main-layer")) { return mainLayer; }
+		return nullptr;
 	}
 	void showLayer(bool p0) {
 		if (!MyEndLevelLayer::getModBool("enabled")) {
