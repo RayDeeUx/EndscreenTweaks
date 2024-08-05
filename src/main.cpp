@@ -412,7 +412,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			} else if (fontID == -1) {
 				endTextLabel->setFntFile("goldFont.fnt");
 			} else if (fontID != 0) {
-				endTextLabel->setFntFile(fmt::format("gjFont{}.fnt", fontID).c_str());
+				endTextLabel->setFntFile(fmt::format("gjFont{:02d}.fnt", fontID).c_str());
 			}
 
 			endTextLabel->setAlignment(CCTextAlignment::kCCTextAlignmentCenter); // center text
