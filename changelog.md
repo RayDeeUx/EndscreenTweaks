@@ -1,4 +1,7 @@
 # EndscreenTweaks Changelog
+## v1.3.0
+- Add config directory shortcut button.
+- Add "Fluked From %" options for Classic levels. (suggested by [yolodomo](https://discord.com/users/708984489283682327))
 ## v1.2.1
 - Fix a crash from selecting Fonts 1 through 9 (even though they're all objectively ugly). Thanks again, hiimjustin000!
 ## v1.2.0

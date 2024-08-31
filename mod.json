@@ -5,7 +5,7 @@
 		"android": "2.206",
 		"win": "2.206"
 	},
-	"version": "v1.2.1",
+	"version": "v1.3.0",
 	"id": "raydeeux.endscreentweaks",
 	"name": "EndscreenTweaks",
 	"developers": ["RayDeeUx", "sofabeddd", "Relative"],
@@ -17,6 +17,11 @@
 			"description": "Toggles the mod.",
 			"type": "bool",
 			"default": true
+		},
+		"configdir": {
+			"name": "Click me to open the Config Directory!",
+			"desc": "<cy>(Hopefully.)</c>\nThis setting does literally nothing new except being a button that acts as a shortcut to open the config directory for this mod (which is kind of important for using this mod properly, because this is where you will store and edit your custom endscreen texts), because the legendary developers in the Geode Team themselves forgot to add a shortcut button that would have done this exact same thing, and I have gotten far too many folks (rightfully) asking me to find the config directory when using some of my other mods, and I hate repeating the same things over and over again, and I don't know if the next major update for Geode will also repeat this mistake where HJfod forgets to include a config directory shortcut button, so this setting and this button are here for extra insurance, so please enjoy this extra button, I guess. Anyway, by the time you're finished reading this, your device should be finished with opening the config directory; press \"Aight\" to close this window.",
+			"type": "custom"
 		},
 		"endTexts": {
 			"name": "Enable Endscreen Texts",
@@ -66,7 +71,31 @@
 		},
 		"platAttemptsAndJumps": {
 			"name": "Plat. Attempts + Jumps",
-			"description": "Shows your attempt and jump count on the Level Complete screen when completing Platformer levels.",
+			"description": "Shows your attempt and jump count on the \"Level Complete\" screen when completing Platformer levels.",
+			"type": "bool",
+			"default": false
+		},
+		"classicFlukedFrom": {
+			"name": "Classic \"Fluked From\" %",
+			"description": "<cl>Original idea by yolodomo.</c>\n\nShows your last best percentage on the \"Level Complete\" screen when completing Classic levels.\n\n<cy>To disable, set this setting to \"[Disabled]\". Otherwise, choose a prefix for this label to enable this feature.</c>\n\n<cr>I am not responsible if some of these prefix options will overlap past the borders of the endscreen or the level completion rewards; go experiment on your own.</c>",
+			"type": "string",
+			"default": "[Disabled]",
+			"one-of": [
+				"[Disabled]",
+				"Fluked From",
+				"Last %",
+				"Last Percent",
+				"Prev. Best",
+				"Previous Best",
+				"Record Before Completion",
+				"Furthest Death Before Completion",
+				"Worst Fail",
+				"Prior Record"
+			]
+		},
+		"dontShowFlukeIfZero": {
+			"name": "Don't Show \"Fluked From\" If 0%",
+			"description": "Skips showing your prior best percentage if the prior best was 0%.",
 			"type": "bool",
 			"default": false
 		},

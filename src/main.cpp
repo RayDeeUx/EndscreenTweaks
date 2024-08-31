@@ -1,10 +1,3 @@
-/*
-#ifdef GEODE_IS_WINDOWS
-#include <Geode/modify/PlayerObject.hpp>
-#elif __APPLE__
-#include <Geode/modify/GJBaseGameLayer.hpp>
-#endif
-*/
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/CCScheduler.hpp>
 #include <Geode/modify/CurrencyRewardLayer.hpp>
@@ -15,6 +8,7 @@
 #include <algorithm>
 #include <random>
 #include <regex>
+#include "Settings.hpp"
 
 using namespace geode::prelude;
 
@@ -25,6 +19,7 @@ std::string fallbackString = "We've got too many players to congratulate on leve
 
 int fps = -1;
 int64_t originalOpacity = 0;
+int lastFlukedPercent = 0;
 
 bool isCompactEndscreen;
 bool isGDMO;
@@ -33,6 +28,7 @@ bool isLevelComplete = false;
 float compactEndscreenFallbackPosition = CCDirector::get()->getWinSize().width * 0.6f;
 
 $on_mod(Loaded) {
+	Mod::get()->addCustomSetting<MySettingValue>("configdir", "none");
 	auto pathDefault = (Mod::get()->getResourcesDir() / "default.txt");
 	std::ifstream file(pathDefault);
 	std::string placeHolder;
@@ -127,58 +123,19 @@ class $modify(CCScheduler) {
 	}
 };
 
-/*
-int attempts;
-int jumps = 0;
-
-#ifdef GEODE_IS_WINDOWS
-class $modify(PlayerObject) {
-	void incrementJumps() {
-		PlayerObject::incrementJumps();
-		jumps += 1;
+class $modify(MyPlayLayer, PlayLayer) {
+	void levelComplete() {
+		if (!m_level) { return PlayLayer::levelComplete(); }
+		lastFlukedPercent = this->m_level->m_normalPercent.value();
+		if (Mod::get()->getSettingValue<bool>("dontShowFlukeIfZero") && lastFlukedPercent == 0) { lastFlukedPercent = 200; }
+		// set it to an impossibly high value because i am too lazy to write yet another compound boolean statement
+		PlayLayer::levelComplete();
 	}
-};
-#elif __APPLE__
-class $modify(GJBaseGameLayer) {
-	void toggleDualMode(GameObject* p0, bool p1, PlayerObject* p2, bool p3) {
-		GJBaseGameLayer::toggleDualMode(p0, p1, p2, p3);
-		if (PlayLayer::get()) {
-			attempts += 1;
-		} else {
-			attempts = 0;
-		}
-	}
-};
-#endif
-
-class $modify(PlayLayer) {
 	void onQuit() {
-		PlayLayer::onQuit(); // call the original function
-		jumps = 0;
+		lastFlukedPercent = 0;
+		PlayLayer::onQuit();
 	}
-	void fullReset() {
-		PlayLayer::fullReset(); // call the original function
-		attempts = 1;
-		jumps = 0;
-	}
-#ifndef __APPLE__
-	void updateAttempts() {
-		PlayLayer::updateAttempts();
-		attempts += 1;
-	}
-#endif
-	void onEnterTransitionDidFinish() {
-		PlayLayer::onEnterTransitionDidFinish();
-		attempts = 1;
-	}
-#ifndef GEODE_IS_WINDOWS
-	void incrementJumps() {
-		PlayLayer::incrementJumps();
-		jumps += 1;
-	}
-#endif
 };
-*/
 
 class $modify(MyCurrencyRewardLayer, CurrencyRewardLayer) {
 	/*
@@ -195,16 +152,11 @@ class $modify(MyCurrencyRewardLayer, CurrencyRewardLayer) {
 };
 
 class $modify(MyEndLevelLayer, EndLevelLayer) {
-	/*
-	static void onModify(auto & self)
-	{
-		// i wanted to have compat with relative's endscreen text but better safe than sorry :)
-		self.setHookPriority("EndLevelLayer::showLayer", INT16_MAX - 1);
-		self.setHookPriority("EndLevelLayer::customSetup", INT16_MAX - 1);
-	}
-	*/
 	bool getModBool(std::string setting) {
 		return Mod::get()->getSettingValue<bool>(setting);
+	}
+	std::string getModString(std::string setting) {
+		return Mod::get()->getSettingValue<std::string>(setting);
 	}
 	CCSprite* getHideButtonSprite() {
 		if (auto hideButtonSprite = typeinfo_cast<CCSprite*>(getChildByIDRecursive("hide-button")->getChildren()->objectAtIndex(0))) {
@@ -289,13 +241,14 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			if (auto bg = getChildByIDRecursive("background")) { bg->setVisible(false); }
 		}
 	}
-	void applyPlatAttemptsAndJumps(GJGameLevel* theLevel) {
+	void applyPlatAttemptsAndJumpsOrFlukedFromPercent(GJGameLevel* theLevel) {
 		isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
-		if (MyEndLevelLayer::getModBool("platAttemptsAndJumps") && theLevel->isPlatformer()) {
-			auto mainLayer = MyEndLevelLayer::getMainLayer();
-			if (mainLayer == nullptr) { return; }
-			auto playLayer = PlayLayer::get();
-			if (playLayer == nullptr) { return; }
+		auto mainLayer = MyEndLevelLayer::getMainLayer();
+		if (mainLayer == nullptr) { return; }
+		auto playLayer = PlayLayer::get();
+		if (playLayer == nullptr) { return; }
+		bool isPlat = theLevel->isPlatformer();
+		if (MyEndLevelLayer::getModBool("platAttemptsAndJumps") && isPlat) {
 			auto timeLabel = getChildByIDRecursive("time-label");
 			if (timeLabel == nullptr) { return; }
 			auto pointsLabel = getChildByIDRecursive("points-label");
@@ -314,6 +267,19 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			jumpsLabel->setPositionY(timeLabel->getPositionY() + 20);
 			jumpsLabel->setID("jumps-label"_spr);
 			mainLayer->addChild(jumpsLabel);
+			mainLayer->updateLayout();
+		} else if (MyEndLevelLayer::getModString("classicFlukedFrom") != "[Disabled]" && !isPlat && !playLayer->m_isTestMode && !playLayer->m_isPracticeMode && lastFlukedPercent < 100) {
+			auto timeLabel = getChildByIDRecursive("time-label");
+			if (timeLabel == nullptr) { return; }
+			auto jumpsLabel = getChildByIDRecursive("jumps-label");
+			if (jumpsLabel == nullptr) { return; }
+			jumpsLabel->setPositionY(jumpsLabel->getPositionY() + 7.0f);
+			timeLabel->setPositionY(timeLabel->getPositionY() + 14.0f);
+			auto flukedFromLabel = cocos2d::CCLabelBMFont::create(fmt::format("{}: {}%", getModString("classicFlukedFrom"), lastFlukedPercent).c_str(), "goldFont.fnt");
+			flukedFromLabel->setPosition(jumpsLabel->getPositionX(), timeLabel->getPositionY() - 16.0f);
+			flukedFromLabel->setScale(timeLabel->getScale());
+			flukedFromLabel->setID("fluked-from-label"_spr);
+			mainLayer->addChild(flukedFromLabel);
 			mainLayer->updateLayout();
 		}
 	}
@@ -435,7 +401,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			MyEndLevelLayer::applyHideEndLevelLayerHideBtn();
 			MyEndLevelLayer::applyHideChainsBackground();
 			MyEndLevelLayer::applySpaceUK();
-			MyEndLevelLayer::applyPlatAttemptsAndJumps(theLevel);
+			MyEndLevelLayer::applyPlatAttemptsAndJumpsOrFlukedFromPercent(theLevel);
 			MyEndLevelLayer::applyGDMOCompatShowLayer(theLevel);
 		}
 	}
