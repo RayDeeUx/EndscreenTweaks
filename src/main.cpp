@@ -13,6 +13,7 @@
 using namespace geode::prelude;
 
 std::vector<std::string> quotes;
+std::vector<std::string> customQuotes;
 std::vector<std::string> wETMigration;
 
 std::string fallbackString = "We've got too many players to congratulate on level completions. Beat this level again for an actual message.";
@@ -106,14 +107,15 @@ migration failed, womp womp)";
 				str = fmt::format("- {} -", str);
 			}
 			quotes.push_back(str);
+			customQuotes.push_back(str);
 		} // technically i can write two one-time use boolean variables to allow people to toggle these things on and off as they please without the quotes adding themselves multiple times into the vector, but i'd rather add the "restart required" barrier just to be extra safe
 	}
 }
 
-const char* grabRandomQuote() {
+const char* grabRandomQuote(std::vector<std::string> vector = quotes) {
 	std::mt19937 randomSeed(std::random_device{}());
-	std::shuffle(quotes.begin(), quotes.end(), randomSeed);
-	return quotes.front().c_str();
+	std::shuffle(vector.begin(), vector.end(), randomSeed);
+	return vector.front().c_str();
 }
 
 class $modify(CCScheduler) {
@@ -338,8 +340,9 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	}
 	void applyRandomQuoteAndFont(PlayLayer* playLayer, GJGameLevel* theLevel) {
 		if (auto endTextLabel = typeinfo_cast<CCLabelBMFont*>(getChildByIDRecursive("end-text"))) {
-			auto randomString = grabRandomQuote();
-			if (strcmp("Make sure to screenshot this win!", randomString) == 0) {
+			std::string randomString = grabRandomQuote();
+			if (!customQuotes.empty() && getModBool("customTextsOnly")) randomString = grabRandomQuote(customQuotes);
+			if ("Make sure to screenshot this win!" == randomString) {
 				#ifdef GEODE_IS_MACOS
 					randomString = "Press Command + Shift + 3 to screenshot this win!";
 				#endif
@@ -349,28 +352,28 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				#ifdef GEODE_IS_WINDOWS
 					randomString = "Press \"Win + Shift + S\'\' or \"PrtSc\'\' to screenshot this win!";
 				#endif
-			} else if (strcmp(R"(''First try, part two!")", randomString) == 0) {
-				std::string temp = fmt::format("\'\'First try, part {}!\"", playLayer->m_attempts);
+			} else if (R"(''First try, part two!")" == randomString) {
+				std::string temp = fmt::format(R"(''First try, part {}!")", playLayer->m_attempts);
 				if (playLayer->m_attempts == 1) { temp = R"(''First try!")"; }
-				randomString = temp.c_str();
-			} else if (strcmp(R"(''As you can see, my FPS is around 18 or so, which means we can definitely take this further.")", randomString) == 0) {
-				randomString = fmt::format("\'\'As you can see, my FPS is around {} or so, which means we can definitely take this further.\"", fps).c_str();
-			} else if (strcmp(R"(''If you wish to defeat me, train for another 100 years.")", randomString) == 0) {
-				randomString = fmt::format("\'\'If you wish to defeat me, train for another {} years.\"", std::max(100, (playLayer->m_jumps * 100))).c_str();
-			} else if (strcmp("Good luck on that statgrinding session!", randomString) == 0 && theLevel->m_stars.value() != 0) {
+				randomString = temp;
+			} else if (R"(''As you can see, my FPS is around 18 or so, which means we can definitely take this further.")" == randomString) {
+				randomString = fmt::format(R"(''As you can see, my FPS is around {} or so, which means we can definitely take this further.")", fps);
+			} else if (R"(''If you wish to defeat me, train for another 100 years.")" == randomString) {
+				randomString = fmt::format(R"(''If you wish to defeat me, train for another {} years.")", std::max(100, (playLayer->m_jumps * 100)));
+			} else if ("Good luck on that statgrinding session!" == randomString && theLevel->m_stars.value() != 0) {
 				if (theLevel->isPlatformer()) { randomString = "Good luck on that moongrinding session!"; }
 				else { randomString = "Good luck on that stargrinding session!"; }
 			}
 		
-			float scale = 0.36f * 228.f / strlen(randomString);
-			if (strcmp("BELIEVE", randomString) == 0) { scale = 1.5f; }
-			else if (strcmp("endTextLabel->setString(randomString.c_str(), true);", randomString) == 0) { scale = 0.4f;}
+			float scale = 0.36f * 228.f / strlen(randomString.c_str());
+			if ("BELIEVE" == randomString) { scale = 1.5f; }
+			else if ("endTextLabel->setString(randomString.c_str(), true);" == randomString) { scale = 0.4f; }
 			else if (scale > Mod::get()->getSettingValue<double>("maxScale")) { scale = Mod::get()->getSettingValue<double>("maxScale"); }
 
 			endTextLabel->setScale(scale);
 			endTextLabel->setWidth(336.f); // width of end screen minus 20px
 			
-			endTextLabel->setString(randomString, true); // set string
+			endTextLabel->setString(randomString.c_str(), true); // set string
 
 			int64_t fontID = Mod::get()->getSettingValue<int64_t>("customFont");
 			if (fontID == -2) {
@@ -384,7 +387,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			endTextLabel->setAlignment(CCTextAlignment::kCCTextAlignmentCenter); // center text
 
 			if (isCompactEndscreen) endTextLabel->setPositionX(compactEndscreenFallbackPosition);
-			if (strcmp("", randomString) == 0) { endTextLabel->setString(fallbackString.c_str(), true); } // fallback string
+			if (randomString.empty()) { endTextLabel->setString(fallbackString.c_str(), true); } // fallback string
 		}
 	}
 	CCNode* getMainLayer() {
