@@ -29,7 +29,7 @@ bool isLevelComplete = false;
 float compactEndscreenFallbackPosition = CCDirector::get()->getWinSize().width * 0.6f;
 
 $on_mod(Loaded) {
-	Mod::get()->addCustomSetting<MySettingValue>("configdir", "none");
+	Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
 	auto pathDefault = (Mod::get()->getResourcesDir() / "default.txt");
 	std::ifstream file(pathDefault);
 	std::string placeHolder;
