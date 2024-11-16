@@ -415,7 +415,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		auto playLayer = PlayLayer::get();
 		if (playLayer == nullptr) { return; }
 		auto theLevel = playLayer->m_level;
-		if (auto completeMessage = typeinfo_cast<TextArea*>(getChildByIDRecursive("complete-message"))) {
+		/*
+  		if (auto completeMessage = typeinfo_cast<TextArea*>(getChildByIDRecursive("complete-message"))) {
 			// ensure that no one's up to any funny business by hardcoding the scale and contents of vanilla complete messages 
 			completeMessage->setScale(0.55f);
 			if (getChildByIDRecursive("level-complete-text")) {
@@ -428,6 +429,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			if (isCompactEndscreen) completeMessage->setPositionX(compactEndscreenFallbackPosition);
 			return;
 		}
+  		*/
 		if (!MyEndLevelLayer::getModBool("endTexts")) { return; }
 		MyEndLevelLayer::applyRandomQuoteAndFont(playLayer, theLevel);
 	}
