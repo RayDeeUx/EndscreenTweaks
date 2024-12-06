@@ -7,9 +7,15 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 project(EndscreenTweaks VERSION 1.0.0)
 
 add_library(${PROJECT_NAME} SHARED
+    src/PlayLayer.cpp
+    src/CCScheduler.cpp
+    src/EndLevelLayer.cpp
+    src/CurrencyRewardLayer.cpp
     src/main.cpp
     src/Settings.cpp
     src/Settings.hpp
+    src/Manager.cpp
+    src/Manager.hpp
     # Add your cpp files here
 )
 
