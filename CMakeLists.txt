@@ -9,6 +9,7 @@ project(EndscreenTweaks VERSION 1.0.0)
 add_library(${PROJECT_NAME} SHARED
     src/PlayLayer.cpp
     src/CCScheduler.cpp
+    src/FLAlertLayer.cpp
     src/EndLevelLayer.cpp
     src/CurrencyRewardLayer.cpp
     src/main.cpp
