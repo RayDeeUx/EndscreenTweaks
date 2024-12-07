@@ -12,11 +12,6 @@
 using namespace geode::prelude;
 
 class $modify(MyEndLevelLayer, EndLevelLayer) {
-	static const char* grabRandomQuote(std::vector<std::string> vector = Manager::getSharedInstance()->quotes) {
-		std::mt19937 randomSeed(std::random_device{}());
-		std::shuffle(vector.begin(), vector.end(), randomSeed);
-		return vector.front().c_str();
-	}
 	CCSprite* getHideButtonSprite() {
 		return typeinfo_cast<CCSprite*>(getChildByIDRecursive("hide-button")->getChildren()->objectAtIndex(0));
 	}
@@ -183,12 +178,39 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		}
 	}
 	*/
+	void applyCustomLevelCompleteText(const std::string_view matchPlayLayer) {
+		if (!getModBool("customLevelCompleteText") || !getModBool("enabled")) return;
+		const auto lvlCompleteText = typeinfo_cast<CCSprite*>(getChildByIDRecursive("level-complete-text"));
+		if (!lvlCompleteText) return;
+		Manager* manager = managerMacro;
+		auto origOpacity = lvlCompleteText->getOpacity();
+		lvlCompleteText->setOpacity(0);
+		if (getModString("alsoReplacePlayLayerLCT") == "Separate From EndLevelLayer") manager->generateNewSprites(getModString("customLCTMode"));
+		if (manager->chosenMode == "Images" && !manager->sharedReplacementSprite.empty()) {
+			CCSprite* newSprite = CCSprite::create(manager->sharedReplacementSprite.c_str());
+			lvlCompleteText->addChild(newSprite);
+			lvlCompleteText->updateLayout();
+			newSprite->setPosition(lvlCompleteText->getContentSize() / 2.f);
+			newSprite->setID("custom-level-complete-sprite-endlevellayer"_spr);
+		} else if (manager->chosenMode == "Oxygene One" && !manager->sharedReplacementLabel.empty()) {
+			CCLabelBMFont* newLabel = CCLabelBMFont::create(manager->sharedReplacementLabel.c_str(), "levelCompleteFont.fnt"_spr);
+			newLabel->setExtraKerning(5);
+			newLabel->limitLabelWidth(380.f, 1.0f, 0.25f);
+			lvlCompleteText->addChild(newLabel);
+			lvlCompleteText->updateLayout();
+			newLabel->setPosition(lvlCompleteText->getContentSize() / 2.f);
+			newLabel->setID("custom-level-complete-label-endlevellayer"_spr);
+		} else {
+			lvlCompleteText->setOpacity(origOpacity);
+			return log::info("failed. manager->chosenMode: {}", manager->chosenMode);
+		}
+	}
 	void applyRandomQuoteAndFont(PlayLayer* playLayer, GJGameLevel* theLevel) {
 		auto endTextLabel = typeinfo_cast<CCLabelBMFont*>(getChildByIDRecursive("end-text"));
 		if (!endTextLabel) return;
 		Manager* manager = managerMacro;
-		std::string randomString = MyEndLevelLayer::grabRandomQuote();
-		if (!manager->customQuotes.empty() && getModBool("customTextsOnly")) randomString = MyEndLevelLayer::grabRandomQuote(manager->customQuotes);
+		std::string randomString = manager->grabRandomString();
+		if (!manager->customQuotes.empty() && getModBool("customTextsOnly")) randomString = manager->grabRandomString(manager->customQuotes);
 		if ("Make sure to screenshot this win!" == randomString) {
 			#ifdef GEODE_IS_MACOS
 				randomString = "Press Command + Shift + 3 to screenshot this win!";
@@ -255,5 +277,6 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		auto playLayer = PlayLayer::get();
 		if (!playLayer) return;
 		if (getModBool("endTexts")) MyEndLevelLayer::applyRandomQuoteAndFont(playLayer, playLayer->m_level);
+		if (getModBool("customLevelCompleteText")) MyEndLevelLayer::applyCustomLevelCompleteText(getModString("alsoReplacePlayLayerLCT"));
 	}
 };
