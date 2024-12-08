@@ -179,13 +179,13 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	}
 	*/
 	void applyCustomLevelCompleteText(const std::string_view matchPlayLayer) {
-		if (!getModBool("customLevelCompleteText") || !getModBool("enabled")) return;
+		if (!getModBool("customLevelCompleteText") || !getModBool("enabled") || !m_playLayer) return;
 		const auto lvlCompleteText = typeinfo_cast<CCSprite*>(getChildByIDRecursive("level-complete-text"));
 		if (!lvlCompleteText) return;
 		Manager* manager = managerMacro;
 		auto origOpacity = lvlCompleteText->getOpacity();
 		lvlCompleteText->setOpacity(0);
-		if (getModString("alsoReplacePlayLayerLCT") == "Separate From EndLevelLayer") manager->generateNewSprites(getModString("customLCTMode"));
+		if (matchPlayLayer == "Separate From EndLevelLayer") manager->generateNewSprites(getModString("customLCTMode"), m_playLayer);
 		if (manager->chosenMode == "Images" && !manager->sharedReplacementSprite.empty()) {
 			CCSprite* newSprite = CCSprite::create(manager->sharedReplacementSprite.c_str());
 			lvlCompleteText->addChild(newSprite);

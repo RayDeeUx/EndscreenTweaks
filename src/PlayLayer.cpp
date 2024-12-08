@@ -38,7 +38,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 		if (!toModify) return;
 		std::string customLCTModePlayLayer = getModString("customLCTMode");
 		bool lctReplaced = false;
-		manager->generateNewSprites(customLCTModePlayLayer);
+		manager->generateNewSprites(customLCTModePlayLayer, this);
 		// "omg ery why not just choose a mode first???"
 		// assigning it to manager = easier "shared replacement" with EndLevelLayer later
 		if (getModString("alsoReplacePlayLayerLCT") == "Disabled") return;
