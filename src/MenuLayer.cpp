@@ -1,5 +1,4 @@
 #include <Geode/modify/MenuLayer.hpp>
-#include <vector>
 #include "Manager.hpp"
 
 #define managerMacro Manager::getSharedInstance()
