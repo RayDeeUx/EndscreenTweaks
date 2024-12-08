@@ -188,12 +188,22 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		if (matchPlayLayer == "Separate From EndLevelLayer") manager->generateNewSprites(getModString("customLCTMode"), m_playLayer);
 		if (manager->chosenMode == "Images" && !manager->sharedReplacementSprite.empty()) {
 			CCSprite* newSprite = CCSprite::create(manager->sharedReplacementSprite.c_str());
+			if (!newSprite) {
+				lvlCompleteText->setOpacity(origOpacity);
+				return log::info("tried replacing the sprite, but newly created sprite was null? attempted image: {}", manager->sharedReplacementSprite);
+			}
 			lvlCompleteText->addChild(newSprite);
 			lvlCompleteText->updateLayout();
 			newSprite->setPosition(lvlCompleteText->getContentSize() / 2.f);
 			newSprite->setID("custom-level-complete-sprite-endlevellayer"_spr);
+			if (getModBool("scaleCustomLevelCompleteImages") && newSprite->getContentWidth() > 400) newSprite->setScaleX(400.f / newSprite->getContentWidth());
+			if (getModBool("scaleCustomLevelCompleteImages") && newSprite->getContentHeight() > 50) newSprite->setScaleY(50.f / newSprite->getContentHeight());
 		} else if (manager->chosenMode == "Oxygene One" && !manager->sharedReplacementLabel.empty()) {
 			CCLabelBMFont* newLabel = CCLabelBMFont::create(manager->sharedReplacementLabel.c_str(), "levelCompleteFont.fnt"_spr);
+			if (!newLabel) {
+				lvlCompleteText->setOpacity(origOpacity);
+				return log::info("tried replacing the sprite, but newly created label was null? attempted image: {}", manager->sharedReplacementLabel);
+			}
 			newLabel->setExtraKerning(5);
 			newLabel->limitLabelWidth(380.f, 1.0f, 0.25f);
 			lvlCompleteText->addChild(newLabel);

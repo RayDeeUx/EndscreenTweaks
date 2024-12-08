@@ -106,9 +106,15 @@
 		},
 		"customLevelCompleteTextsOnly": {
 			"name": "Only Use Custom \"Level Complete\" Texts",
-			"description": "<cp>REQUIRES GAME RESTART TO APPLY.</c>\n\nOnly uses your own custom \"Level Complete\" texts from \"customLevelCompleteQuotes.txt\" file when using a custom \"Level Complete\" text in the \"Oxygene One\".\n\nIf no custom quotes are found, the mod will fall back to the default set of quotes.",
+			"description": "<cl>Original idea by Saritahh.</c> <cp>REQUIRES GAME RESTART TO APPLY.</c>\n\nOnly uses your own custom \"Level Complete\" texts from \"customLevelCompleteQuotes.txt\" file when using a custom \"Level Complete\" text in the \"Oxygene One\".\n\nIf no custom quotes are found, the mod will fall back to the default set of quotes.",
 			"type": "bool",
 			"default": false
+		},
+		"scaleCustomLevelCompleteImages": {
+			"name": "Custom \"Level Complete\" Images Scaling Correction",
+			"description": "<cl>Original idea by Saritahh.</c>\n\nCorrects the sizing of your custom \"Level Complete\" images.",
+			"type": "bool",
+			"default": true
 		},
 		"platAttemptsAndJumps": {
 			"name": "Plat. Attempts + Jumps",
