@@ -196,8 +196,13 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			lvlCompleteText->updateLayout();
 			newSprite->setPosition(lvlCompleteText->getContentSize() / 2.f);
 			newSprite->setID("custom-level-complete-sprite-endlevellayer"_spr);
-			if (getModBool("scaleCustomLevelCompleteImages") && newSprite->getContentWidth() > 400) newSprite->setScaleX(400.f / newSprite->getContentWidth());
-			if (getModBool("scaleCustomLevelCompleteImages") && newSprite->getContentHeight() > 50) newSprite->setScaleY(50.f / newSprite->getContentHeight());
+			if (getModBool("scaleCustomLevelCompleteImages")) {
+				const float contentHeight = newSprite->getContentHeight();
+				if (contentHeight < 36.5f) newSprite->setScale(36.5f / contentHeight);
+				else if (contentHeight > 50.f) newSprite->setScaleY(50.f / contentHeight);
+				const float contentWidth = newSprite->getContentWidth();
+				if (contentWidth > 400.f) newSprite->setScaleX(400.f / contentWidth);
+			}
 		} else if (manager->chosenMode == "Oxygene One" && !manager->sharedReplacementLabel.empty()) {
 			CCLabelBMFont* newLabel = CCLabelBMFont::create(manager->sharedReplacementLabel.c_str(), "levelCompleteFont.fnt"_spr);
 			if (!newLabel) {

@@ -50,8 +50,13 @@ class $modify(MyPlayLayer, PlayLayer) {
 			toModify->updateLayout();
 			newSprite->setPosition(toModify->getContentSize() / 2.f);
 			newSprite->setID("custom-level-complete-sprite-playlayer"_spr);
-			if (getModBool("scaleCustomLevelCompleteImages") && newSprite->getContentWidth() > 400) newSprite->setScaleX(400.f / newSprite->getContentWidth());
-			if (getModBool("scaleCustomLevelCompleteImages") && newSprite->getContentHeight() > 150) newSprite->setScaleY(150.f / newSprite->getContentHeight());
+			if (getModBool("scaleCustomLevelCompleteImages")) {
+				const float contentHeight = newSprite->getContentHeight();
+				if (contentHeight < 36.5f) newSprite->setScale(36.5f / contentHeight);
+				else if (contentHeight > 150.f) newSprite->setScaleY(150.f / contentHeight);
+				const float contentWidth = newSprite->getContentWidth();
+				if (contentWidth > 400.f) newSprite->setScaleX(400.f / contentWidth);
+			}
 			lctReplaced = true;
 		}
 		if (manager->chosenMode == "Oxygene One" && !manager->sharedReplacementLabel.empty() && !lctReplaced) {
