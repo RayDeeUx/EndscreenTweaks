@@ -200,7 +200,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				const float contentHeight = newSprite->getContentHeight();
 				if (contentHeight < 36.5f) newSprite->setScale(36.5f / contentHeight);
 				else if (contentHeight > 50.f) newSprite->setScaleY(50.f / contentHeight);
-				const float contentWidth = newSprite->getContentWidth();
+				const float contentWidth = newSprite->getContentWidth() * newSprite->getScaleX();
 				if (contentWidth > 400.f) newSprite->setScaleX(400.f / contentWidth);
 			}
 		} else if (manager->chosenMode == "Oxygene One" && !manager->sharedReplacementLabel.empty()) {
