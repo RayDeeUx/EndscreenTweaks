@@ -1,4 +1,10 @@
 # EndscreenTweaks Changelog
+## v1.5.0
+- Refactor source code into multiple files.
+- Add "Custom "Level Complete" Text" options. (suggested by [Saritahh](https://discord.com/users/305158690204286979))
+  - Replacement options include "Oxygene One", "Images", and "Combined".
+  - Additional options include replacing the "Level Complete" text when completing a level before the end screen, or generating a separate replacement. (Also Replace "Level Complete" in PlayLayer)
+  - Additional option to re-scale "Images" smaller than a certain dimension. (Custom "Level Complete" Images Scaling Correction)
 ## v1.4.2
 - Port to 2.2074.
 ## v1.4.1
