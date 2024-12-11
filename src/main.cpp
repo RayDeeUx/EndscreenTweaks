@@ -14,6 +14,9 @@ $on_mod(Loaded) {
 	if (!std::filesystem::exists((configDir / R"(levelCompleteImages)"))) {
 		std::filesystem::create_directory(configDir / R"(levelCompleteImages)");
 	}
+	if (!std::filesystem::exists((configDir / R"(disabled_level_complete_images)"))) {
+		std::filesystem::create_directory(configDir / R"(disabled_level_complete_images)");
+	}
 	auto pathDefault = (Mod::get()->getResourcesDir() / "default.txt");
 	std::ifstream file(pathDefault);
 	std::string placeHolder;
