@@ -54,8 +54,8 @@ class $modify(MyPlayLayer, PlayLayer) {
 				const float contentHeight = newSprite->getContentHeight();
 				if (contentHeight < 36.5f) newSprite->setScale(36.5f / contentHeight);
 				else if (contentHeight > 150.f) newSprite->setScaleY(150.f / contentHeight);
-				const float contentWidth = newSprite->getContentWidth() * newSprite->getScaleX();
-				if (contentWidth > 400.f) newSprite->setScaleX(400.f / contentWidth);
+				const float contentWidth = newSprite->getContentWidth();
+				if (contentWidth * newSprite->getScaleX() > 400.f) newSprite->setScaleX(400.f / contentWidth);
 			}
 			lctReplaced = true;
 		}
