@@ -68,6 +68,7 @@ public:
 		return !fileName.empty() && (geode::utils::string::endsWith(fileName, ".png") ||  geode::utils::string::endsWith(fileName, ".jpg"));
 	}
 	static std::string grabRandomString(std::vector<std::string> vector = getSharedInstance()->quotes) {
+		if (vector.empty()) return "";
 		std::mt19937 randomSeed(std::random_device{}());
 		std::shuffle(vector.begin(), vector.end(), randomSeed);
 		return vector.front();
