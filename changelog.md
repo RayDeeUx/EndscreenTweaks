@@ -1,4 +1,6 @@
 # EndscreenTweaks Changelog
+## v1.5.1
+- Fix a stupid C++ crash for shuffling empty data types.
 ## v1.5.0
 - Refactor source code into multiple files.
 - Add "Custom "Level Complete" Text" options. (suggested by [Saritahh](https://discord.com/users/305158690204286979))
