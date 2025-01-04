@@ -205,6 +205,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			}
 		} else if (manager->chosenMode == "Oxygene One" && !manager->sharedReplacementLabel.empty()) {
 			CCLabelBMFont* newLabel = CCLabelBMFont::create(manager->sharedReplacementLabel.c_str(), "levelCompleteFont.fnt"_spr);
+			CCLabelBMFont* underLabel = CCLabelBMFont::create(manager->sharedReplacementLabel.c_str(), "levelCompleteFont_underlay.fnt"_spr);
 			if (!newLabel) {
 				lvlCompleteText->setOpacity(origOpacity);
 				return log::info("tried replacing the sprite, but newly created label was null? attempted image: {}", manager->sharedReplacementLabel);
