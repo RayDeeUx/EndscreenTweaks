@@ -1,4 +1,6 @@
 # EndscreenTweaks Changelog
+## v1.5.2
+- Some cleanup from behind the scenes. Nothing noticeable for end users, though.
 ## v1.5.1
 - Fix a stupid C++ crash for shuffling empty data types.
 ## v1.5.0
