@@ -10,7 +10,6 @@ add_library(${PROJECT_NAME} SHARED
     src/MenuLayer.cpp
     src/PlayLayer.cpp
     src/CCScheduler.cpp
-    src/FLAlertLayer.cpp
     src/EndLevelLayer.cpp
     src/CurrencyRewardLayer.cpp
     src/main.cpp
