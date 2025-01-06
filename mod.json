@@ -61,7 +61,7 @@
 		},
 		"customFont": {
 			"name": "Endscreen Text Font #",
-			"description": "Sets the font of all end text messages. 0 for Pusab, -1 for Golden Pusab, -2 for chatFont.\n-All other numbers: use the level editor, find the font each number corresponds to, subtract that number by 1, then put it here.</c>",
+			"description": "Sets the font of all end text messages. 0 for Pusab, -1 for Golden Pusab, -2 for chatFont.\nAll other numbers: use the level editor, find the font each number corresponds to, subtract that number by 1, then put it here.",
 			"type": "int",
 			"default": 0,
 			"min": -2,
