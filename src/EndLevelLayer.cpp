@@ -205,16 +205,28 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			}
 		} else if (manager->chosenMode == "Oxygene One" && !manager->sharedReplacementLabel.empty()) {
 			CCLabelBMFont* newLabel = CCLabelBMFont::create(manager->sharedReplacementLabel.c_str(), "levelCompleteFont.fnt"_spr);
+			CCLabelBMFont* underLabel = CCLabelBMFont::create(manager->sharedReplacementLabel.c_str(), "levelCompleteFont_underlay.fnt"_spr);
 			if (!newLabel) {
 				lvlCompleteText->setOpacity(origOpacity);
 				return log::info("tried replacing the sprite, but newly created label was null? attempted image: {}", manager->sharedReplacementLabel);
 			}
+			// add main font
 			newLabel->setExtraKerning(5);
 			newLabel->limitLabelWidth(380.f, 1.0f, 0.25f);
 			lvlCompleteText->addChild(newLabel);
 			lvlCompleteText->updateLayout();
 			newLabel->setPosition(lvlCompleteText->getContentSize() / 2.f);
 			newLabel->setID("custom-level-complete-label-endlevellayer"_spr);
+			newLabel->setZOrder(1);
+			
+			// add underlay font
+			underLabel->setExtraKerning(5);
+			underLabel->limitLabelWidth(380.f, 1.0f, 0.25f);
+			lvlCompleteText->addChild(underLabel);
+			lvlCompleteText->updateLayout();
+			underLabel->setPosition(lvlCompleteText->getContentSize() / 2.f);
+			underLabel->setID("custom-level-complete-label-endlevellayer-underlay"_spr);
+			underLabel->setZOrder(0);
 		} else {
 			lvlCompleteText->setOpacity(origOpacity);
 			return log::info("failed. manager->chosenMode: {}", manager->chosenMode);

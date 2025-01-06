@@ -60,6 +60,7 @@ class $modify(MyPlayLayer, PlayLayer) {
 			lctReplaced = true;
 		}
 		if (manager->chosenMode == "Oxygene One" && !manager->sharedReplacementLabel.empty() && !lctReplaced) {
+			// Main Font, untouched
 			CCLabelBMFont* newLabel = CCLabelBMFont::create(manager->sharedReplacementLabel.c_str(), "levelCompleteFont.fnt"_spr);
 			newLabel->setExtraKerning(5);
 			newLabel->limitLabelWidth(380.f, 1.0f, 0.25f);
@@ -67,6 +68,17 @@ class $modify(MyPlayLayer, PlayLayer) {
 			toModify->updateLayout();
 			newLabel->setPosition(toModify->getContentSize() / 2.f);
 			newLabel->setID("custom-level-complete-label-playlayer"_spr);
+			newLabel->setZOrder(1);
+
+			// Underlay font
+			CCLabelBMFont* underLabel = CCLabelBMFont::create(manager->sharedReplacementLabel.c_str(), "levelCompleteFont_underlay.fnt"_spr);
+			underLabel->setExtraKerning(5);
+			underLabel->limitLabelWidth(380.f, 1.0f, 0.25f);
+			toModify->addChild(underLabel);
+			toModify->updateLayout();
+			underLabel->setPosition(toModify->getContentSize() / 2.f);
+			underLabel->setID("custom-level-complete-label-playlayer-underlay"_spr);
+			underLabel->setZOrder(0);
 			lctReplaced = true;
 		}
 		if (!lctReplaced) {
