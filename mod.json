@@ -84,7 +84,7 @@
 		},
 		"customLCTMode" : {
 			"name": "Custom \"Level Complete\" Text Mode",
-			"description": "<cl>Original idea by Saritahh.</c>\n\nChoose your preferred \"Level Complete\" replacement. <cy>\"Oxygene One\"</c> creates messages in <cl>the Oxygene One font</c>. <cy>\"Images\"</c> are pulled from <cl>this mod's config directory</c>. <cy>\"Combined\" picks one from both.",
+			"description": "<cl>Original idea by Saritahh.</c>\n\nChoose your preferred \"Level Complete\" replacement. <cy>\"Oxygene One\"</c> creates messages in <cl>the Oxygene One font</c>. <cy>\"Images\"</c> are pulled from <cl>this mod's config directory</c>. <cy>\"Combined\"</c> picks one from both.",
 			"type": "string",
 			"default": "Oxygene One",
 			"one-of": [
