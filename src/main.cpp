@@ -105,7 +105,7 @@ migration failed, womp womp)";
 	std::string defaultLCQuote;
 	while (std::getline(defaultLCQuoteFile, defaultLCQuote)) {
 		manager->levelCompleteQuotes.push_back(defaultLCQuote);
-		log::info("added default levelcomplete quote: `{}`", defaultLCQuote);
+		log::info("added default levelcomplete quote: {}", defaultLCQuote);
 	}
 	auto pathCustomLvlCompleteQuotes = (configDir / "customLevelCompleteQuotes.txt");
 	if (std::filesystem::exists(pathCustomLvlCompleteQuotes)) {
@@ -115,7 +115,7 @@ migration failed, womp womp)";
 			const std::string toAdd = geode::utils::string::toUpper(geode::utils::string::replace(customLCQuote, "\"", "\'\'"));
 			manager->levelCompleteQuotes.push_back(toAdd);
 			manager->customLevelCompleteQuotes.push_back(toAdd);
-			log::info("added custom levelcomplete quote: `{}`", toAdd);
+			log::info("added custom levelcomplete quote: {}", toAdd);
 		}
 	} else {
 		std::string content = R"(insert funny text here

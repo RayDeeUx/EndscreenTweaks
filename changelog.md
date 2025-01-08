@@ -1,4 +1,7 @@
 # EndscreenTweaks Changelog
+## v1.5.3
+- True story: for some reason, some of my built-in replacements weren't being parsed properly, so I recompiled it again to find out what the issue was. Seems like I was getting all worked up for nothing, but I'm leaving the log calls in there anyway in case something goes wrong.
+- Add [Saritahh](https://github.com/DeepRsnanceX) to mod developers list as originally promised.
 ## v1.5.2
 - Some cleanup from behind the scenes.
 - Improved font accuracy for `Oxygene One`, thank you [Saritahh](https://github.com/DeepRsnanceX)!
@@ -6,7 +9,7 @@
 - Fix a stupid C++ crash for shuffling empty data types.
 ## v1.5.0
 - Refactor source code into multiple files.
-- Add "Custom "Level Complete" Text" options. (suggested by [Saritahh](https://discord.com/users/305158690204286979))
+- Add "Custom "Level Complete" Text" options. (suggested by [Saritahh](https://github.com/DeepRsnanceX))
   - Replacement options include "Oxygene One", "Images", and "Combined".
   - Additional options include replacing the "Level Complete" text when completing a level before the end screen, or generating a separate replacement. (Also Replace "Level Complete" in PlayLayer)
   - Additional option to re-scale "Images" smaller than a certain dimension. (Custom "Level Complete" Images Scaling Correction)

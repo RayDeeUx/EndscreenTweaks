@@ -5,10 +5,10 @@
 		"android": "2.2074",
 		"win": "2.2074"
 	},
-	"version": "v1.5.2",
+	"version": "v1.5.3",
 	"id": "raydeeux.endscreentweaks",
 	"name": "EndscreenTweaks",
-	"developers": ["RayDeeUx", "sofabeddd", "Relative"],
+	"developers": ["RayDeeUx", "sofabeddd", "Saritahhh", "Relative"],
 	"description": "Various tweaks to the endscreen. (Formerly WholesomeEndTexts.)",
 	"repository": "https://github.com/RayDeeUx/EndscreenTweaks",
 	"settings": {

@@ -103,6 +103,7 @@ public:
 			U RAPPIN' RESULT! [RANDOM: COOL GOOD BAD AWFUL]
 			A KNOCKOUT! [CHOOSE BETWEEN - GOLLY! A PERFECT SCORE! / A BRAND NEW RECORD! - IF LEVEL RATED]
 			*/
+			log::info("replacementLabelText before changes: {}", replacementLabelText);
 			if (replacementLabelText == "SONIC MADE IT THROUGH ACT 0" && getRandInt(1000) == 1) {
 				replacementLabelText = "HAHA, ONE!";
 			}
@@ -129,10 +130,13 @@ public:
 			} else if (replacementLabelText == "SPONSORED BY YOUR LOCAL MOD MENU" && !manager->loadedModMenus.empty() && manager->modIDToModMenu.contains(chosenModID)) {
 				replacementLabelText = utils::string::replace(replacementLabelText, "YOUR LOCAL MOD MENU", manager->modIDToModMenu.find(chosenModID)->second);
 			}
+			log::info("replacementLabelText after changes: {}", replacementLabelText);
 			manager->sharedReplacementLabel = replacementLabelText;
 		}
 		if (customLCTMode == "Combined") customLCTMode = manager->grabRandomString(manager->knownCLCTModesBesidesCombined);
 		log::info("customLCTMode: {} (should not be Combined)", customLCTMode);
+		log::info("sharedReplacementSprite: {}", manager->sharedReplacementSprite);
+		log::info("sharedReplacementLabel: {}", manager->sharedReplacementLabel);
 		if (customLCTMode == "Combined") {
 			return log::info("something went terribly wrong --- check contents of the `manager->knownCLCTModesBesidesCombined` vector");
 		}
