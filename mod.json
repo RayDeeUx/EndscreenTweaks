@@ -42,7 +42,7 @@
 			"default": false
 		},
 		"customTextsOnly": {
-			"name": "Only Use custom.txt Splash Texts",
+			"name": "Only Use custom.txt Endscreen Texts",
 			"description": "Only uses your own custom \"New Best\" texts from \"custom.txt\" file.\n\nIf no custom quotes are found, the mod will fall back to the default set of quotes.\n\n<cr>Enabling this setting will override the \"Include Technoblade\" setting if you have written your own custom quotes.</c>",
 			"type": "bool",
 			"default": false
