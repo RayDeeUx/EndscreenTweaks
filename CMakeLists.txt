@@ -13,6 +13,7 @@ add_library(${PROJECT_NAME} SHARED
     src/EndLevelLayer.cpp
     src/CurrencyRewardLayer.cpp
     src/main.cpp
+    src/boilerplate.hpp
     src/Settings.cpp
     src/Settings.hpp
     src/Manager.cpp
