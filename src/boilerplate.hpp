@@ -8,8 +8,6 @@
 
 inline void addQuotes(const std::string& settingName) {
 	Manager* manager = managerMacro;
-	if (!manager->quotes.empty()) manager->quotes.clear();
-	if (!manager->customQuotes.empty()) manager->customQuotes.clear();
 	if (settingName == "custom" && getModBool(settingName)) {
 		log::info("adding custom.txt quotes");
 		auto pathCustomConfigDir = (configDir / "custom.txt");
@@ -74,6 +72,9 @@ inline void addCustomQuotesAndLevelCompleteTests() {
 }
 
 inline void managerReset() {
+	Manager* manager = managerMacro;
+	if (!manager->quotes.empty()) manager->quotes.clear();
+	if (!manager->customQuotes.empty()) manager->customQuotes.clear();
 	addResourceQuotes();
 	addCustomQuotesAndLevelCompleteTests();
 }
