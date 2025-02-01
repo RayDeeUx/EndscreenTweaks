@@ -25,28 +25,34 @@
 			"type": "custom:configdir"
 		},
 		"endTexts": {
-			"name": "Enable Endscreen Texts",
+			"name": "Change Endscreen Texts",
 			"description": "Toggles the main feature of the mod: changing the endscreen text!",
 			"type": "bool",
 			"default": true
 		},
 		"custom": {
-			"name": "Include Custom Endscreen Texts",
-			"description": "<cp>[REQUIRES RESTART TO APPLY]</c>\n\nIncludes your own custom \"Level Complete\" text.\nPlease edit the \"custom.txt\" file by opening this mod's config directory (look for the golden pencil button at the bottom left of the mod's introductory screen).",
+			"name": "custom.txt Endscreen Texts",
+			"description": "Includes your own custom \"Level Complete\" text.\nPlease edit the \"custom.txt\" file by opening this mod's config directory (look for the golden pencil button at the bottom left of the mod's introductory screen).",
 			"type": "bool",
 			"default": false
 		},
 		"customTextsOnly": {
-			"name": "Only Use Custom Endscreen Texts",
-			"description": "<cp>REQUIRES GAME RESTART TO APPLY.</c>\n\nOnly uses your own custom \"New Best\" texts from \"custom.txt\" file.\n\nIf no custom quotes are found, the mod will fall back to the default set of quotes.\n\n<cr>Enabling this setting will override the \"Include Technoblade\" setting if you have written your own custom quotes.</c>",
+			"name": "Only Use custom.txt Splash Texts",
+			"description": "Only uses your own custom \"New Best\" texts from \"custom.txt\" file.\n\nIf no custom quotes are found, the mod will fall back to the default set of quotes.\n\n<cr>Enabling this setting will override the \"Include Technoblade\" setting if you have written your own custom quotes.</c>",
 			"type": "bool",
 			"default": false
 		},
 		"technoblade": {
-			"name": "Include Technoblade (o7)",
-			"description": "<cp>[REQUIRES RESTART TO APPLY]</c>\n\nIncludes quotes from Minecraft YouTuber Technoblade.",
+			"name": "Technoblade (o7)",
+			"description": "Includes quotes from Minecraft YouTuber Technoblade.",
 			"type": "bool",
 			"default": false
+		},
+		"snl50": {
+			"name": "SNL50",
+			"description": "Includes quotes from Saturday Night Live (one from each season, hopefully).",
+			"type": "bool",
+			"default": true
 		},
 		"maxScale": {
 			"name": "Endscreen Text Max Scale",
@@ -77,7 +83,7 @@
 			}
 		},
 		"customLevelCompleteText" : {
-			"name": "Enable Custom \"Level Complete\" Text",
+			"name": "Change \"Level Complete\" Text",
 			"description": "<cl>Original idea by Saritahh.</c>\n\nReplaces the original \"Level Complete\" text when completing a level with *either* custom text with Oxygene One <cy>(the font used in the original \"Level Complete\" font)</c>, or an image of your choice <cy>(selected from this mod's config directory)</c>.",
 			"type": "bool",
 			"default": false
@@ -105,7 +111,7 @@
 			]
 		},
 		"customLevelCompleteTextsOnly": {
-			"name": "Only Use Custom \"Level Complete\" Texts",
+			"name": "Only Use customLevelCompleteQuotes.txt Texts for \"Level Complete\"",
 			"description": "<cl>Original idea by Saritahh.</c> <cp>REQUIRES GAME RESTART TO APPLY.</c>\n\nOnly uses your own custom \"Level Complete\" texts from \"customLevelCompleteQuotes.txt\" file when using a custom \"Level Complete\" text in the \"Oxygene One\".\n\nIf no custom quotes are found, the mod will fall back to the default set of quotes.",
 			"type": "bool",
 			"default": false
