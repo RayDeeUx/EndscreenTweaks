@@ -282,6 +282,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		endTextLabel->setScale(scale);
 		endTextLabel->setWidth(336.f); // width of end screen minus 20px
 		endTextLabel->setString(randomString.c_str()); // set string
+		endTextLabel->setAlignment(kCCTextAlignmentCenter);
 	}
 	void showLayer(bool p0) {
 		if (!getModBool("enabled")) return EndLevelLayer::showLayer(p0);
