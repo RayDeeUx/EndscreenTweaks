@@ -73,8 +73,8 @@ inline void addCustomQuotesAndLevelCompleteTests() {
 
 inline void managerReset() {
 	Manager* manager = managerMacro;
-	if (!manager->quotes.empty()) manager->quotes.clear();
-	if (!manager->customQuotes.empty()) manager->customQuotes.clear();
+	manager->quotes.clear();
+	manager->customQuotes.clear();
 	addResourceQuotes();
 	addCustomQuotesAndLevelCompleteTests();
 }
