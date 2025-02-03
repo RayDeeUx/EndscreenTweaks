@@ -47,6 +47,12 @@
 			"type": "bool",
 			"default": false
 		},
+		"default": {
+			"name": "Default Set of Endscreen Texts",
+			"description": "Includes the default set of Endscreen Texts from this mod.",
+			"type": "bool",
+			"default": true
+		},
 		"technoblade": {
 			"name": "Technoblade (o7)",
 			"description": "Includes quotes from Minecraft YouTuber Technoblade.",
