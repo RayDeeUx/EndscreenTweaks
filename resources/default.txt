@@ -10,7 +10,7 @@ stay hydrated
 Mind the 20-20-20 rule!
 Is this a certified Pointercrate submission?
 read if cute
-endTextLabel->setString(randomString.c_str(), true);
+endTextLabel->setString(randomString.c_str());
 Good job. Now go finish your homework.
 MOM GET THE CAMERA!!!
 BELIEVE

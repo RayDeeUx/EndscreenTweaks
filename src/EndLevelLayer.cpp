@@ -235,9 +235,22 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	void applyRandomQuoteAndFont(PlayLayer* playLayer, GJGameLevel* theLevel) {
 		auto endTextLabel = typeinfo_cast<CCLabelBMFont*>(getChildByIDRecursive("end-text"));
 		if (!endTextLabel) return;
+
+		int64_t fontID = Mod::get()->getSettingValue<int64_t>("customFont");
+		if (fontID == -2) {
+			endTextLabel->setFntFile("chatFont.fnt");
+		} else if (fontID == -1) {
+			endTextLabel->setFntFile("goldFont.fnt");
+		} else if (fontID != 0) {
+			endTextLabel->setFntFile(fmt::format("gjFont{:02d}.fnt", fontID).c_str());
+		}
+
 		Manager* manager = managerMacro;
-		std::string randomString = manager->grabRandomString();
-		if (!manager->customQuotes.empty() && getModBool("customTextsOnly")) randomString = manager->grabRandomString(manager->customQuotes);
+		if (manager->isCompactEndscreen) endTextLabel->setPositionX(manager->compactEndscreenFallbackPosition);
+
+		std::string randomString = !manager->customQuotes.empty() && getModBool("customTextsOnly") ? manager->grabRandomString(manager->customQuotes) : manager->grabRandomString();
+		if (randomString.empty()) return;
+
 		if ("Make sure to screenshot this win!" == randomString) {
 			#ifdef GEODE_IS_MACOS
 				randomString = "Press Command + Shift + 3 to screenshot this win!";
@@ -263,27 +276,12 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 
 		float scale = 0.36f * 228.f / strlen(randomString.c_str());
 		if ("BELIEVE" == randomString) scale = 1.5f;
-		else if ("endTextLabel->setString(randomString.c_str(), true);" == randomString) scale = 0.4f;
+		else if ("endTextLabel->setString(randomString.c_str());" == randomString) scale = 0.4f;
 		else if (scale > Mod::get()->getSettingValue<double>("maxScale")) scale = getModDouble("maxScale");
 
 		endTextLabel->setScale(scale);
 		endTextLabel->setWidth(336.f); // width of end screen minus 20px
-
-		endTextLabel->setString(randomString.c_str(), true); // set string
-
-		int64_t fontID = Mod::get()->getSettingValue<int64_t>("customFont");
-		if (fontID == -2) {
-			endTextLabel->setFntFile("chatFont.fnt");
-		} else if (fontID == -1) {
-			endTextLabel->setFntFile("goldFont.fnt");
-		} else if (fontID != 0) {
-			endTextLabel->setFntFile(fmt::format("gjFont{:02d}.fnt", fontID).c_str());
-		}
-
-		endTextLabel->setAlignment(CCTextAlignment::kCCTextAlignmentCenter); // center text
-
-		if (manager->isCompactEndscreen) endTextLabel->setPositionX(manager->compactEndscreenFallbackPosition);
-		if (randomString.empty()) endTextLabel->setString(manager->fallbackString.c_str(), true); // fallback string
+		endTextLabel->setString(randomString.c_str()); // set string
 	}
 	void showLayer(bool p0) {
 		if (!getModBool("enabled")) return EndLevelLayer::showLayer(p0);

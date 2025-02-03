@@ -41,8 +41,6 @@ public:
 		{"thesillydoggo.qolmod", "QOLMOD"}
 	};
 
-	std::string fallbackString = "We've got too many players to congratulate on level completions. Beat this level again for an actual message.";
-
 	int fps = -1;
 	int64_t originalOpacity = 0;
 	int lastFlukedPercent = 0;
