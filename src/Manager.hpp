@@ -67,9 +67,9 @@ public:
 	}
 	static std::string grabRandomString(std::vector<std::string> vector = getSharedInstance()->quotes) {
 		if (vector.empty()) return "";
-		std::mt19937 randomSeed(std::random_device{}());
-		std::shuffle(vector.begin(), vector.end(), randomSeed);
-		return vector.front();
+		static std::mt19937_64 engine(std::random_device{});
+		std::uniform_int_distribution<size_t> dist(0, vec.size() - 1);
+		return vec.at(dist(engine));
 	}
 	static int getRandInt(const int max = 3) {
 		std::random_device rd;
