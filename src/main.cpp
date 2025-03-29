@@ -42,7 +42,7 @@ $on_mod(Loaded) {
 abc def
 u beat the level
 gg gaming
-[this text file was brought to you by endscreentweaks. if you're seeing this in the config directory for wholesomeendtexts, something has gone terribly TERRIBLY wrong-simply ping @erymanthus in the geode sdk discord server and do not panic!])";
+[this text file was brought to you by endscreentweaks. to add your own custom messages, simply edit this file.])";
 			(void) utils::file::writeString(pathCustom, content);
 		} else if (std::filesystem::exists(oldWETMessages)) {
 			if (!manager->wETMigration.empty()) {
