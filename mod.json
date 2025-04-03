@@ -1,14 +1,20 @@
 {
-	"geode": "4.0.1",
+	"geode": "4.3.1",
 	"gd": {
 		"mac": "2.2074",
 		"android": "2.2074",
-		"win": "2.2074"
+		"win": "2.2074",
+		"ios": "2.2074"
 	},
-	"version": "v1.6.1",
+	"version": "v1.6.2",
 	"id": "raydeeux.endscreentweaks",
 	"name": "EndscreenTweaks",
-	"developers": ["RayDeeUx", "sofabeddd", "Saritahhh", "Relative"],
+	"developers": [
+		"RayDeeUx",
+		"sofabeddd",
+		"Saritahhh",
+		"Relative"
+	],
 	"description": "Various tweaks to the endscreen. (Formerly WholesomeEndTexts.)",
 	"repository": "https://github.com/RayDeeUx/EndscreenTweaks",
 	"settings": {
@@ -70,8 +76,8 @@
 			"description": "Sets the max scale of all end text messages.",
 			"type": "float",
 			"default": 0.5,
-			"min": 0.10,
-			"max": 1.00,
+			"min": 0.1,
+			"max": 1,
 			"control": {
 				"slider-step": 0.01
 			}
@@ -93,13 +99,13 @@
 				"slider-step": 1
 			}
 		},
-		"customLevelCompleteText" : {
+		"customLevelCompleteText": {
 			"name": "Change \"Level Complete\" Text",
 			"description": "<cl>Original idea by Saritahh.</c>\n\nReplaces the original \"Level Complete\" text when completing a level with *either* custom text with Oxygene One <cy>(the font used in the original \"Level Complete\" font)</c>, or an image of your choice <cy>(selected from this mod's config directory)</c>.",
 			"type": "bool",
 			"default": false
 		},
-		"customLCTMode" : {
+		"customLCTMode": {
 			"name": "Custom \"Level Complete\" Text Mode",
 			"description": "<cl>Original idea by Saritahh.</c>\n\nChoose your preferred \"Level Complete\" replacement. <cy>\"Oxygene One\"</c> creates messages in <cl>the Oxygene One font</c>. <cy>\"Images\"</c> are pulled from <cl>this mod's config directory</c>. <cy>\"Combined\"</c> picks one from both.",
 			"type": "string",
@@ -110,7 +116,7 @@
 				"Combined"
 			]
 		},
-		"alsoReplacePlayLayerLCT" : {
+		"alsoReplacePlayLayerLCT": {
 			"name": "Also Replace \"Level Complete\" in PlayLayer",
 			"description": "<cl>Original idea by Saritahh.</c>\n\n<cl>Disabled</c> leaves PlayLayer's \"Level Complete\" untouched. <cl>Match EndLevelLayer</c> matches replacements with the endscreen. <cl>Separate From EndLevelLayer</c> generates a separate replacement for the endscreen.",
 			"type": "string",
