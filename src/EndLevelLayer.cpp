@@ -12,6 +12,9 @@
 using namespace geode::prelude;
 
 class $modify(MyEndLevelLayer, EndLevelLayer) {
+	static void onModify(auto& self) {
+		(void) self.setHookPriorityPost("EndLevelLayer::showLayer", Priority::First);
+	}
 	CCSprite* getHideButtonSprite() {
 		return typeinfo_cast<CCSprite*>(getChildByIDRecursive("hide-button")->getChildren()->objectAtIndex(0));
 	}
@@ -43,7 +46,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	}
 	void applySpaceUK() {
 		if (!getModBool("spaceUK")) return;
-		Manager* manager = managerMacro;
+		const Manager* manager = managerMacro;
 		auto levelCompleteText = getChildByIDRecursive("level-complete-text");
 		if (!levelCompleteText) levelCompleteText = getChildByIDRecursive("practice-complete-text"); // grab practice mode complete text as fallback node
 		if (!levelCompleteText) return;
@@ -79,11 +82,11 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	}
 	void applyHideChainsBackground() {
 		if (getModBool("hideChains")) {
-			if (const auto left = getChildByIDRecursive("chain-left")) left->setVisible(false);
-			if (auto right = getChildByIDRecursive("chain-right")) right->setVisible(false);
+			if (CCNode* left = getChildByIDRecursive("chain-left")) left->setVisible(false);
+			if (CCNode* right = getChildByIDRecursive("chain-right")) right->setVisible(false);
 		}
 		if (getModBool("hideBackground")) {
-			if (const auto bg = getChildByIDRecursive("background")) bg->setVisible(false);
+			if (CCNode* bg = getChildByIDRecursive("background")) bg->setVisible(false);
 		}
 	}
 	void applyPlatAttemptsAndJumpsOrFlukedFromPercent(GJGameLevel* theLevel) {
@@ -103,81 +106,24 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			attemptsLabel->setPosition(timeLabel->getPositionX(), timeLabel->getPositionY() + 40);
 			attemptsLabel->setID("attempts-label"_spr);
 			m_mainLayer->addChild(attemptsLabel);
-			m_mainLayer->updateLayout();
 			const auto jumpsLabel = cocos2d::CCLabelBMFont::create(("Jumps: " + std::to_string(playLayer->m_jumps)).c_str(), "goldFont.fnt");
 			jumpsLabel->setScale(0.8f);
 			jumpsLabel->setPosition({timeLabel->getPositionX(), timeLabel->getPositionY() + 20});
 			jumpsLabel->setID("jumps-label"_spr);
 			m_mainLayer->addChild(jumpsLabel);
-			m_mainLayer->updateLayout();
 		} else if (getModString("classicFlukedFrom") != "[Disabled]" && !isPlat && !playLayer->m_isTestMode && !playLayer->m_isPracticeMode && manager->lastFlukedPercent < 100) {
 			const auto timeLabel = getChildByIDRecursive("time-label");
 			const auto jumpsLabel = getChildByIDRecursive("jumps-label");
 			if (!timeLabel || !jumpsLabel) return;
 			jumpsLabel->setPositionY(jumpsLabel->getPositionY() + 7.0f);
 			timeLabel->setPositionY(timeLabel->getPositionY() + 14.0f);
-			auto flukedFromLabel = cocos2d::CCLabelBMFont::create(fmt::format("{}: {}%", getModString("classicFlukedFrom"), manager->lastFlukedPercent).c_str(), "goldFont.fnt");
+			CCLabelBMFont* flukedFromLabel = CCLabelBMFont::create(fmt::format("{}: {}%", getModString("classicFlukedFrom"), manager->lastFlukedPercent).c_str(), "goldFont.fnt");
 			flukedFromLabel->setPosition(jumpsLabel->getPositionX(), timeLabel->getPositionY() - 16.0f);
 			flukedFromLabel->setScale(timeLabel->getScale());
 			flukedFromLabel->setID("fluked-from-label"_spr);
 			m_mainLayer->addChild(flukedFromLabel);
-			m_mainLayer->updateLayout();
 		}
 	}
-	/*
-	void applyGDMOCompatShowLayer(GJGameLevel* theLevel) {
-		isGDMO = Loader::get()->isModLoaded("maxnu.gd_mega_overlay");
-		if (isGDMO && theLevel->m_coins == 0 && Loader::get()->getLoadedMod("maxnu.gd_mega_overlay")->getSavedValue<bool>("level/endlevellayerinfo/enabled")) {
-			//
-				gdmo does this silly thing where they add children without giving them node IDs and i need to release this mod ASAP so please forgive me for using getobjectatindex but getchildoftype doesnt work for this use case because everything in endscreen layer is a child of some other cclayer smh
-				if (!m_mainLayer) return;
-				auto mainLayerChildren = m_mainLayer->getChildren();
-				auto attemptsLabel = getChildByIDRecursive("attempts-label");
-				auto jumpsLabel = getChildByIDRecursive("jumps-label");
-				if (attemptsLabel == nullptr || jumpsLabel == nullptr) {
-					log::info("uhoh! couldnt find labels");
-					attemptsLabel = getChildByIDRecursive("attempts-label"_spr);
-					jumpsLabel = getChildByIDRecursive("jumps-label"_spr);
-				}
-				auto iHopeThisIsGDMONoclipAccuracyLabel = typeinfo_cast<CCNode*>(mainLayerChildren->objectAtIndex(3));
-				auto iHopeThisIsGDMONoclipDeathLabel = typeinfo_cast<CCNode*>(mainLayerChildren->objectAtIndex(4));
-				if (iHopeThisIsGDMONoclipAccuracyLabel == nullptr || iHopeThisIsGDMONoclipDeathLabel == nullptr) {
-					return;
-				}
-				if (strcmp(iHopeThisIsGDMONoclipAccuracyLabel->getID().c_str(), "") != 0 || strcmp(iHopeThisIsGDMONoclipDeathLabel->getID().c_str(), "") != 0) {
-					return;
-				}
-				iHopeThisIsGDMONoclipAccuracyLabel->setPositionY(attemptsLabel->getPositionY());
-				iHopeThisIsGDMONoclipDeathLabel->setPositionY(jumpsLabel->getPositionY());
-			//
-			// backup plan starts below
-			float windowWidth = getChildByIDRecursive("background")->getContentSize().width;
-			float windowHeight = CCDirector::get()->getWinSize().height;
-			float offset = getChildByIDRecursive("background")->getPositionX();
-			auto starContainer = getChildByIDRecursive("star-container");
-			if (starContainer == nullptr) { starContainer = getChildByIDRecursive("moon-container"); }
-			float gdmoHeight = windowHeight * (285.f / 320.f);
-			float gdmoTwentyFivePercentX = (windowWidth * .25f) + offset;
-			float gdmoFiftyPercentX = (windowWidth * .5f) + offset;
-			float gdmoSeventyFivePercentX = (windowWidth * .75f) + offset;
-			if (starContainer) {
-				if (theLevel->m_stars.value() == 1) { starContainer->setPositionX(gdmoFiftyPercentX); }
-				else { starContainer->setPositionX(gdmoTwentyFivePercentX); }
-				starContainer->setPositionY(gdmoHeight);
-			}
-			if (auto orbContainer = getChildByIDRecursive("orb-container")) {
-				orbContainer->setPositionY(gdmoHeight);
-				if (auto diamondContainer = getChildByIDRecursive("diamond-container")) {
-					diamondContainer->setPositionX(gdmoSeventyFivePercentX);
-					diamondContainer->setPositionY(gdmoHeight);
-					orbContainer->setPositionX(gdmoFiftyPercentX);
-				} else {
-					orbContainer->setPositionX(gdmoSeventyFivePercentX);
-				}
-			}
-		}
-	}
-	*/
 	void applyCustomLevelCompleteText(const std::string_view matchPlayLayer) {
 		if (!getModBool("customLevelCompleteText") || !getModBool("enabled") || !m_playLayer) return;
 		const auto lvlCompleteText = typeinfo_cast<CCSprite*>(getChildByIDRecursive("level-complete-text"));
@@ -193,7 +139,6 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				return log::info("tried replacing the sprite, but newly created sprite was null? attempted image: {}", manager->sharedReplacementSprite);
 			}
 			lvlCompleteText->addChild(newSprite);
-			lvlCompleteText->updateLayout();
 			newSprite->setPosition(lvlCompleteText->getContentSize() / 2.f);
 			newSprite->setID("custom-level-complete-sprite-endlevellayer"_spr);
 			if (getModBool("scaleCustomLevelCompleteImages")) {
@@ -214,7 +159,6 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			newLabel->setExtraKerning(5);
 			newLabel->limitLabelWidth(380.f, 1.0f, 0.25f);
 			lvlCompleteText->addChild(newLabel);
-			lvlCompleteText->updateLayout();
 			newLabel->setPosition(lvlCompleteText->getContentSize() / 2.f);
 			newLabel->setID("custom-level-complete-label-endlevellayer"_spr);
 			newLabel->setZOrder(1);
@@ -223,7 +167,6 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			underLabel->setExtraKerning(5);
 			underLabel->limitLabelWidth(380.f, 1.0f, 0.25f);
 			lvlCompleteText->addChild(underLabel);
-			lvlCompleteText->updateLayout();
 			underLabel->setPosition(lvlCompleteText->getContentSize() / 2.f);
 			underLabel->setID("custom-level-complete-label-endlevellayer-underlay"_spr);
 			underLabel->setZOrder(0);
@@ -236,7 +179,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		auto endTextLabel = typeinfo_cast<CCLabelBMFont*>(getChildByIDRecursive("end-text"));
 		if (!endTextLabel) return;
 
-		int64_t fontID = Mod::get()->getSettingValue<int64_t>("customFont");
+		const int64_t fontID = Mod::get()->getSettingValue<int64_t>("customFont");
 		if (fontID == -2) {
 			endTextLabel->setFntFile("chatFont.fnt");
 		} else if (fontID == -1) {
@@ -254,11 +197,11 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		if ("Make sure to screenshot this win!" == randomString) {
 			#ifdef GEODE_IS_MACOS
 				randomString = "Press Command + Shift + 3 to screenshot this win!";
-			#endif
-			#ifdef GEODE_IS_ANDROID
+			#elif defined(GEODE_IS_IOS)
+				randomString = "Don\'t forget to screenshot this win!";
+			#elif defined(GEODE_IS_ANDROID)
 				randomString = "Press the \"Volume Down\'\' and \"Power\'\' buttons to screenshot this win!";
-			#endif
-			#ifdef GEODE_IS_WINDOWS
+			#elif defined(GEODE_IS_WINDOWS)
 				randomString = "Press \"Win + Shift + S\'\' or \"PrtSc\'\' to screenshot this win!";
 			#endif
 		} else if (R"(''First try, part two!")" == randomString) {
@@ -266,7 +209,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			if (playLayer->m_attempts == 1) { temp = R"(''First try!")"; }
 			randomString = temp;
 		} else if (R"(''As you can see, my FPS is around 18 or so, which means we can definitely take this further.")" == randomString) {
-			randomString = fmt::format(R"(''As you can see, my FPS is around {} or so, which means we can definitely take this further.")", manager->fps);
+			randomString = fmt::format(R"(''As you can see, my FPS is around {} or so, which means we can definitely take this further.")", CCDirector::get()->m_fFrameRate);
 		} else if (R"(''If you wish to defeat me, train for another 100 years.")" == randomString) {
 			randomString = fmt::format(R"(''If you wish to defeat me, train for another {} years.")", std::max(100, (playLayer->m_jumps * 100)));
 		} else if ("Good luck on your statgrinding session!" == randomString && theLevel->m_stars.value() != 0) {
@@ -274,7 +217,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			else { randomString = "Good luck on that stargrinding session!"; }
 		}
 
-		float scale = 0.36f * 228.f / strlen(randomString.c_str());
+		float scale = 0.36f * 228.f / static_cast<float>(randomString.length());
 		if ("BELIEVE" == randomString) scale = 1.5f;
 		else if ("endTextLabel->setString(randomString.c_str());" == randomString) scale = 0.4f;
 		else if (scale > Mod::get()->getSettingValue<double>("maxScale")) scale = getModDouble("maxScale");
@@ -287,14 +230,13 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	void showLayer(bool p0) {
 		if (!getModBool("enabled")) return EndLevelLayer::showLayer(p0);
 		EndLevelLayer::showLayer(getModBool("noTransition"));
-		if (auto playLayer = PlayLayer::get()) {
-			auto theLevel = playLayer->m_level;
-			MyEndLevelLayer::applyHideEndLevelLayerHideBtn();
-			MyEndLevelLayer::applyHideChainsBackground();
-			MyEndLevelLayer::applySpaceUK();
-			MyEndLevelLayer::applyPlatAttemptsAndJumpsOrFlukedFromPercent(theLevel);
-			// MyEndLevelLayer::applyGDMOCompatShowLayer(theLevel);
-		}
+		if (!m_playLayer || !m_playLayer->m_level) return;
+		GJGameLevel* theLevel = m_playLayer->m_level;
+		MyEndLevelLayer::applyHideEndLevelLayerHideBtn();
+		MyEndLevelLayer::applyHideChainsBackground();
+		MyEndLevelLayer::applySpaceUK();
+		MyEndLevelLayer::applyPlatAttemptsAndJumpsOrFlukedFromPercent(theLevel);
+		// MyEndLevelLayer::applyGDMOCompatShowLayer(theLevel);
 	}
 	void customSetup() {
 		EndLevelLayer::customSetup();

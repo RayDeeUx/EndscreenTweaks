@@ -1,10 +1,10 @@
 {
-	"geode": "4.3.1",
+	"geode": "4.4.0",
 	"gd": {
-		"mac": "2.2074",
-		"android": "2.2074",
 		"win": "2.2074",
-		"ios": "2.2074"
+		"mac": "2.2074",
+		"ios": "2.2074",
+		"android": "2.2074"
 	},
 	"version": "v1.6.2",
 	"id": "raydeeux.endscreentweaks",
@@ -216,30 +216,23 @@
 			"resources/btn.png"
 		]
 	},
-	"dependencies": [
-		{
-			"id": "geode.node-ids",
-			"version": ">=1.17.0",
-			"importance": "required"
-		}
-	],
-	"incompatibilities": [
-		{
-			"id": "relative.custom_endscreen_text",
-			"version": "*",
+	"dependencies": {
+		"geode.node-ids": ">=1.17.0"
+	},
+	"incompatibilities": {
+		"relative.custom_endscreen_text":{
+			"version": ">=1.0.0",
 			"importance": "superseded"
 		},
-		{
-			"id": "raydeeux.wholesomeendtexts",
-			"version": "*",
+		"raydeeux.wholesomeendtexts": {
+			"version": ">=1.0.0",
 			"importance": "superseded"
 		},
-		{
-			"id": "1257plays.spaceuk_mode",
-			"version": "*",
+		"1257plays.spaceuk_mode": {
+			"version": ">=1.0.0",
 			"importance": "superseded"
 		}
-	],
+	},
 	"issues": {
 		"url": "https://discord.com/channels/911701438269386882/1205523212444639292",
 		"info": "To disable hyphen prefixes and suffixes in custom messages, edit saved.json. For other issues, ping me <cl>(@erymanthus)</c> in the Geode SDK Discord server's <cl>#help</c> channel if you need help. <cr>DMs are NOT accepted.</c>"
