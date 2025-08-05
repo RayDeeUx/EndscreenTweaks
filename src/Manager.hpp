@@ -26,6 +26,8 @@ public:
 
 	std::vector<std::string> loadedModMenus;
 
+	std::vector<std::string> formattedModsListVector;
+
 	std::vector<std::string> knownCLCTModesBesidesCombined = {"Images", "Oxygene One"};
 
 	std::vector<std::string> downwellStages = {"CAVERNS", "CATACOMBS", "AQUIFIER", "LIMBO", "ABYSS"};
@@ -56,6 +58,8 @@ public:
 	std::string sharedReplacementLabel = "";
 	std::string sharedReplacementSprite = "";
 	std::string chosenMode = "";
+
+	std::string modsListFormatted = "";
 
 	static Manager* getSharedInstance() {
 		if (!instance) {
