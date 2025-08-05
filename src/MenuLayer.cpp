@@ -8,7 +8,8 @@ using namespace geode::prelude;
 
 class $modify(MyMenuLayer, MenuLayer) {
 	bool init() {
-		bool result = MenuLayer::init();
+		if (!MenuLayer::init()) return false;
+
 		const auto mods = Loader::get()->getAllMods();
 		Manager* manager = managerMacro;
 		manager->totalMods = mods.size();
@@ -61,6 +62,7 @@ class $modify(MyMenuLayer, MenuLayer) {
 			manager->formattedModsListVector.push_back(formattedModListItem);
 			manager->modsListFormatted = manager->modsListFormatted.append(fmt::format("{}\n", formattedModListItem));
 		});
-		return result;
+
+		return true;
 	}
 };

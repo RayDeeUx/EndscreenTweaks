@@ -226,11 +226,12 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	}
 	void addLoadedModsList() {
 		if (!m_playLayer || m_playLayer->m_isPracticeMode || !m_listLayer) return;
+		if (!getModBool("enabled") || !getModBool("showModsListButton")) return;
 
 		CCLabelBMFont* label = CCLabelBMFont::create("Mods\nList", "bigFont.fnt");
 		CCSprite* sprite = CircleButtonSprite::create(label, CircleBaseColor::Green);
 		sprite->setScale(.8f);
-		label->setScale(.4f);
+		label->setScale(.35f);
 		label->setAlignment(kCCTextAlignmentCenter);
 
 		CCMenuItemSpriteExtra* modsListButton = CCMenuItemSpriteExtra::create(sprite, this, menu_selector(MyEndLevelLayer::showModsList));

@@ -169,6 +169,12 @@
 			"type": "bool",
 			"default": false
 		},
+		"showModsListButton": {
+			"name": "Mods List Button",
+			"description": "Adds a \"Mods List\" button at the lower left of EndLevelLayer.",
+			"type": "bool",
+			"default": false
+		},
 		"hideChains": {
 			"name": "Hide Chains",
 			"description": "Hides the chains from EndLevelLayer.",
