@@ -40,10 +40,11 @@ class $modify(MyMenuLayer, MenuLayer) {
 					if (type == LoadProblem::Type::Suggestion || type == LoadProblem::Type::Recommendation) continue;
 					std::string colorTag = "<c-FF0000>";
 					if (type == LoadProblem::Type::Conflict || type == LoadProblem::Type::Duplicate || type == LoadProblem::Type::DisabledDependency || type == LoadProblem::Type::MissingDependency) colorTag = "<cy>";
-					else if (type == LoadProblem::Type::UnsupportedVersion || type == LoadProblem::Type::UnsupportedGeodeVersion || type == LoadProblem::Type::NeedsNewerGeodeVersion) colorTag = "<c-AAAAAA>";
-					formattedProblemsList = formattedProblemsList.append(fmt::format("{}{}</c>, ", colorTag, message));
+					else if (type == LoadProblem::Type::UnsupportedVersion || type == LoadProblem::Type::UnsupportedGeodeVersion || type == LoadProblem::Type::NeedsNewerGeodeVersion) colorTag = "<c-DCDCDC>";
+					formattedProblemsList = formattedProblemsList.append(fmt::format("{}{}</c> | ", colorTag, message));
 				}
-			   	if (!formattedProblemsList.empty() && utils::string::endsWith(formattedProblemsList, ", ")) {
+			   	if (!formattedProblemsList.empty() && utils::string::endsWith(formattedProblemsList, " | ")) {
+					formattedProblemsList.pop_back();
 					formattedProblemsList.pop_back();
 					formattedProblemsList.pop_back();
 			   	}
@@ -52,7 +53,7 @@ class $modify(MyMenuLayer, MenuLayer) {
 
 			const std::string& formattedModListItem = fmt::format(
 				"- {}{}</c> {} {} [{}]{}",
-				mod->isEnabled() ? "<cg>" : hasNoProblems ? "<cy>" : "<c-FF0000>",
+				mod->isEnabled() ? "<c-FFFFFF>" : hasNoProblems ? "<c-AAAAAA>" : "<c-FF0000>",
 				mod->getName(), mod->getVersion().toVString(), formattedByline,
 				modID, formattedProblemsList
 			);
@@ -60,7 +61,6 @@ class $modify(MyMenuLayer, MenuLayer) {
 			manager->formattedModsListVector.push_back(formattedModListItem);
 			manager->modsListFormatted = manager->modsListFormatted.append(fmt::format("{}\n", formattedModListItem));
 		});
-		log::info("manager->modsListFormatted:\n{}", manager->modsListFormatted);
 		return result;
 	}
 };
