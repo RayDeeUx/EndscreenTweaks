@@ -36,13 +36,13 @@ class $modify(MyPlayLayer, PlayLayer) {
 			}
 		}
 		if (!toModify) return;
-		std::string customLCTModePlayLayer = getModString("customLCTMode");
+		const std::string& customLCTModePlayLayer = getModString("customLCTMode");
 		bool lctReplaced = false;
 		manager->generateNewSprites(customLCTModePlayLayer, this);
 		// "omg ery why not just choose a mode first???"
 		// assigning it to manager = easier "shared replacement" with EndLevelLayer later
 		if (getModString("alsoReplacePlayLayerLCT") == "Disabled") return;
-		auto origOpacity = toModify->getOpacity();
+		const auto origOpacity = toModify->getOpacity();
 		toModify->setOpacity(0);
 		if (manager->chosenMode == "Images" && !manager->sharedReplacementSprite.empty() && !lctReplaced) {
 			CCSprite* newSprite = CCSprite::create(manager->sharedReplacementSprite.c_str());

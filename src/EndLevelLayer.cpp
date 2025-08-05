@@ -12,9 +12,6 @@
 using namespace geode::prelude;
 
 class $modify(MyEndLevelLayer, EndLevelLayer) {
-	static void onModify(auto& self) {
-		(void) self.setHookPriorityPost("EndLevelLayer::showLayer", Priority::First);
-	}
 	CCSprite* getHideButtonSprite() {
 		return typeinfo_cast<CCSprite*>(getChildByIDRecursive("hide-button")->getChildren()->objectAtIndex(0));
 	}

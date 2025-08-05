@@ -7,6 +7,7 @@ using namespace geode::prelude;
 
 $on_mod(Loaded) {
 	Manager* manager = managerMacro;
+	manager->hideEndLevelLayer = Mod::get()->getSettingValue<bool>("hideEndLevelLayer");
 	(void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);
 	(void) Mod::get()->registerCustomSettingType("refresh", &MyButtonSettingV3::parse);
 	if (!std::filesystem::exists((configDir / R"(levelCompleteImages)"))) {
@@ -42,7 +43,7 @@ $on_mod(Loaded) {
 abc def
 u beat the level
 gg gaming
-[this text file was brought to you by endscreentweaks. to add your own custom messages, simply edit this file.])";
+[make sure to edit this file!])";
 			(void) utils::file::writeString(pathCustom, content);
 		} else if (std::filesystem::exists(oldWETMessages)) {
 			if (!manager->wETMigration.empty()) {
@@ -69,19 +70,23 @@ migration failed, womp womp)";
 
 	addCustomQuotesAndLevelCompleteTests();
 
-	listenForSettingChanges("default", [](bool unusedVar) {
+	listenForSettingChanges("default", [](bool) {
 		managerReset();
 	});
 
-	listenForSettingChanges("technoblade", [](bool unusedVar) {
+	listenForSettingChanges("technoblade", [](bool) {
 		managerReset();
 	});
 
-	listenForSettingChanges("snl50", [](bool unusedVar) {
+	listenForSettingChanges("snl50", [](bool) {
 		managerReset();
 	});
 
-	listenForSettingChanges("custom", [](bool unusedVar) {
+	listenForSettingChanges("custom", [](bool) {
 		managerReset();
+	});
+
+	listenForSettingChanges("hideEndLevelLayer", [](const bool hideEndLevelLayerNew) {
+		Manager::getSharedInstance()->hideEndLevelLayer = hideEndLevelLayerNew;
 	});
 }

@@ -1,4 +1,7 @@
 # EndscreenTweaks Changelog
+## v1.7.0
+- Fixed some string formatting-related issues.
+- Refactored some code here and here.
 ## v1.6.2
 - Experimental iOS support.
 ## v1.6.1

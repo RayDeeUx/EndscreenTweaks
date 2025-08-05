@@ -1,5 +1,7 @@
 #include <Geode/modify/CurrencyRewardLayer.hpp>
 
+#include "Manager.hpp"
+
 using namespace geode::prelude;
 
 class $modify(MyCurrencyRewardLayer, CurrencyRewardLayer) {
@@ -9,9 +11,9 @@ class $modify(MyCurrencyRewardLayer, CurrencyRewardLayer) {
 	what the hell, robtop?
 	*/
 	void update(float p0) {
-		bool isHideEndLevelLayer = Mod::get()->getSettingValue<bool>("hideEndLevelLayer");
-		bool isChildOfEndLevelLayer = typeinfo_cast<EndLevelLayer*>(this->getParent());
-		if (isHideEndLevelLayer && isChildOfEndLevelLayer) this->setVisible(false);
+		const bool isHideEndLevelLayer = Manager::getSharedInstance()->hideEndLevelLayer;
+		const EndLevelLayer* endLevelLayer = typeinfo_cast<EndLevelLayer*>(this->getParent());
+		if (isHideEndLevelLayer && endLevelLayer && endLevelLayer->m_playLayer) this->setVisible(false);
 		CurrencyRewardLayer::update(p0);
 	}
 };

@@ -14,6 +14,8 @@ public:
 
 	bool calledAlready = false;
 
+	bool hideEndLevelLayer = false;
+
 	std::vector<std::string> quotes;
 	std::vector<std::string> customQuotes;
 	std::vector<std::string> wETMigration;
