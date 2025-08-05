@@ -98,12 +98,12 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			const auto pointsLabel = getChildByIDRecursive("points-label");
 			if (!manager->isCompactEndscreen) timeLabel->setPositionY(timeLabel->getPositionY() - 20);
 			if (pointsLabel) pointsLabel->setPositionY(timeLabel->getPositionY() - 18);
-			const auto attemptsLabel = cocos2d::CCLabelBMFont::create(("Attempts: " + std::to_string(playLayer->m_attempts)).c_str(), "goldFont.fnt");
+			CCLabelBMFont* attemptsLabel = CCLabelBMFont::create(("Attempts: " + std::to_string(playLayer->m_attempts)).c_str(), "goldFont.fnt");
 			attemptsLabel->setScale(0.8f);
 			attemptsLabel->setPosition(timeLabel->getPositionX(), timeLabel->getPositionY() + 40);
 			attemptsLabel->setID("attempts-label"_spr);
 			m_mainLayer->addChild(attemptsLabel);
-			const auto jumpsLabel = cocos2d::CCLabelBMFont::create(("Jumps: " + std::to_string(playLayer->m_jumps)).c_str(), "goldFont.fnt");
+			CCLabelBMFont* jumpsLabel = CCLabelBMFont::create(("Jumps: " + std::to_string(playLayer->m_jumps)).c_str(), "goldFont.fnt");
 			jumpsLabel->setScale(0.8f);
 			jumpsLabel->setPosition({timeLabel->getPositionX(), timeLabel->getPositionY() + 20});
 			jumpsLabel->setID("jumps-label"_spr);
@@ -173,7 +173,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		}
 	}
 	void applyRandomQuoteAndFont(PlayLayer* playLayer, GJGameLevel* theLevel) {
-		auto endTextLabel = typeinfo_cast<CCLabelBMFont*>(getChildByIDRecursive("end-text"));
+		CCLabelBMFont* endTextLabel = typeinfo_cast<CCLabelBMFont*>(getChildByIDRecursive("end-text"));
 		if (!endTextLabel) return;
 
 		const int64_t fontID = Mod::get()->getSettingValue<int64_t>("customFont");
@@ -185,7 +185,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			endTextLabel->setFntFile(fmt::format("gjFont{:02d}.fnt", fontID).c_str());
 		}
 
-		Manager* manager = managerMacro;
+		const Manager* manager = managerMacro;
 		if (manager->isCompactEndscreen) endTextLabel->setPositionX(manager->compactEndscreenFallbackPosition);
 
 		std::string randomString = !manager->customQuotes.empty() && getModBool("customTextsOnly") ? manager->grabRandomString(manager->customQuotes) : manager->grabRandomString();
@@ -238,8 +238,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 
 		CCMenu* modsListMenu = CCMenu::create();
 		modsListMenu->setContentSize({33, 33});
-		modsListMenu->setPosition(m_listLayer->getPosition()); // i know this sounds like a crackpot position but it fits perfectly (im ignoring practice mode bc who tf wanna show that)
 		modsListMenu->ignoreAnchorPointForPosition(false);
+		modsListMenu->setPosition(m_listLayer->getPosition()); // i know this sounds like a crackpot position but it fits perfectly (im ignoring practice mode bc who tf wanna show that)
 		modsListMenu->addChildAtPosition(modsListButton, Anchor::Center);
 
 		this->m_mainLayer->addChild(modsListMenu);
