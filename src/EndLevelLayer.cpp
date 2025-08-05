@@ -246,7 +246,11 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	}
 	void showModsList(CCObject* sender) {
 		Manager* manager = Manager::getSharedInstance();
-		const std::string& formattedList = manager->modsListFormatted;
+		std::string formattedList;
+		for (const std::string& modListEntry : manager->formattedModsListVector) {
+			formattedList += modListEntry;
+			formattedList += '\n';
+		}
 		const std::string& formattedTitle = fmt::format("{} Total ({} Loaded, {} Disabled, {} w/Problems)", manager->totalMods, manager->loadedMods, manager->disabledMods, manager->problemMods);
 		MDPopup::create(formattedTitle, formattedList, "Copy", "Close", [formattedList](const bool btn2){
 			if (btn2) return;
@@ -269,7 +273,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		EndLevelLayer::customSetup();
 		if (!getModBool("enabled")) return;
 		managerMacro->isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
-		auto playLayer = PlayLayer::get();
+		PlayLayer* playLayer = PlayLayer::get();
 		if (!playLayer) return;
 		if (getModBool("endTexts")) MyEndLevelLayer::applyRandomQuoteAndFont(playLayer, playLayer->m_level);
 		if (getModBool("customLevelCompleteText")) MyEndLevelLayer::applyCustomLevelCompleteText(getModString("alsoReplacePlayLayerLCT"));

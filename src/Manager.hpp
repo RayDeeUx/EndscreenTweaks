@@ -64,8 +64,6 @@ public:
 	std::string sharedReplacementSprite = "";
 	std::string chosenMode = "";
 
-	std::string modsListFormatted = "";
-
 	static Manager* getSharedInstance() {
 		if (!instance) {
 			instance = new Manager();

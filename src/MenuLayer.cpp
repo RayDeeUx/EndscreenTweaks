@@ -60,7 +60,6 @@ class $modify(MyMenuLayer, MenuLayer) {
 			);
 
 			manager->formattedModsListVector.push_back(formattedModListItem);
-			manager->modsListFormatted = manager->modsListFormatted.append(fmt::format("{}\n", formattedModListItem));
 		});
 
 		return true;
