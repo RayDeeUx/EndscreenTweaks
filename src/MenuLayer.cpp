@@ -32,7 +32,9 @@ class $modify(MyMenuLayer, MenuLayer) {
 			}
 
 			std::string formattedProblemsList = "";
-			if (std::vector<LoadProblem> problems = mod->getAllProblems(); !problems.empty()) {
+			const std::vector<LoadProblem> problems = mod->getAllProblems();
+			const bool hasNoProblems = problems.empty();
+			if (!hasNoProblems) {
 				formattedProblemsList = " {";
 				for (const auto [type, cause, message] : problems) {
 					if (type == LoadProblem::Type::Suggestion || type == LoadProblem::Type::Recommendation) continue;
@@ -50,7 +52,7 @@ class $modify(MyMenuLayer, MenuLayer) {
 
 			const std::string& formattedModListItem = fmt::format(
 				"- {}{}</c> {} {} [{}]{}",
-				mod->isEnabled() ? "<cg>" : "<c-FF0000>",
+				mod->isEnabled() ? "<cg>" : hasNoProblems ? "<cy>" : "<c-FF0000>",
 				mod->getName(), mod->getVersion().toVString(), formattedByline,
 				modID, formattedProblemsList
 			);
