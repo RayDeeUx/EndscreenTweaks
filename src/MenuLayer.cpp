@@ -11,7 +11,13 @@ class $modify(MyMenuLayer, MenuLayer) {
 		bool result = MenuLayer::init();
 		const auto mods = Loader::get()->getAllMods();
 		Manager* manager = managerMacro;
+		manager->totalMods = mods.size();
 		std::ranges::for_each(mods, [&](const Mod* mod) {
+			if (!mod->hasLoadProblems() && mod->isEnabled()) manager->loadedMods += 1;
+			else manager->problemMods += 1;
+
+			if (!mod->isEnabled()) manager->disabledMods += 1;
+
 			const std::string& modID = mod->getID();
 
 			if (manager->modIDToModMenu.contains(modID)) manager->loadedModMenus.push_back(modID);

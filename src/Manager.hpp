@@ -49,6 +49,11 @@ public:
 	int64_t originalOpacity = 0;
 	int lastFlukedPercent = 0;
 
+	int totalMods = 0;
+	int loadedMods = 0;
+	int disabledMods = 0;
+	int problemMods = 0;
+
 	bool isCompactEndscreen;
 	bool isGDMO;
 	bool isLevelComplete = false;

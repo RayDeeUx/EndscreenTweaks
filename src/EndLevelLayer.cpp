@@ -224,6 +224,35 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		endTextLabel->setString(randomString.c_str()); // set string
 		endTextLabel->setAlignment(kCCTextAlignmentCenter);
 	}
+	void addLoadedModsList() {
+		if (!m_playLayer || m_playLayer->m_isPracticeMode || !m_listLayer) return;
+
+		CCLabelBMFont* label = CCLabelBMFont::create("Mods\nList", "bigFont.fnt");
+		CCSprite* sprite = CircleButtonSprite::create(label, CircleBaseColor::Green);
+		sprite->setScale(.8f);
+		label->setScale(.4f);
+		label->setAlignment(kCCTextAlignmentCenter);
+
+		CCMenuItemSpriteExtra* modsListButton = CCMenuItemSpriteExtra::create(sprite, this, menu_selector(MyEndLevelLayer::showModsList));
+
+		CCMenu* modsListMenu = CCMenu::create();
+		modsListMenu->setContentSize({33, 33});
+		modsListMenu->setPosition(m_listLayer->getPosition()); // i know this sounds like a crackpot position but it fits perfectly (im ignoring practice mode bc who tf wanna show that)
+		modsListMenu->ignoreAnchorPointForPosition(false);
+		modsListMenu->addChildAtPosition(modsListButton, Anchor::Center);
+
+		this->m_mainLayer->addChild(modsListMenu);
+	}
+	void showModsList(CCObject* sender) {
+		Manager* manager = Manager::getSharedInstance();
+		const std::string& formattedList = manager->modsListFormatted;
+		const std::string& formattedTitle = fmt::format("{} Total ({} Loaded, {} Disabled, {} w/Problems)", manager->totalMods, manager->loadedMods, manager->disabledMods, manager->problemMods);
+		MDPopup::create(formattedTitle, formattedList, "Copy", "Close", [formattedList](const bool btn2){
+			if (btn2) return;
+			geode::utils::clipboard::write(formattedList);
+			Notification::create("Copied mods list")->show();
+		})->show();
+	}
 	void showLayer(bool p0) {
 		if (!getModBool("enabled")) return EndLevelLayer::showLayer(p0);
 		EndLevelLayer::showLayer(getModBool("noTransition"));
@@ -233,7 +262,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		MyEndLevelLayer::applyHideChainsBackground();
 		MyEndLevelLayer::applySpaceUK();
 		MyEndLevelLayer::applyPlatAttemptsAndJumpsOrFlukedFromPercent(theLevel);
-		// MyEndLevelLayer::applyGDMOCompatShowLayer(theLevel);
+		MyEndLevelLayer::addLoadedModsList();
 	}
 	void customSetup() {
 		EndLevelLayer::customSetup();
