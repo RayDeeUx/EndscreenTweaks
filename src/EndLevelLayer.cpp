@@ -251,10 +251,10 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			formattedList += modListEntry;
 			formattedList += '\n';
 		}
-		const std::string& formattedTitle = fmt::format("{} Total ({} Loaded, {} Disabled, {} w/Problems)", manager->totalMods, manager->loadedMods, manager->disabledMods, manager->problemMods);
-		MDPopup::create(formattedTitle, formattedList, "Copy", "Close", [formattedList](const bool btn2){
+		const std::string& formattedTitle = fmt::format("{} Total ({} Loaded, {} Disabled, of which {} w/Problems)", manager->totalMods, manager->loadedMods, manager->disabledMods, manager->problemMods);
+		MDPopup::create(formattedTitle, formattedList, "Copy", "Close", [formattedTitle, formattedList](const bool btn2){
 			if (btn2) return;
-			geode::utils::clipboard::write(formattedList);
+			geode::utils::clipboard::write(fmt::format("{}\n{}", formattedTitle, formattedList));
 			Notification::create("Copied mods list")->show();
 		})->show();
 	}

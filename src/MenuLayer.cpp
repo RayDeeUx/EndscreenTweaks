@@ -14,10 +14,9 @@ class $modify(MyMenuLayer, MenuLayer) {
 		Manager* manager = managerMacro;
 		manager->totalMods = mods.size();
 		std::ranges::for_each(mods, [&](const Mod* mod) {
-			if (!mod->hasLoadProblems() && mod->isEnabled()) manager->loadedMods += 1;
-			else manager->problemMods += 1;
-
-			if (!mod->isEnabled()) manager->disabledMods += 1;
+			bool incrementedOnce = false;
+			if (mod->getAllProblems().empty() && mod->isEnabled()) manager->loadedMods += 1;
+			else if (!mod->isEnabled() && !mod->hasLoadProblems()) manager->disabledMods += 1;
 
 			const std::string& modID = mod->getID();
 
@@ -40,7 +39,13 @@ class $modify(MyMenuLayer, MenuLayer) {
 				for (const auto [type, cause, message] : problems) {
 					if (type == LoadProblem::Type::Suggestion || type == LoadProblem::Type::Recommendation) continue;
 					std::string colorTag = "<c-FF0000>";
-					if (type == LoadProblem::Type::Conflict || type == LoadProblem::Type::Duplicate || type == LoadProblem::Type::DisabledDependency || type == LoadProblem::Type::MissingDependency) colorTag = "<cy>";
+					if (type == LoadProblem::Type::Conflict || type == LoadProblem::Type::Duplicate || type == LoadProblem::Type::DisabledDependency || type == LoadProblem::Type::MissingDependency) {
+						colorTag = "<cy>";
+						if (!incrementedOnce) {
+							manager->problemMods += 1;
+							incrementedOnce = true;
+						}
+					}
 					else if (type == LoadProblem::Type::UnsupportedVersion || type == LoadProblem::Type::UnsupportedGeodeVersion || type == LoadProblem::Type::NeedsNewerGeodeVersion) colorTag = "<c-DCDCDC>";
 					formattedProblemsList = formattedProblemsList.append(fmt::format("{}{}</c> | ", colorTag, message));
 				}
