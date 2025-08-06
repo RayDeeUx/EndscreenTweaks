@@ -2,7 +2,8 @@
 ## v1.7.0
 - Added an option to show and copy your installed mods list.
   - This was formerly part of ErysEdits for a few weeks. Now it's back.
-- Fixed some string formatting-related issues.
+  - The popup of the installed mods list may drop your FPS; be careful!
+- Fixed some string formatting-related issues with "Level Complete!" messages.
 - Refactored some code here and here.
 ## v1.6.2
 - Experimental iOS support.
