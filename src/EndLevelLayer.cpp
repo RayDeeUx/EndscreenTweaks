@@ -78,12 +78,22 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		}
 	}
 	void applyHideChainsBackground() {
+		if (!m_mainLayer) return;
 		if (getModBool("hideChains")) {
-			if (CCNode* left = getChildByIDRecursive("chain-left")) left->setVisible(false);
-			if (CCNode* right = getChildByIDRecursive("chain-right")) right->setVisible(false);
+			if (CCNode* left = m_mainLayer->getChildByID("chain-left")) static_cast<CCSprite*>(left)->setOpacity(0);
+			if (CCNode* right = m_mainLayer->getChildByID("chain-right")) static_cast<CCSprite*>(right)->setOpacity(0);
 		}
 		if (getModBool("hideBackground")) {
-			if (CCNode* bg = getChildByIDRecursive("background")) bg->setVisible(false);
+			if (CCNode* bg = m_mainLayer->getChildByID("background")) {
+				GJListLayer* background = static_cast<GJListLayer*>(bg);
+				background->setCascadeOpacityEnabled(false);
+				background->setOpacity(0);
+				if (CCNode* left = bg->getChildByID("left-border")) static_cast<CCSprite*>(left)->setOpacity(0);
+				if (CCNode* right = bg->getChildByID("right-border")) static_cast<CCSprite*>(right)->setOpacity(0);
+				if (CCNode* top = bg->getChildByID("top-border")) static_cast<CCSprite*>(top)->setOpacity(0);
+				if (CCNode* bottom = bg->getChildByID("bottom-border")) static_cast<CCSprite*>(bottom)->setOpacity(0);
+				if (CCNode* title = bg->getChildByID("title")) static_cast<CCLabelBMFont*>(title)->setOpacity(0);
+			}
 		}
 	}
 	void applyPlatAttemptsAndJumpsOrFlukedFromPercent(GJGameLevel* theLevel) {
