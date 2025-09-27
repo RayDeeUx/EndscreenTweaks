@@ -293,7 +293,7 @@
 		"robtopFallUpHideEasingRate": {
 			"name": "\"Hiding\" Falling Up Easing Rate",
 			"type": "float",
-			"default": 1.00,
+			"default": 2.00,
 			"min": 0.10,
 			"max": 4.00
 		},
@@ -322,7 +322,7 @@
 		"robtopFallDownHideEasingRate": {
 			"name": "\"Hiding\" Falling Down Easing Rate",
 			"type": "float",
-			"default": 1.00,
+			"default": 2.00,
 			"min": 0.10,
 			"max": 4.00
 		},
