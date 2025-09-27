@@ -14,7 +14,6 @@ using namespace geode::prelude;
 
 class $modify(MyEndLevelLayer, EndLevelLayer) {
 	void fakeUpdateFunction(float) {
-		this->setCascadeOpacityEnabled(false);
 		this->setOpacity(managerMacro->backdropOpacity);
 	}
 	CCSprite* getHideButtonSprite() {
@@ -102,6 +101,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		}
 		if (const int opacity = std::clamp<int>(getModInt("backdropOpacity"), 0, 255); opacity != 100) {
 			managerMacro->backdropOpacity = opacity;
+			this->setCascadeOpacityEnabled(false);
 			this->schedule(schedule_selector(MyEndLevelLayer::fakeUpdateFunction));
 		}
 	}
