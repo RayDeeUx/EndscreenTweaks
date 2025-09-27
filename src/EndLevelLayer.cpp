@@ -14,6 +14,9 @@
 using namespace geode::prelude;
 
 class $modify(MyEndLevelLayer, EndLevelLayer) {
+	static void onModify(auto& self) {
+		self.setHookPriority("EndLevelLayer::onHideLayer", Priority::Replace);
+	}
 	static CCActionInterval* getEaseTypeForCustomScaleAnimation(CCActionInterval* action, const std::string& modStringSetting, const float easingRate, const EasingReason easingReason) {
 		if (!action) return nullptr;
 		const std::string& easeType = utils::string::toLower(modStringSetting);
@@ -359,8 +362,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	}
 	void onHideLayer(CCObject* sender) {
 		// don't rely on Manager::shouldEditTransition; vanilla GD's fast menu still shows transition when activating this button
-		EndLevelLayer::onHideLayer(sender);
-		if (!getModBool("enabled") || !getModBool("editTransition")) return;
+		if (!getModBool("enabled") || !getModBool("editTransition")) return EndLevelLayer::onHideLayer(sender);
 
 		this->stopActionByTag(12341);
 		this->setCascadeColorEnabled(false);
