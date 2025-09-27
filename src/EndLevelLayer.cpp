@@ -360,7 +360,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	void onHideLayer(CCObject* sender) {
 		// don't rely on Manager::shouldEditTransition; vanilla GD's fast menu still shows transition when activating this button
 		EndLevelLayer::onHideLayer(sender);
-		if (!getModBool("enabled") || !getModBool("noTransition")) return;
+		if (!getModBool("enabled") || !getModBool("editTransition")) return;
 
 		this->stopActionByTag(12341);
 		this->setCascadeColorEnabled(false);
