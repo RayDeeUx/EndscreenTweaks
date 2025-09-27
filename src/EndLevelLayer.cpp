@@ -334,19 +334,18 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		if (!getModBool("enabled")) return EndLevelLayer::showLayer(p0);
 		EndLevelLayer::showLayer(noTransition);
 		if (!m_playLayer || !m_playLayer->m_level) return;
-		GJGameLevel* theLevel = m_playLayer->m_level;
 		MyEndLevelLayer::applyEditedTransitionsInitialFallDown();
 		MyEndLevelLayer::applyHideEndLevelLayerHideBtn();
 		MyEndLevelLayer::applyHideChainsBackground();
 		MyEndLevelLayer::applySpaceUK();
-		MyEndLevelLayer::applyPlatAttemptsAndJumpsOrFlukedFromPercent(theLevel);
+		MyEndLevelLayer::applyPlatAttemptsAndJumpsOrFlukedFromPercent(m_playLayer->m_level);
 		MyEndLevelLayer::addLoadedModsList();
 	}
 	void customSetup() {
 		EndLevelLayer::customSetup();
 		if (!getModBool("enabled")) return;
 		// managerMacro->isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
-		if (!m_playLayer) return;
+		if (!m_playLayer || !m_playLayer->m_level) return;
 		if (getModBool("endTexts")) MyEndLevelLayer::applyRandomQuoteAndFont(m_playLayer, m_playLayer->m_level);
 		if (getModBool("customLevelCompleteText")) MyEndLevelLayer::applyCustomLevelCompleteText(getModString("alsoReplacePlayLayerLCT"));
 	}
