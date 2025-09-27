@@ -206,8 +206,8 @@
 			"default": false
 		},
 		"editTransition": {
-			"name": "Edit Bouncing Transition",
-			"description": "Change the bouncing transition when showing EndLevelLayer. Note that __enabling `No Bouncing Transition` or `Fast Menu` from GD's vanilla settings__ will disable this setting and all other related settings.",
+			"name": "Customize Bouncing Transition",
+			"description": "Change the bouncing transition when showing EndLevelLayer. Note that __enabling `No Bouncing Transition` from this mod, or enabling `Fast Menu` from GD's vanilla settings__ will disable settings related to the initial endscreen \"falling down\" animation as well as all backdrop opacity settings.",
 			"type": "bool",
 			"default": false
 		},
