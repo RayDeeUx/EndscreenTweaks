@@ -328,11 +328,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		})->show();
 	}
 	void showLayer(bool p0) {
-		const bool noTransition = getModBool("noTransition");
-		if (this->m_fastMenu || noTransition) managerMacro->shouldEditTransition = false;
-		else managerMacro->shouldEditTransition = getModBool("editTransition");
 		if (!getModBool("enabled")) return EndLevelLayer::showLayer(p0);
-		EndLevelLayer::showLayer(noTransition);
+		EndLevelLayer::showLayer(getModBool("noTransition"));
 		if (!m_playLayer || !m_playLayer->m_level) return;
 		MyEndLevelLayer::applyEditedTransitionsInitialFallDown();
 		MyEndLevelLayer::applyHideEndLevelLayerHideBtn();
@@ -342,11 +339,16 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		MyEndLevelLayer::addLoadedModsList();
 	}
 	void customSetup() {
+		if (this->m_fastMenu || getModBool("noTransition")) managerMacro->shouldEditTransition = false;
+		else managerMacro->shouldEditTransition = getModBool("editTransition");
 		EndLevelLayer::customSetup();
 		if (!getModBool("enabled")) return;
 		// managerMacro->isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
 		if (!m_playLayer || !m_playLayer->m_level) return;
 		if (getModBool("endTexts")) MyEndLevelLayer::applyRandomQuoteAndFont(m_playLayer, m_playLayer->m_level);
 		if (getModBool("customLevelCompleteText")) MyEndLevelLayer::applyCustomLevelCompleteText(getModString("alsoReplacePlayLayerLCT"));
+	}
+	void onHideLayer(CCObject* sender) {
+		if (!getModBool("enabled") || !managerMacro->shouldEditTransition) return EndLevelLayer::onHideLayer(sender);
 	}
 };
