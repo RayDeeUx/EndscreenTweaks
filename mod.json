@@ -211,13 +211,33 @@
 			"type": "bool",
 			"default": false
 		},
-		"backdropOpacity": {
-			"name": "Backdrop Opacity",
-			"description": "Adjust the opacity of the backdrop of EndLevelLayer.",
+		"backdropOpacityRated": {
+			"name": "Backdrop Opacity (Rated Levels)",
+			"description": "Adjust the opacity of the backdrop of EndLevelLayer when completing a rated level.",
 			"type": "int",
 			"default": 100,
 			"min": 0,
 			"max": 255
+		},
+		"backdropOpacity": {
+			"name": "Backdrop Opacity",
+			"description": "Adjust the opacity of the backdrop of EndLevelLayer when completing a non-rated level.",
+			"type": "int",
+			"default": 100,
+			"min": 0,
+			"max": 255
+		},
+		"backdropColorRated": {
+			"name": "Backdrop Opacity (Rated Levels)",
+			"description": "Adjust the color of the backdrop of EndLevelLayer when completing a rated level.",
+			"type": "color",
+			"default": "#000000"
+		},
+		"backdropColor": {
+			"name": "Backdrop Opacity",
+			"description": "Adjust the color of the backdrop of EndLevelLayer when completing a non-rated level.",
+			"type": "color",
+			"default": "#000000"
 		},
 		"initialFallDownDuration": {
 			"name": "Initial Falling Down Duration",

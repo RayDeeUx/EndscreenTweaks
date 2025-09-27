@@ -9,6 +9,7 @@
 #define getModInt Mod::get()->getSettingValue<int64_t>
 #define getModDouble Mod::get()->getSettingValue<double>
 #define getModString Mod::get()->getSettingValue<std::string>
+#define getModColor Mod::get()->getSettingValue<ccColor3B>
 
 using namespace geode::prelude;
 
@@ -51,12 +52,16 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		this->stopAllActions();
 		this->m_mainLayer->stopAllActions();
 
+		const bool hasStars = m_playLayer->m_level->m_stars.value() > 0;
+
 		this->setOpacity(0);
+		this->setColor(hasStars ? getModColor("backdropColorRated") : getModColor("backdropColor"));
+		this->setCascadeColorEnabled(false);
 		this->setCascadeOpacityEnabled(false);
 		this->m_mainLayer->setPosition({this->getPositionX(), 320.f});
 
 		const float duration = std::clamp<float>(getModDouble("initialFallDownDuration"), 0.f, 2.f);
-		CCFadeTo* fadeToAction = CCFadeTo::create(duration, std::clamp<int>(getModInt("backdropOpacity"), 0, 255));
+		CCFadeTo* fadeToAction = CCFadeTo::create(duration, std::clamp<int>(hasStars ? getModInt("backdropOpacityRated") : getModInt("backdropOpacity"), 0, 255));
 		CCSequence* fadeSequence = CCSequence::create(fadeToAction, nullptr);
 		fadeSequence->setTag(12341);
 		this->runAction(fadeSequence);
