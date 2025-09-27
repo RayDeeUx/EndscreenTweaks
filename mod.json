@@ -187,14 +187,6 @@
 			"type": "bool",
 			"default": false
 		},
-		"backdropOpacity": {
-			"name": "Backdrop Opacity",
-			"description": "Adjust the opacity of the backdrop of EndLevelLayer. Set to 100 (the vanilla default) to disable.",
-			"type": "int",
-			"default": 100,
-			"min": 0,
-			"max": 255
-		},
 		"hideHideEndscreen": {
 			"name": "Hide \"Hide Endscreen\" Button",
 			"description": "Hides the \"Hide Endscreen\" button from EndLevelLayer. (Still clickable, just invisible.)\n\n<cy>(Enabling this option will also hide the sprite of the extra button added from enabling the \"Hide EndLevelLayer\" option.)</c>",
@@ -212,6 +204,20 @@
 			"description": "Disables the bouncing transition when showing EndLevelLayer.",
 			"type": "bool",
 			"default": false
+		},
+		"editTransition": {
+			"name": "Edit Bouncing Transition",
+			"description": "Change the bouncing transition when showing EndLevelLayer. Note that __enabling `No Bouncing Transition` or `Fast Menu` from GD's vanilla settings__ will disable this setting and all other related settings.",
+			"type": "bool",
+			"default": false
+		},
+		"backdropOpacity": {
+			"name": "Backdrop Opacity",
+			"description": "Adjust the opacity of the backdrop of EndLevelLayer.",
+			"type": "int",
+			"default": 100,
+			"min": 0,
+			"max": 255
 		},
 		"spaceUK": {
 			"name": "SpaceUK",

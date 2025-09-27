@@ -65,6 +65,7 @@ public:
 	std::string chosenMode = "";
 
 	int backdropOpacity = 100;
+	bool shouldEditTransition = false;
 
 	static Manager* getSharedInstance() {
 		if (!instance) {

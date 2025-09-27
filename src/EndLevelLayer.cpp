@@ -13,8 +13,63 @@
 using namespace geode::prelude;
 
 class $modify(MyEndLevelLayer, EndLevelLayer) {
-	void fakeUpdateFunction(float) {
-		this->setOpacity(managerMacro->backdropOpacity);
+	static CCActionInterval* getEaseTypeForCustomScaleAnimation(CCActionInterval* action, const std::string& modStringSetting, const float easingRate) {
+		if (!action) return nullptr;
+		const std::string& easeType = utils::string::toLower(modStringSetting);
+
+		if (easeType == "none (linear)" || easeType == "none" || easeType == "linear") return action;
+
+		if (easeType == "ease in") return CCEaseIn::create(action, easingRate);
+		if (easeType == "ease out") return CCEaseOut::create(action, easingRate);
+		if (easeType == "ease in out") return CCEaseInOut::create(action, easingRate);
+
+		if (easeType == "back in") return CCEaseBackIn::create(action);
+		if (easeType == "back out") return CCEaseBackOut::create(action);
+		if (easeType == "back in out") return CCEaseBackInOut::create(action);
+
+		if (easeType == "bounce in") return CCEaseBounceIn::create(action);
+		if (easeType == "bounce out") return CCEaseBounceOut::create(action);
+		if (easeType == "bounce in out") return CCEaseBounceInOut::create(action);
+
+		if (easeType == "elastic in") return CCEaseElasticIn::create(action, easingRate);
+		if (easeType == "elastic out") return CCEaseElasticOut::create(action, easingRate);
+		if (easeType == "elastic in out") return CCEaseElasticInOut::create(action, easingRate);
+
+		if (easeType == "exponential in") return CCEaseExponentialIn::create(action);
+		if (easeType == "exponential out") return CCEaseExponentialOut::create(action);
+		if (easeType == "exponential in out") return CCEaseExponentialInOut::create(action);
+
+		if (easeType == "sine in") return CCEaseSineIn::create(action);
+		if (easeType == "sine out") return CCEaseSineOut::create(action);
+		if (easeType == "sine in out") return CCEaseSineInOut::create(action);
+
+		return CCEaseBounceOut::create(action);
+	}
+	void applyEditedTransitions() {
+		if (!managerMacro->shouldEditTransition || !m_mainLayer) return;
+
+		this->stopActionByTag(0x3035);
+		this->m_mainLayer->stopActionByTag(0x3035);
+
+		this->setOpacity(0);
+		this->setCascadeOpacityEnabled(false);
+		this->m_mainLayer->setPosition({this->getPositionX(), 320.f});
+
+		float duration = 1.f; // setting, make sure to clamp!
+		CCFadeTo* fadeToAction = CCFadeTo::create(duration, managerMacro->backdropOpacity);
+		CCSequence* fadeSequence = CCSequence::create(fadeToAction, nullptr);
+		fadeSequence->setTag(12341);
+		this->runAction(fadeSequence);
+
+		CCMoveTo* moveToAction = CCMoveTo::create(duration, {0, 5.f});
+		CCActionInterval* easedMoveToAction = MyEndLevelLayer::getEaseTypeForCustomScaleAnimation(
+			moveToAction, getModString("initialMoveDownEasingType"),
+			std::clamp<float>(getModDouble("initialMoveDownEasingRate"), .1f, 4.f)
+		);
+		CCCallFunc* callFunctn = CCCallFunc::create(this, callfunc_selector(EndLevelLayer::enterAnimFinished));
+		CCSequence* moveDownSequence = CCSequence::create(easedMoveToAction, callFunctn, nullptr);
+		moveDownSequence->setTag(12341);
+		this->m_mainLayer->runAction(moveDownSequence);
 	}
 	CCSprite* getHideButtonSprite() {
 		return typeinfo_cast<CCSprite*>(getChildByIDRecursive("hide-button")->getChildren()->objectAtIndex(0));
@@ -98,11 +153,6 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				if (CCNode* bottom = bg->getChildByID("bottom-border")) static_cast<CCSprite*>(bottom)->setOpacity(0);
 				if (CCNode* title = bg->getChildByID("title")) static_cast<CCLabelBMFont*>(title)->setOpacity(0);
 			}
-		}
-		if (const int opacity = std::clamp<int>(getModInt("backdropOpacity"), 0, 255); opacity != 100) {
-			managerMacro->backdropOpacity = opacity;
-			this->setCascadeOpacityEnabled(false);
-			this->schedule(schedule_selector(MyEndLevelLayer::fakeUpdateFunction));
 		}
 	}
 	void applyPlatAttemptsAndJumpsOrFlukedFromPercent(GJGameLevel* theLevel) {
@@ -278,10 +328,13 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		})->show();
 	}
 	void showLayer(bool p0) {
+		const bool noTransition = getModBool("noTransition");
+		if (p0 || noTransition) managerMacro->shouldEditTransition = false;
 		if (!getModBool("enabled")) return EndLevelLayer::showLayer(p0);
-		EndLevelLayer::showLayer(getModBool("noTransition"));
+		EndLevelLayer::showLayer(noTransition);
 		if (!m_playLayer || !m_playLayer->m_level) return;
 		GJGameLevel* theLevel = m_playLayer->m_level;
+		MyEndLevelLayer::applyEditedTransitions();
 		MyEndLevelLayer::applyHideEndLevelLayerHideBtn();
 		MyEndLevelLayer::applyHideChainsBackground();
 		MyEndLevelLayer::applySpaceUK();
