@@ -219,6 +219,35 @@
 			"min": 0,
 			"max": 255
 		},
+		"initialFallDownDuration": {
+			"name": "Initial Falling Down Duration",
+			"description": "Adjust the duration of the initial EndLevelLayer falling down animation.",
+			"type": "float",
+			"default": 1.0,
+			"min": 0.0,
+			"max": 2.0
+		},
+		"initialFallDownEasingType": {
+			"name": "Initial Falling Down Easing Type",
+			"type": "string",
+			"default": "Bounce Out",
+			"one-of": [
+				"None (Linear)",
+				"Ease In", "Ease Out", "Ease In Out",
+				"Back In", "Back Out", "Back In Out",
+				"Bounce In", "Bounce Out", "Bounce In Out",
+				"Elastic In", "Elastic Out", "Elastic In Out",
+				"Exponential In", "Exponential Out", "Exponential In Out",
+				"Sine In", "Sine Out", "Sine In Out"
+			]
+		},
+		"initialFallDownEasingRate": {
+			"name": "Initial Falling Down Easing Rate",
+			"type": "float",
+			"default": 1.00,
+			"min": 0.10,
+			"max": 4.00
+		},
 		"spaceUK": {
 			"name": "SpaceUK",
 			"description": "940px. Any questions?",

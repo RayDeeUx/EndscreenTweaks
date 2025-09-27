@@ -45,26 +45,26 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 
 		return CCEaseBounceOut::create(action);
 	}
-	void applyEditedTransitions() {
+	void applyEditedTransitionsInitialFallDown() {
 		if (!managerMacro->shouldEditTransition || !m_mainLayer) return;
 
-		this->stopActionByTag(0x3035);
-		this->m_mainLayer->stopActionByTag(0x3035);
+		this->stopAllActions();
+		this->m_mainLayer->stopAllActions();
 
 		this->setOpacity(0);
 		this->setCascadeOpacityEnabled(false);
 		this->m_mainLayer->setPosition({this->getPositionX(), 320.f});
 
-		float duration = 1.f; // setting, make sure to clamp!
-		CCFadeTo* fadeToAction = CCFadeTo::create(duration, managerMacro->backdropOpacity);
+		const float duration = std::clamp<float>(getModDouble("initialFallDownDuration"), 0.f, 2.f);
+		CCFadeTo* fadeToAction = CCFadeTo::create(duration, std::clamp<int>(getModInt("backdropOpacity"), 0, 255));
 		CCSequence* fadeSequence = CCSequence::create(fadeToAction, nullptr);
 		fadeSequence->setTag(12341);
 		this->runAction(fadeSequence);
 
 		CCMoveTo* moveToAction = CCMoveTo::create(duration, {0, 5.f});
 		CCActionInterval* easedMoveToAction = MyEndLevelLayer::getEaseTypeForCustomScaleAnimation(
-			moveToAction, getModString("initialMoveDownEasingType"),
-			std::clamp<float>(getModDouble("initialMoveDownEasingRate"), .1f, 4.f)
+			moveToAction, getModString("initialFallDownEasingType"),
+			std::clamp<float>(getModDouble("initialFallDownEasingRate"), .1f, 4.f)
 		);
 		CCCallFunc* callFunctn = CCCallFunc::create(this, callfunc_selector(EndLevelLayer::enterAnimFinished));
 		CCSequence* moveDownSequence = CCSequence::create(easedMoveToAction, callFunctn, nullptr);
@@ -329,12 +329,13 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	}
 	void showLayer(bool p0) {
 		const bool noTransition = getModBool("noTransition");
-		if (p0 || noTransition) managerMacro->shouldEditTransition = false;
+		if (this->m_fastMenu || noTransition) managerMacro->shouldEditTransition = false;
+		else managerMacro->shouldEditTransition = getModBool("editTransition");
 		if (!getModBool("enabled")) return EndLevelLayer::showLayer(p0);
 		EndLevelLayer::showLayer(noTransition);
 		if (!m_playLayer || !m_playLayer->m_level) return;
 		GJGameLevel* theLevel = m_playLayer->m_level;
-		MyEndLevelLayer::applyEditedTransitions();
+		MyEndLevelLayer::applyEditedTransitionsInitialFallDown();
 		MyEndLevelLayer::applyHideEndLevelLayerHideBtn();
 		MyEndLevelLayer::applyHideChainsBackground();
 		MyEndLevelLayer::applySpaceUK();
@@ -344,10 +345,9 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	void customSetup() {
 		EndLevelLayer::customSetup();
 		if (!getModBool("enabled")) return;
-		managerMacro->isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
-		PlayLayer* playLayer = PlayLayer::get();
-		if (!playLayer) return;
-		if (getModBool("endTexts")) MyEndLevelLayer::applyRandomQuoteAndFont(playLayer, playLayer->m_level);
+		// managerMacro->isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
+		if (!m_playLayer) return;
+		if (getModBool("endTexts")) MyEndLevelLayer::applyRandomQuoteAndFont(m_playLayer, m_playLayer->m_level);
 		if (getModBool("customLevelCompleteText")) MyEndLevelLayer::applyCustomLevelCompleteText(getModString("alsoReplacePlayLayerLCT"));
 	}
 };
