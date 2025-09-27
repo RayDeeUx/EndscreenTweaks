@@ -6,6 +6,7 @@
 using namespace geode::prelude;
 
 $on_mod(Loaded) {
+	Mod::get()->setLoggingEnabled(Mod::get()->getSettingValue<bool>("logging"));
 	Manager* manager = managerMacro;
 	manager->hideEndLevelLayer = Mod::get()->getSettingValue<bool>("hideEndLevelLayer");
 	(void) Mod::get()->registerCustomSettingType("configdir", &MyButtonSettingV3::parse);

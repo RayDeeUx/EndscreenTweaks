@@ -248,9 +248,22 @@
 			"min": 0.10,
 			"max": 4.00
 		},
+		"robtopFallUpHideDuration": {
+			"name": "\"Hiding\" Falling Up Duration",
+			"description": "Adjust the duration of the EndLevelLayer falling up animation that happens when \"hiding\" using the vanilla button.",
+			"type": "float",
+			"default": 1.0,
+			"min": 0.0,
+			"max": 5.0
+		},
 		"spaceUK": {
 			"name": "SpaceUK",
 			"description": "940px. Any questions?",
+			"type": "bool",
+			"default": false
+		},
+		"logging": {
+			"name": "Logging",
 			"type": "bool",
 			"default": false
 		}
