@@ -64,6 +64,8 @@ public:
 	std::string sharedReplacementSprite = "";
 	std::string chosenMode = "";
 
+	int backdropOpacity = 100;
+
 	static Manager* getSharedInstance() {
 		if (!instance) {
 			instance = new Manager();

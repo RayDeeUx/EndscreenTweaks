@@ -13,6 +13,10 @@
 using namespace geode::prelude;
 
 class $modify(MyEndLevelLayer, EndLevelLayer) {
+	void fakeUpdateFunction(float) {
+		this->setCascadeOpacityEnabled(false);
+		this->setOpacity(managerMacro->backdropOpacity);
+	}
 	CCSprite* getHideButtonSprite() {
 		return typeinfo_cast<CCSprite*>(getChildByIDRecursive("hide-button")->getChildren()->objectAtIndex(0));
 	}
@@ -97,8 +101,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			}
 		}
 		if (const int opacity = std::clamp<int>(getModInt("backdropOpacity"), 0, 255); opacity != 100) {
-			this->setCascadeOpacityEnabled(false);
-			this->setOpacity(opacity);
+			managerMacro->backdropOpacity = opacity;
+			this->schedule(schedule_selector(MyEndLevelLayer::fakeUpdateFunction));
 		}
 	}
 	void applyPlatAttemptsAndJumpsOrFlukedFromPercent(GJGameLevel* theLevel) {
