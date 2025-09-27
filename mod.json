@@ -1,5 +1,5 @@
 {
-	"geode": "4.4.0",
+	"geode": "4.7.0",
 	"gd": {
 		"win": "2.2074",
 		"mac": "2.2074",
@@ -186,6 +186,14 @@
 			"description": "Hides the background from EndLevelLayer.",
 			"type": "bool",
 			"default": false
+		},
+		"backdropOpacity": {
+			"name": "Backdrop Opacity",
+			"description": "Adjust the opacity of the backdrop of EndLevelLayer. Set to 100 (the vanilla default) to disable.",
+			"type": "int",
+			"default": 100,
+			"min": 0,
+			"max": 255
 		},
 		"hideHideEndscreen": {
 			"name": "Hide \"Hide Endscreen\" Button",

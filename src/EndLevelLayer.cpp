@@ -6,6 +6,7 @@
 
 #define managerMacro Manager::getSharedInstance()
 #define getModBool Mod::get()->getSettingValue<bool>
+#define getModInt Mod::get()->getSettingValue<int64_t>
 #define getModDouble Mod::get()->getSettingValue<double>
 #define getModString Mod::get()->getSettingValue<std::string>
 
@@ -94,6 +95,10 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 				if (CCNode* bottom = bg->getChildByID("bottom-border")) static_cast<CCSprite*>(bottom)->setOpacity(0);
 				if (CCNode* title = bg->getChildByID("title")) static_cast<CCLabelBMFont*>(title)->setOpacity(0);
 			}
+		}
+		if (const int opacity = std::clamp<int>(getModInt("backdropOpacity"), 0, 255); opacity != 100) {
+			this->setCascadeOpacityEnabled(false);
+			this->setOpacity(opacity);
 		}
 	}
 	void applyPlatAttemptsAndJumpsOrFlukedFromPercent(GJGameLevel* theLevel) {
