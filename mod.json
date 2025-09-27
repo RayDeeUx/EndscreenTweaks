@@ -228,13 +228,13 @@
 			"max": 255
 		},
 		"backdropColorRated": {
-			"name": "Backdrop Opacity (Rated Levels)",
+			"name": "Backdrop Color (Rated Levels)",
 			"description": "Adjust the color of the backdrop of EndLevelLayer when completing a rated level.",
 			"type": "color",
 			"default": "#000000"
 		},
 		"backdropColor": {
-			"name": "Backdrop Opacity",
+			"name": "Backdrop Color",
 			"description": "Adjust the color of the backdrop of EndLevelLayer when completing a non-rated level.",
 			"type": "color",
 			"default": "#000000"
@@ -275,6 +275,56 @@
 			"default": 1.0,
 			"min": 0.0,
 			"max": 5.0
+		},
+		"robtopFallUpHideEasingType": {
+			"name": "\"Hiding\" Falling Up Easing Type",
+			"type": "string",
+			"default": "Ease In Out",
+			"one-of": [
+				"None (Linear)",
+				"Ease In", "Ease Out", "Ease In Out",
+				"Back In", "Back Out", "Back In Out",
+				"Bounce In", "Bounce Out", "Bounce In Out",
+				"Elastic In", "Elastic Out", "Elastic In Out",
+				"Exponential In", "Exponential Out", "Exponential In Out",
+				"Sine In", "Sine Out", "Sine In Out"
+			]
+		},
+		"robtopFallUpHideEasingRate": {
+			"name": "\"Hiding\" Falling Up Easing Rate",
+			"type": "float",
+			"default": 1.00,
+			"min": 0.10,
+			"max": 4.00
+		},
+		"robtopFallDownHideDuration": {
+			"name": "\"Hiding\" Falling Down Duration",
+			"description": "Adjust the duration of the EndLevelLayer falling down animation that happens when \"hiding\" using the vanilla button.",
+			"type": "float",
+			"default": 1.0,
+			"min": 0.0,
+			"max": 5.0
+		},
+		"robtopFallDownHideEasingType": {
+			"name": "\"Hiding\" Falling Down Easing Type",
+			"type": "string",
+			"default": "Ease In Out",
+			"one-of": [
+				"None (Linear)",
+				"Ease In", "Ease Out", "Ease In Out",
+				"Back In", "Back Out", "Back In Out",
+				"Bounce In", "Bounce Out", "Bounce In Out",
+				"Elastic In", "Elastic Out", "Elastic In Out",
+				"Exponential In", "Exponential Out", "Exponential In Out",
+				"Sine In", "Sine Out", "Sine In Out"
+			]
+		},
+		"robtopFallDownHideEasingRate": {
+			"name": "\"Hiding\" Falling Down Easing Rate",
+			"type": "float",
+			"default": 1.00,
+			"min": 0.10,
+			"max": 4.00
 		},
 		"spaceUK": {
 			"name": "SpaceUK",

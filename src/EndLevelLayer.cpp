@@ -14,7 +14,7 @@
 using namespace geode::prelude;
 
 class $modify(MyEndLevelLayer, EndLevelLayer) {
-	static CCActionInterval* getEaseTypeForCustomScaleAnimation(CCActionInterval* action, const std::string& modStringSetting, const float easingRate) {
+	static CCActionInterval* getEaseTypeForCustomScaleAnimation(CCActionInterval* action, const std::string& modStringSetting, const float easingRate, const EasingReason easingReason) {
 		if (!action) return nullptr;
 		const std::string& easeType = utils::string::toLower(modStringSetting);
 
@@ -44,6 +44,9 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		if (easeType == "sine out") return CCEaseSineOut::create(action);
 		if (easeType == "sine in out") return CCEaseSineInOut::create(action);
 
+		if (easingReason == EasingReason::VanillaFallingDown) return CCEaseBounceOut::create(action);
+		if (easingReason == EasingReason::VanillaHiding) return CCEaseInOut::create(action, easingRate);
+
 		return CCEaseBounceOut::create(action);
 	}
 	void applyEditedTransitionsInitialFallDown() {
@@ -61,7 +64,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		this->m_mainLayer->setPosition({this->getPositionX(), 320.f});
 
 		const float duration = std::clamp<float>(getModDouble("initialFallDownDuration"), 0.f, 2.f);
-		CCFadeTo* fadeToAction = CCFadeTo::create(duration, std::clamp<int>(hasStars ? getModInt("backdropOpacityRated") : getModInt("backdropOpacity"), 0, 255));
+		managerMacro->backdropOpacity = std::clamp<int>(hasStars ? getModInt("backdropOpacityRated") : getModInt("backdropOpacity"), 0, 255);
+		CCFadeTo* fadeToAction = CCFadeTo::create(duration, managerMacro->backdropOpacity);
 		CCSequence* fadeSequence = CCSequence::create(fadeToAction, nullptr);
 		fadeSequence->setTag(12341);
 		this->runAction(fadeSequence);
@@ -69,7 +73,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		CCMoveTo* moveToAction = CCMoveTo::create(duration, {0, 5.f});
 		CCActionInterval* easedMoveToAction = MyEndLevelLayer::getEaseTypeForCustomScaleAnimation(
 			moveToAction, getModString("initialFallDownEasingType"),
-			std::clamp<float>(getModDouble("initialFallDownEasingRate"), .1f, 4.f)
+			std::clamp<float>(getModDouble("initialFallDownEasingRate"), .1f, 4.f), EasingReason::VanillaFallingDown
 		);
 		CCCallFunc* callFunctn = CCCallFunc::create(this, callfunc_selector(EndLevelLayer::enterAnimFinished));
 		CCSequence* moveDownSequence = CCSequence::create(easedMoveToAction, callFunctn, nullptr);
@@ -354,6 +358,28 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		if (getModBool("customLevelCompleteText")) MyEndLevelLayer::applyCustomLevelCompleteText(getModString("alsoReplacePlayLayerLCT"));
 	}
 	void onHideLayer(CCObject* sender) {
-		if (!getModBool("enabled") || !managerMacro->shouldEditTransition) return EndLevelLayer::onHideLayer(sender);
+		// don't rely on Manager::shouldEditTransition; vanilla GD's fast menu still shows transition when activating this button
+		EndLevelLayer::onHideLayer(sender);
+		if (!getModBool("enabled") || !getModBool("noTransition")) return;
+
+		this->stopActionByTag(12341);
+		this->setCascadeColorEnabled(false);
+		this->setCascadeOpacityEnabled(false);
+		this->m_mainLayer->stopActionByTag(12341);
+		m_hidden = !m_hidden;
+
+		const float duration = std::clamp<float>(m_hidden ? getModDouble("robtopFallUpHideDuration") : getModDouble("robtopFallDownHideDuration"), 0.f, 5.f);
+		CCFadeTo* fadeToAction = CCFadeTo::create(duration, m_hidden ? 0 : managerMacro->backdropOpacity);
+		CCSequence* fadeSequence = CCSequence::create(fadeToAction, nullptr);
+		fadeSequence->setTag(12341);
+		this->runAction(fadeSequence);
+
+		CCMoveTo* moveToAction = m_hidden ? CCMoveTo::create(duration, {0, 320.f}) : CCMoveTo::create(duration, {0, 5.f});
+		CCActionInterval* easedMoveToAction = MyEndLevelLayer::getEaseTypeForCustomScaleAnimation(
+			moveToAction, m_hidden ? getModString("robtopFallUpHideEasingType") : getModString("robtopFallDownHideEasingType"),
+			std::clamp<float>(m_hidden ? getModDouble("robtopFallUpHideEasingRate") : getModDouble("robtopFallDownHideEasingRate"), .1f, 4.f), EasingReason::VanillaHiding
+		);
+		easedMoveToAction->setTag(12341);
+		this->m_mainLayer->runAction(easedMoveToAction);
 	}
 };

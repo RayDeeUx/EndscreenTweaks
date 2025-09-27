@@ -6,6 +6,11 @@
 
 using namespace geode::prelude;
 
+enum class EasingReason {
+	VanillaFallingDown,
+	VanillaHiding
+};
+
 class Manager {
 
 protected:
