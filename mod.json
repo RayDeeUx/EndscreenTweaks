@@ -147,7 +147,7 @@
 		},
 		"showTotalAttemptsAndJumps": {
 			"name": "Show Total Attempts + Jumps",
-			"description": "Shows your total attempt/jump count for each level, even Platformer levels (if <cl>\"Plat. Attempts + Jumps\"</c> is enabled).\n\n- Disabled: This feature is disabled. Not much to say there.\n-Fully Replace: Fully replaces the displayed attempt/jump count with the total attempt/jump count instead.\n-Show as Addt'l Info: Shows the total attempt/jump count next to the displayed attempt/jump count.",
+			"description": "<cp>Inspired by YT videos published by Doggie.</c>\n\nShows your total attempt/jump count for each level, even Platformer levels (if <cl>\"Plat. Attempts + Jumps\"</c> is enabled).\n\n- Disabled: This feature is disabled. Not much to say there.\n- Fully Replace: Fully replaces the displayed attempt/jump count with the total attempt/jump count instead.\n- Show as Addt'l Info: Shows the total attempt/jump count next to the displayed attempt/jump count.",
 			"type": "string",
 			"default": "Disabled",
 			"one-of": [

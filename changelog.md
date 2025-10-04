@@ -5,6 +5,8 @@
   - Change most of the traits of the bouncing down animations, as well as the hide/unhide animations from vanilla GD.
   - Options include editing the backdrop opacity, animation durations, and easing durations. Check the mod settings for more!
   - All default options are exactly as seen in vanilla GD.
+- Added `Show Total Attempts + Jumps`
+  - This was mostly for parity with that one private mod Doggie uses in his videos.
 ## v1.7.1
 - Improved compatibility with other mods when `Hide Background` is enabled.
 ## v1.7.0
