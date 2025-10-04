@@ -200,7 +200,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		}
 	}
 	void applyTotalAttemptAndJumpCount(GJGameLevel* level) {
-		const std::string_view showTotalAttemptsAndJumps = geode::utils::string::toLower(getModString("showTotalAttemptsAndJumps"));
+		const std::string& showTotalAttemptsAndJumps = geode::utils::string::toLower(getModString("showTotalAttemptsAndJumps"));
 		if (showTotalAttemptsAndJumps != "fully replace" && showTotalAttemptsAndJumps != "show as addt'l info") return;
 		if (!getModBool("enabled") || showTotalAttemptsAndJumps == "disabled" || !level) return;
 
