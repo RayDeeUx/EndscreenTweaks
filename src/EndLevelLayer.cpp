@@ -219,8 +219,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 
 		if (!attemptLabel || !jumpsLabel) return;
 
-		const std::string& totalAttemptsString = fmt::format(std::locale("en_US.UTF-8"), "{:L}", level->m_attempts).c_str();
-		const std::string& totalJumpsString = fmt::format(std::locale("en_US.UTF-8"), "{:L}", level->m_jumps).c_str();
+		const std::string& totalAttemptsString = fmt::format(std::locale("en_US.UTF-8"), "{:L}", level->m_attempts.value()).c_str();
+		const std::string& totalJumpsString = fmt::format(std::locale("en_US.UTF-8"), "{:L}", level->m_jumps.value()).c_str();
 		if (showTotalAttemptsAndJumps == "fully replace") {
 			attemptLabel->setString(fmt::format(std::locale("en_US.UTF-8"), "Total Attempts: {}", totalAttemptsString).c_str());
 			jumpsLabel->setString(fmt::format(std::locale("en_US.UTF-8"), "Total Jumps: {}", totalJumpsString).c_str());
