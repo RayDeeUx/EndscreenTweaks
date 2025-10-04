@@ -1,7 +1,4 @@
 #include <Geode/modify/EndLevelLayer.hpp>
-#include <vector>
-#include <algorithm>
-#include <random>
 #include "Manager.hpp"
 
 #define managerMacro Manager::getSharedInstance()
@@ -169,10 +166,10 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	}
 	void applyPlatAttemptsAndJumpsOrFlukedFromPercent(GJGameLevel* theLevel) {
 		Manager* manager = managerMacro;
-		manager->isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
-		const auto playLayer = PlayLayer::get();
-		if (!m_mainLayer|| !playLayer) return;
-		const bool isPlat = theLevel->isPlatformer();
+		// manager->isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
+		const auto playLayer = m_playLayer;
+		if (!m_mainLayer || !playLayer) return;
+		const bool isPlat = theLevel->isPlatformer() && playLayer->m_isPlatformer;
 		if (getModBool("platAttemptsAndJumps") && isPlat) {
 			const auto timeLabel = getChildByIDRecursive("time-label");
 			if (!timeLabel) return;
@@ -200,6 +197,36 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			flukedFromLabel->setScale(timeLabel->getScale());
 			flukedFromLabel->setID("fluked-from-label"_spr);
 			m_mainLayer->addChild(flukedFromLabel);
+		}
+	}
+	void applyTotalAttemptAndJumpCount(GJGameLevel* level) {
+		const std::string_view showTotalAttemptsAndJumps = geode::utils::string::toLower(getModString("showTotalAttemptsAndJumps"));
+		if (showTotalAttemptsAndJumps != "fully replace" && showTotalAttemptsAndJumps != "show as addt'l info") return;
+		if (!getModBool("enabled") || showTotalAttemptsAndJumps == "disabled" || !level) return;
+
+		const bool isPlat = level->isPlatformer() && m_playLayer->m_isPlatformer;
+		if (isPlat && !getModBool("platAttemptsAndJumps")) return;
+
+		CCLabelBMFont* attemptLabel = nullptr;
+		CCLabelBMFont* jumpsLabel = nullptr;
+		if (isPlat) {
+			attemptLabel = static_cast<CCLabelBMFont*>(m_mainLayer->getChildByID("attempts-label"_spr));
+			jumpsLabel = static_cast<CCLabelBMFont*>(m_mainLayer->getChildByID("jumps-label"_spr));
+		} else {
+			attemptLabel = static_cast<CCLabelBMFont*>(m_mainLayer->getChildByID("attempts-label"));
+			jumpsLabel = static_cast<CCLabelBMFont*>(m_mainLayer->getChildByID("jumps-label"));
+		}
+
+		if (!attemptLabel || !jumpsLabel) return;
+
+		const std::string& totalAttemptsString = fmt::format(std::locale("en_US.UTF-8"), "{:L}", level->m_attempts).c_str();
+		const std::string& totalJumpsString = fmt::format(std::locale("en_US.UTF-8"), "{:L}", level->m_jumps).c_str();
+		if (showTotalAttemptsAndJumps == "fully replace") {
+			attemptLabel->setString(fmt::format(std::locale("en_US.UTF-8"), "Total Attempts: {}", totalAttemptsString).c_str());
+			jumpsLabel->setString(fmt::format(std::locale("en_US.UTF-8"), "Total Jumps: {}", totalJumpsString).c_str());
+		} else if (showTotalAttemptsAndJumps == "show as addt'l info") {
+			attemptLabel->setString(fmt::format("{} ({})", static_cast<std::string>(attemptLabel->getString()), totalAttemptsString).c_str());
+			jumpsLabel->setString(fmt::format("{} ({})", static_cast<std::string>(jumpsLabel->getString()), totalJumpsString).c_str());
 		}
 	}
 	void applyCustomLevelCompleteText(const std::string_view matchPlayLayer) {
@@ -348,6 +375,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		MyEndLevelLayer::applyHideChainsBackground();
 		MyEndLevelLayer::applySpaceUK();
 		MyEndLevelLayer::applyPlatAttemptsAndJumpsOrFlukedFromPercent(m_playLayer->m_level);
+		MyEndLevelLayer::applyTotalAttemptAndJumpCount(m_playLayer->m_level);
 		MyEndLevelLayer::addLoadedModsList();
 	}
 	void customSetup() {

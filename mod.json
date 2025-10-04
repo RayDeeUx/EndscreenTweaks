@@ -145,6 +145,17 @@
 			"type": "bool",
 			"default": false
 		},
+		"showTotalAttemptsAndJumps": {
+			"name": "Show Total Attempts + Jumps",
+			"description": "Shows your total attempt/jump count for each level, even Platformer levels (if <cl>\"Plat. Attempts + Jumps\"</c> is enabled).\n\n- Disabled: This feature is disabled. Not much to say there.\n-Fully Replace: Fully replaces the displayed attempt/jump count with the total attempt/jump count instead.\n-Show as Addt'l Info: Shows the total attempt/jump count next to the displayed attempt/jump count.",
+			"type": "string",
+			"default": "Disabled",
+			"one-of": [
+				"Disabled",
+				"Fully Replace",
+				"Show As Addt'l Info"
+			]
+		},
 		"classicFlukedFrom": {
 			"name": "Classic \"Fluked From\" %",
 			"description": "<cl>Original idea by yolodomo.</c>\n\nShows your last best percentage on the \"Level Complete\" screen when completing Classic levels.\n\n<cy>To disable, set this setting to \"[Disabled]\". Otherwise, choose a prefix for this label to enable this feature.</c>\n\n<cr>I am not responsible if some of these prefix options will overlap past the borders of the endscreen or the level completion rewards; go experiment on your own.</c>",

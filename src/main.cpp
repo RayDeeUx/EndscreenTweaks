@@ -1,4 +1,3 @@
-#include <fstream>
 #include "Manager.hpp"
 #include "Settings.hpp"
 #include "boilerplate.hpp"
