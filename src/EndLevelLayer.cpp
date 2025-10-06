@@ -12,7 +12,7 @@ using namespace geode::prelude;
 
 class $modify(MyEndLevelLayer, EndLevelLayer) {
 	static void onModify(auto& self) {
-		self.setHookPriority("EndLevelLayer::onHideLayer", Priority::Replace);
+		(void) self.setHookPriority("EndLevelLayer::onHideLayer", Priority::Replace);
 	}
 	static CCActionInterval* getEaseTypeForCustomScaleAnimation(CCActionInterval* action, const std::string& modStringSetting, const float easingRate, const EasingReason easingReason) {
 		if (!action) return nullptr;
@@ -219,8 +219,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 
 		if (!attemptLabel || !jumpsLabel) return;
 
-		const std::string& totalAttemptsString = fmt::format(std::locale("en_US.UTF-8"), "{:L}", level->m_attempts.value()).c_str();
-		const std::string& totalJumpsString = fmt::format(std::locale("en_US.UTF-8"), "{:L}", level->m_jumps.value()).c_str();
+		const std::string& totalAttemptsString = getModBool("totalAttemptsAndJumpsCommas") ? fmt::format(std::locale("en_US.UTF-8"), "{:L}", level->m_attempts.value()) : geode::utils::numToString(level->m_attempts.value());
+		const std::string& totalJumpsString = getModBool("totalAttemptsAndJumpsCommas") ? fmt::format(std::locale("en_US.UTF-8"), "{:L}", level->m_jumps.value()) : geode::utils::numToString(level->m_jumps.value());
 		if (showTotalAttemptsAndJumps == "fully replace") {
 			attemptLabel->setString(fmt::format(std::locale("en_US.UTF-8"), "Total Attempts: {}", totalAttemptsString).c_str());
 			jumpsLabel->setString(fmt::format(std::locale("en_US.UTF-8"), "Total Jumps: {}", totalJumpsString).c_str());

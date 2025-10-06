@@ -156,6 +156,12 @@
 				"Show As Addt'l Info"
 			]
 		},
+		"totalAttemptsAndJumpsCommas": {
+			"name": "Use Commas When Showing Attempts + Jumps",
+			"description": "<cp>Inspired by YT videos published by Doggie.</c>",
+			"type": "bool",
+			"default": true
+		},
 		"classicFlukedFrom": {
 			"name": "Classic \"Fluked From\" %",
 			"description": "<cl>Original idea by yolodomo.</c>\n\nShows your last best percentage on the \"Level Complete\" screen when completing Classic levels.\n\n<cy>To disable, set this setting to \"[Disabled]\". Otherwise, choose a prefix for this label to enable this feature.</c>\n\n<cr>I am not responsible if some of these prefix options will overlap past the borders of the endscreen or the level completion rewards; go experiment on your own.</c>",
