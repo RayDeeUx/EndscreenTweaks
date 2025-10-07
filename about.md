@@ -1,6 +1,6 @@
 # EndscreenTweaks
 <c-AAAAAA>(Formerly WholesomeEndTexts.)</c>\
-Spices things up a bit to the endscreen.\
+Spices things up a bit to the level endscreen.
 
 ## Features:
 * Showing attempt and jump counts in platformer levels.
