@@ -370,6 +370,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		if (!getModBool("enabled")) return EndLevelLayer::showLayer(p0);
 		EndLevelLayer::showLayer(getModBool("noTransition"));
 		if (!m_playLayer || !m_playLayer->m_level) return;
+		if (getModBool("avoidSeeingDouble") && m_playLayer->getChildByType<EndLevelLayer>(0) && m_playLayer->getChildByType<EndLevelLayer>(0) != this) return this->removeMeAndCleanup();
 		MyEndLevelLayer::applyEditedTransitionsInitialFallDown();
 		MyEndLevelLayer::applyHideEndLevelLayerHideBtn();
 		MyEndLevelLayer::applyHideChainsBackground();

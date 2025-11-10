@@ -1,4 +1,9 @@
 # EndscreenTweaks Changelog
+## v1.8.1
+- Added titles to the settings.
+  - Wow, this mod grew a LOT!
+- Added conditions for editing each setting.
+  - Hello, Jasmine! This one's for you.
 ## v1.8.0
 - Added iOS JIT-less support.
 - Added `Customize Bouncing Transition`.

@@ -6,7 +6,7 @@
 		"ios": "2.2074",
 		"android": "2.2074"
 	},
-	"version": "v1.8.0",
+	"version": "v1.8.1",
 	"id": "raydeeux.endscreentweaks",
 	"name": "EndscreenTweaks",
 	"developers": [
@@ -18,6 +18,10 @@
 	"description": "Spices things up a bit to the level endscreen. (Formerly WholesomeEndTexts.)",
 	"repository": "https://github.com/RayDeeUx/EndscreenTweaks",
 	"settings": {
+		"filler-header": {
+			"name": "EndScreenTweaks Master Switch + Shortcuts",
+			"type": "title"
+		},
 		"enabled": {
 			"name": "Enabled",
 			"description": "Toggles the mod.",
@@ -35,41 +39,51 @@
 			"description": "Refresh your custom texts.",
 			"type": "custom:refresh"
 		},
+		"end-text-customization-header": {
+			"name": "Endscreen Messages",
+			"type": "title"
+		},
 		"endTexts": {
 			"name": "Change Endscreen Texts",
 			"description": "Toggles the main feature of the mod: changing the endscreen text!",
 			"type": "bool",
-			"default": true
+			"default": true,
+			"enable-if": "enabled"
 		},
 		"custom": {
 			"name": "custom.txt Endscreen Texts",
 			"description": "Includes your own custom \"Level Complete\" text.\nPlease edit the \"custom.txt\" file by opening this mod's config directory (look for the golden pencil button at the bottom left of the mod's introductory screen).",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled && endTexts"
 		},
 		"customTextsOnly": {
 			"name": "Only Use custom.txt Endscreen Texts",
 			"description": "Only uses your own custom \"New Best\" texts from \"custom.txt\" file.\n\nIf no custom quotes are found, the mod will fall back to the default set of quotes.\n\n<cr>Enabling this setting will override the \"Include Technoblade\" setting if you have written your own custom quotes.</c>",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled && endTexts"
 		},
 		"default": {
 			"name": "Default Set of Endscreen Texts",
 			"description": "Includes the default set of Endscreen Texts from this mod.",
 			"type": "bool",
-			"default": true
+			"default": true,
+			"enable-if": "enabled && endTexts"
 		},
 		"technoblade": {
 			"name": "Technoblade (o7)",
 			"description": "Includes quotes from Minecraft YouTuber Technoblade.",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled && endTexts"
 		},
 		"snl50": {
 			"name": "SNL50",
 			"description": "Includes quotes from Saturday Night Live (one from each season, hopefully).",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled && endTexts"
 		},
 		"maxScale": {
 			"name": "Endscreen Text Max Scale",
@@ -80,7 +94,8 @@
 			"max": 1,
 			"control": {
 				"slider-step": 0.01
-			}
+			},
+			"enable-if": "enabled && endTexts"
 		},
 		"customFont": {
 			"name": "Endscreen Text Font #",
@@ -97,13 +112,19 @@
 				"arrow-step": 1,
 				"big-arrow-step": 5,
 				"slider-step": 1
-			}
+			},
+			"enable-if": "enabled && endTexts"
+		},
+		"level-complete-customization-header": {
+			"name": "\"Level Complete\" Messages",
+			"type": "title"
 		},
 		"customLevelCompleteText": {
 			"name": "Change \"Level Complete\" Text",
 			"description": "<cl>Original idea by Saritahh.</c>\n\nReplaces the original \"Level Complete\" text when completing a level with *either* custom text with Oxygene One <cy>(the font used in the original \"Level Complete\" font)</c>, or an image of your choice <cy>(selected from this mod's config directory)</c>.",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled"
 		},
 		"customLCTMode": {
 			"name": "Custom \"Level Complete\" Text Mode",
@@ -114,7 +135,8 @@
 				"Oxygene One",
 				"Images",
 				"Combined"
-			]
+			],
+			"enable-if": "enabled && customLevelCompleteText"
 		},
 		"alsoReplacePlayLayerLCT": {
 			"name": "Also Replace \"Level Complete\" in PlayLayer",
@@ -125,25 +147,33 @@
 				"Disabled",
 				"Match EndLevelLayer",
 				"Separate From EndLevelLayer"
-			]
+			],
+			"enable-if": "enabled && customLevelCompleteText"
 		},
 		"customLevelCompleteTextsOnly": {
 			"name": "Only Use customLevelCompleteQuotes.txt Texts for \"Level Complete\"",
 			"description": "<cl>Original idea by Saritahh.</c> <cp>REQUIRES GAME RESTART TO APPLY.</c>\n\nOnly uses your own custom \"Level Complete\" texts from \"customLevelCompleteQuotes.txt\" file when using a custom \"Level Complete\" text in the \"Oxygene One\".\n\nIf no custom quotes are found, the mod will fall back to the default set of quotes.",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled && customLevelCompleteText"
 		},
 		"scaleCustomLevelCompleteImages": {
 			"name": "Custom \"Level Complete\" Images Scaling Correction",
 			"description": "<cl>Original idea by Saritahh.</c>\n\nCorrects the sizing of your custom \"Level Complete\" images.",
 			"type": "bool",
-			"default": true
+			"default": true,
+			"enable-if": "enabled && customLevelCompleteText"
+		},
+		"addtl-info-customization-header": {
+			"name": "Additional Endscreen Info",
+			"type": "title"
 		},
 		"platAttemptsAndJumps": {
 			"name": "Plat. Attempts + Jumps",
 			"description": "Shows your attempt and jump count on the \"Level Complete\" screen when completing Platformer levels.",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled"
 		},
 		"showTotalAttemptsAndJumps": {
 			"name": "Show Total Attempts + Jumps",
@@ -154,13 +184,15 @@
 				"Disabled",
 				"Fully Replace",
 				"Show As Addt'l Info"
-			]
+			],
+			"enable-if": "enabled"
 		},
 		"totalAttemptsAndJumpsCommas": {
 			"name": "Use Commas When Showing Attempts + Jumps",
 			"description": "<cp>Inspired by YT videos published by Doggie.</c>",
 			"type": "bool",
-			"default": true
+			"default": true,
+			"enable-if": "enabled"
 		},
 		"classicFlukedFrom": {
 			"name": "Classic \"Fluked From\" %",
@@ -178,55 +210,79 @@
 				"Furthest Death Before Completion",
 				"Worst Fail",
 				"Prior Record"
-			]
+			],
+			"enable-if": "enabled"
 		},
 		"dontShowFlukeIfZero": {
 			"name": "Don't Show \"Fluked From\" If 0%",
 			"description": "Skips showing your prior best percentage if the prior best was 0%.",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled"
+		},
+		"misc-tweaks-customization-header": {
+			"name": "Misc. Endscreen Tweaks",
+			"type": "title"
+		},
+		"avoidSeeingDouble": {
+			"name": "Avoid Multiple EndLevelLayers",
+			"description": "Prevents multiple EndLevelLayers from showing up on the screen.",
+			"type": "bool",
+			"default": true,
+			"enable-if": "enabled"
 		},
 		"showModsListButton": {
 			"name": "Mods List Button",
 			"description": "<cp>Formerly part of ErysEdits.</c>\nAdds a \"Mods List\" button at the lower left of EndLevelLayer.\n\n<cy>(The more mods you have installed, the more likely this option may cause some FPS drops if the button is pressed. Be careful!)</c>",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled"
 		},
 		"hideChains": {
 			"name": "Hide Chains",
 			"description": "Hides the chains from EndLevelLayer.",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled"
 		},
 		"hideBackground": {
 			"name": "Hide Background",
 			"description": "Hides the background from EndLevelLayer.",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled"
 		},
 		"hideHideEndscreen": {
 			"name": "Hide \"Hide Endscreen\" Button",
 			"description": "Hides the \"Hide Endscreen\" button from EndLevelLayer. (Still clickable, just invisible.)\n\n<cy>(Enabling this option will also hide the sprite of the extra button added from enabling the \"Hide EndLevelLayer\" option.)</c>",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled"
 		},
 		"hideEndLevelLayer": {
 			"name": "Auto Hide EndLevelLayer",
 			"description": "Hides the EndLevelLayer on level completion. Adds an extra button to toggle the EndLevelLayer's visibility.\n\n<cy>This also hides the rewards animation on completing levels.</c>",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled"
+		},
+		"bouncing-transition-customization-header": {
+			"name": "Bouncing Transition Customization",
+			"type": "title"
 		},
 		"noTransition": {
 			"name": "No Bouncing Transition",
 			"description": "Disables the bouncing transition when showing EndLevelLayer.",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled"
 		},
 		"editTransition": {
 			"name": "Customize Bouncing Transition",
 			"description": "Change the bouncing transition when showing EndLevelLayer. Note that __enabling `No Bouncing Transition` from this mod, or enabling `Fast Menu` from GD's vanilla settings__ will disable settings related to the initial endscreen \"falling down\" animation as well as all backdrop opacity settings.",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled"
 		},
 		"backdropOpacityRated": {
 			"name": "Backdrop Opacity (Rated Levels)",
@@ -234,7 +290,8 @@
 			"type": "int",
 			"default": 100,
 			"min": 0,
-			"max": 255
+			"max": 255,
+			"enable-if": "enabled && editTransition"
 		},
 		"backdropOpacity": {
 			"name": "Backdrop Opacity",
@@ -242,19 +299,22 @@
 			"type": "int",
 			"default": 100,
 			"min": 0,
-			"max": 255
+			"max": 255,
+			"enable-if": "enabled && editTransition"
 		},
 		"backdropColorRated": {
 			"name": "Backdrop Color (Rated Levels)",
 			"description": "Adjust the color of the backdrop of EndLevelLayer when completing a rated level.",
 			"type": "color",
-			"default": "#000000"
+			"default": "#000000",
+			"enable-if": "enabled && editTransition"
 		},
 		"backdropColor": {
 			"name": "Backdrop Color",
 			"description": "Adjust the color of the backdrop of EndLevelLayer when completing a non-rated level.",
 			"type": "color",
-			"default": "#000000"
+			"default": "#000000",
+			"enable-if": "enabled && editTransition"
 		},
 		"initialFallDownDuration": {
 			"name": "Initial Falling Down Duration",
@@ -262,7 +322,8 @@
 			"type": "float",
 			"default": 1.0,
 			"min": 0.0,
-			"max": 2.0
+			"max": 2.0,
+			"enable-if": "enabled && editTransition"
 		},
 		"initialFallDownEasingType": {
 			"name": "Initial Falling Down Easing Type",
@@ -276,14 +337,16 @@
 				"Elastic In", "Elastic Out", "Elastic In Out",
 				"Exponential In", "Exponential Out", "Exponential In Out",
 				"Sine In", "Sine Out", "Sine In Out"
-			]
+			],
+			"enable-if": "enabled && editTransition"
 		},
 		"initialFallDownEasingRate": {
 			"name": "Initial Falling Down Easing Rate",
 			"type": "float",
 			"default": 1.00,
 			"min": 0.10,
-			"max": 4.00
+			"max": 4.00,
+			"enable-if": "enabled && editTransition"
 		},
 		"robtopFallUpHideDuration": {
 			"name": "\"Hiding\" Falling Up Duration",
@@ -291,7 +354,8 @@
 			"type": "float",
 			"default": 1.0,
 			"min": 0.0,
-			"max": 5.0
+			"max": 5.0,
+			"enable-if": "enabled && editTransition"
 		},
 		"robtopFallUpHideEasingType": {
 			"name": "\"Hiding\" Falling Up Easing Type",
@@ -305,14 +369,16 @@
 				"Elastic In", "Elastic Out", "Elastic In Out",
 				"Exponential In", "Exponential Out", "Exponential In Out",
 				"Sine In", "Sine Out", "Sine In Out"
-			]
+			],
+			"enable-if": "enabled && editTransition"
 		},
 		"robtopFallUpHideEasingRate": {
 			"name": "\"Hiding\" Falling Up Easing Rate",
 			"type": "float",
 			"default": 2.00,
 			"min": 0.10,
-			"max": 4.00
+			"max": 4.00,
+			"enable-if": "enabled && editTransition"
 		},
 		"robtopFallDownHideDuration": {
 			"name": "\"Hiding\" Falling Down Duration",
@@ -320,7 +386,8 @@
 			"type": "float",
 			"default": 1.0,
 			"min": 0.0,
-			"max": 5.0
+			"max": 5.0,
+			"enable-if": "enabled && editTransition"
 		},
 		"robtopFallDownHideEasingType": {
 			"name": "\"Hiding\" Falling Down Easing Type",
@@ -334,25 +401,33 @@
 				"Elastic In", "Elastic Out", "Elastic In Out",
 				"Exponential In", "Exponential Out", "Exponential In Out",
 				"Sine In", "Sine Out", "Sine In Out"
-			]
+			],
+			"enable-if": "enabled && editTransition"
 		},
 		"robtopFallDownHideEasingRate": {
 			"name": "\"Hiding\" Falling Down Easing Rate",
 			"type": "float",
 			"default": 2.00,
 			"min": 0.10,
-			"max": 4.00
+			"max": 4.00,
+			"enable-if": "enabled && editTransition"
+		},
+		"misc-header": {
+			"name": "Misc.",
+			"type": "title"
 		},
 		"spaceUK": {
 			"name": "SpaceUK",
 			"description": "940px. Any questions?",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled"
 		},
 		"logging": {
 			"name": "Logging",
 			"type": "bool",
-			"default": false
+			"default": false,
+			"enable-if": "enabled"
 		}
 	},
 	"resources": {
