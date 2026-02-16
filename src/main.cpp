@@ -70,23 +70,23 @@ migration failed, womp womp)";
 
 	addCustomQuotesAndLevelCompleteTests();
 
-	listenForSettingChanges("default", [](bool) {
+	listenForSettingChanges<bool>("default", [](bool) {
 		managerReset();
 	});
 
-	listenForSettingChanges("technoblade", [](bool) {
+	listenForSettingChanges<bool>("technoblade", [](bool) {
 		managerReset();
 	});
 
-	listenForSettingChanges("snl50", [](bool) {
+	listenForSettingChanges<bool>("snl50", [](bool) {
 		managerReset();
 	});
 
-	listenForSettingChanges("custom", [](bool) {
+	listenForSettingChanges<bool>("custom", [](bool) {
 		managerReset();
 	});
 
-	listenForSettingChanges("hideEndLevelLayer", [](const bool hideEndLevelLayerNew) {
+	listenForSettingChanges<bool>("hideEndLevelLayer", [](const bool hideEndLevelLayerNew) {
 		Manager::getSharedInstance()->hideEndLevelLayer = hideEndLevelLayerNew;
 	});
 }
