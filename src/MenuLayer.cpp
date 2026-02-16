@@ -15,8 +15,8 @@ class $modify(MyMenuLayer, MenuLayer) {
 		manager->totalMods = mods.size();
 		std::ranges::for_each(mods, [&](const Mod* mod) {
 			bool incrementedOnce = false;
-			if (mod->getAllProblems().empty() && mod->isEnabled()) manager->loadedMods += 1;
-			else if (!mod->isEnabled() && !mod->hasLoadProblems()) manager->disabledMods += 1;
+			if (mod->getAllProblems().empty() && mod->isLoaded()) manager->loadedMods += 1;
+			else if (!mod->isLoaded() && !mod->hasErrors()) manager->disabledMods += 1;
 
 			const std::string& modID = mod->getID();
 
@@ -31,35 +31,16 @@ class $modify(MyMenuLayer, MenuLayer) {
 				formattedByline.pop_back();
 			}
 
-			std::string formattedProblemsList = "";
-			const std::vector<LoadProblem> problems = mod->getAllProblems();
-			const bool hasNoProblems = problems.empty();
-			if (!hasNoProblems) {
-				formattedProblemsList = " {";
-				for (const auto [type, cause, message] : problems) {
-					if (type == LoadProblem::Type::Suggestion || type == LoadProblem::Type::Recommendation) continue;
-					std::string colorTag = "<c-FF0000>";
-					if (type == LoadProblem::Type::Conflict || type == LoadProblem::Type::Duplicate || type == LoadProblem::Type::DisabledDependency || type == LoadProblem::Type::MissingDependency) {
-						colorTag = "<cy>";
-						if (!incrementedOnce) {
-							manager->problemMods += 1;
-							incrementedOnce = true;
-						}
-					}
-					else if (type == LoadProblem::Type::UnsupportedVersion || type == LoadProblem::Type::UnsupportedGeodeVersion || type == LoadProblem::Type::NeedsNewerGeodeVersion) colorTag = "<c-DCDCDC>";
-					formattedProblemsList = formattedProblemsList.append(fmt::format("{}{}</c> | ", colorTag, message));
-				}
-			   	if (!formattedProblemsList.empty() && utils::string::endsWith(formattedProblemsList, " | ")) {
-					formattedProblemsList.pop_back();
-					formattedProblemsList.pop_back();
-					formattedProblemsList.pop_back();
-			   	}
-			   	formattedProblemsList = formattedProblemsList.append("}");
+			std::string formattedProblemsList;
+			std::optional<LoadProblem> problem = mod->getLoadProblem();
+			if (problem && problem->isProblemTheUserShouldCareAbout()) {
+				manager->problemMods += 1;
+				formattedProblemsList = fmt::format(" {{<co>{}</c>}}", problem->message);
 			}
 
 			const std::string& formattedModListItem = fmt::format(
 				"- {}{}</c> {} {} [{}]{}",
-				mod->isEnabled() ? "<c-FFFFFF>" : hasNoProblems ? "<c-AAAAAA>" : "<c-FF0000>",
+				mod->isLoaded() ? "<c-FFFFFF>" : !problem ? "<c-AAAAAA>" : "<c-FF0000>",
 				mod->getName(), mod->getVersion().toVString(), formattedByline,
 				modID, formattedProblemsList
 			);
