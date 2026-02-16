@@ -16,7 +16,7 @@ class $modify(MyMenuLayer, MenuLayer) {
 		std::ranges::for_each(mods, [&](const Mod* mod) {
 			bool incrementedOnce = false;
 			if (mod->getAllProblems().empty() && mod->isLoaded()) manager->loadedMods += 1;
-			else if (!mod->isLoaded() && !mod->hasErrors()) manager->disabledMods += 1;
+			else if (!mod->isLoaded() && !mod->getLoadProblem()) manager->disabledMods += 1;
 
 			const std::string& modID = mod->getID();
 
