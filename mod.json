@@ -1,12 +1,12 @@
 {
-	"geode": "4.10.0",
+	"geode": "5.0.0-beta.2",
 	"gd": {
-		"win": "2.2074",
-		"mac": "2.2074",
-		"ios": "2.2074",
-		"android": "2.2074"
+		"win": "2.2081",
+		"mac": "2.2081",
+		"ios": "2.2081",
+		"android": "2.2081"
 	},
-	"version": "v1.8.2",
+	"version": "v1.8.3",
 	"id": "raydeeux.endscreentweaks",
 	"name": "EndscreenTweaks",
 	"developers": [
@@ -441,21 +441,12 @@
 		]
 	},
 	"dependencies": {
-		"geode.node-ids": ">=1.17.0"
+		"geode.node-ids": ">=1.22.0"
 	},
 	"incompatibilities": {
-		"relative.custom_endscreen_text":{
-			"version": ">=1.0.0",
-			"importance": "superseded"
-		},
-		"raydeeux.wholesomeendtexts": {
-			"version": ">=1.0.0",
-			"importance": "superseded"
-		},
-		"1257plays.spaceuk_mode": {
-			"version": ">=1.0.0",
-			"importance": "superseded"
-		}
+		"relative.custom_endscreen_text": ">=1.0.0",
+		"raydeeux.wholesomeendtexts": ">=1.0.0",
+		"1257plays.spaceuk_mode": ">=1.0.0"
 	},
 	"issues": {
 		"url": "https://discord.com/channels/911701438269386882/1205523212444639292",

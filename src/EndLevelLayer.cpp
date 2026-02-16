@@ -122,7 +122,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		levelCompleteText->setScale(0.8f * (940.f / 1004.f)); // original scale of this node is 0.8 according to logs. hardcoding it here in case other mods decide to scale it to whatever else
 	}
 	void applyHideEndLevelLayerHideBtn() {
-		const auto hideLayerMenu = typeinfo_cast<CCMenu*>(getChildByIDRecursive("hide-layer-menu"));
+		const auto hideLayerMenu = this->getChildByIDRecursive("hide-layer-menu");
 		const auto hideButtonSprite = MyEndLevelLayer::getHideButtonSprite();
 		const auto hideButtonButton = hideButtonSprite->getParent();
 		if (!hideLayerMenu || !m_mainLayer || !hideButtonSprite || !hideButtonButton) return;
@@ -138,8 +138,8 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			hideELLSprite->setID("hide-endlevellayer-sprite"_spr);
 			hideELLSprite->setVisible(MyEndLevelLayer::getHideButtonSprite()->isVisible());
 			auto hideELLBtn = CCMenuItemSpriteExtra::create(hideELLSprite, this, menu_selector(MyEndLevelLayer::toggleMainLayerVisibility));
-			hideELLBtn->setScale(hideButtonButton->getScale());
-			hideELLBtn->setPositionY(hideButtonButton->getPositionY() - hideButtonButton->getContentHeight());
+			// hideELLBtn->setScale(hideButtonButton->getScale());
+			// hideELLBtn->setPositionY(hideButtonButton->getPositionY() - hideButtonButton->getContentHeight());
 			hideELLBtn->setID("hide-endlevellayer-button"_spr);
 			hideLayerMenu->addChild(hideELLBtn);
 			hideLayerMenu->updateLayout(); // in case there is a layout in future node IDs updates
@@ -168,24 +168,27 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		Manager* manager = managerMacro;
 		// manager->isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
 		const auto playLayer = m_playLayer;
-		if (!m_mainLayer || !playLayer) return;
+		if (!m_mainLayer || !m_mainLayer->getChildByID("summary-container") || !playLayer) return;
 		const bool isPlat = theLevel->isPlatformer() && playLayer->m_isPlatformer;
 		if (getModBool("platAttemptsAndJumps") && isPlat) {
+			/*
 			const auto timeLabel = getChildByIDRecursive("time-label");
 			if (!timeLabel) return;
 			const auto pointsLabel = getChildByIDRecursive("points-label");
 			if (!manager->isCompactEndscreen) timeLabel->setPositionY(timeLabel->getPositionY() - 20);
 			if (pointsLabel) pointsLabel->setPositionY(timeLabel->getPositionY() - 18);
+			*/
 			CCLabelBMFont* attemptsLabel = CCLabelBMFont::create(("Attempts: " + std::to_string(playLayer->m_attempts)).c_str(), "goldFont.fnt");
 			attemptsLabel->setScale(0.8f);
 			attemptsLabel->setPosition(timeLabel->getPositionX(), timeLabel->getPositionY() + 40);
 			attemptsLabel->setID("attempts-label"_spr);
-			m_mainLayer->addChild(attemptsLabel);
+			m_mainLayer->getChildByID("summary-container")->addChild(attemptsLabel);
 			CCLabelBMFont* jumpsLabel = CCLabelBMFont::create(("Jumps: " + std::to_string(playLayer->m_jumps)).c_str(), "goldFont.fnt");
 			jumpsLabel->setScale(0.8f);
 			jumpsLabel->setPosition({timeLabel->getPositionX(), timeLabel->getPositionY() + 20});
 			jumpsLabel->setID("jumps-label"_spr);
-			m_mainLayer->addChild(jumpsLabel);
+			m_mainLayer->getChildByID("summary-container")->addChild(jumpsLabel);
+			m_mainLayer->getChildByID("summary-container")->updateLayout();
 		} else if (getModString("classicFlukedFrom") != "[Disabled]" && !isPlat && !playLayer->m_isTestMode && !playLayer->m_isPracticeMode && manager->lastFlukedPercent < 100) {
 			const auto timeLabel = getChildByIDRecursive("time-label");
 			const auto jumpsLabel = getChildByIDRecursive("jumps-label");

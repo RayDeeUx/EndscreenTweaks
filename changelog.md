@@ -1,4 +1,6 @@
 # EndscreenTweaks Changelog
+## v1.8.3
+- Port to GD 2.2081.
 ## v1.8.2
 - Update SNL quote bank.
 ## v1.8.1
