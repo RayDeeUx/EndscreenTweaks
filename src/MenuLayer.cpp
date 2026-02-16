@@ -14,9 +14,9 @@ class $modify(MyMenuLayer, MenuLayer) {
 		Manager* manager = managerMacro;
 		manager->totalMods = mods.size();
 		std::ranges::for_each(mods, [&](const Mod* mod) {
-			bool incrementedOnce = false;
-			if (mod->getAllProblems().empty() && mod->isLoaded()) manager->loadedMods += 1;
-			else if (!mod->isLoaded() && !mod->getLoadProblem()) manager->disabledMods += 1;
+			std::optional<LoadProblem> problem = mod->getLoadProblem();
+			if (!problem && mod->isLoaded()) manager->loadedMods += 1;
+			else if (!mod->isLoaded() && !problem) manager->disabledMods += 1;
 
 			const std::string& modID = mod->getID();
 
@@ -32,7 +32,6 @@ class $modify(MyMenuLayer, MenuLayer) {
 			}
 
 			std::string formattedProblemsList;
-			std::optional<LoadProblem> problem = mod->getLoadProblem();
 			if (problem && problem->isProblemTheUserShouldCareAbout()) {
 				manager->problemMods += 1;
 				formattedProblemsList = fmt::format(" {{<co>{}</c>}}", problem->message);
