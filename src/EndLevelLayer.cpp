@@ -179,27 +179,30 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			if (pointsLabel) pointsLabel->setPositionY(timeLabel->getPositionY() - 18);
 			*/
 			CCLabelBMFont* attemptsLabel = CCLabelBMFont::create(("Attempts: " + std::to_string(playLayer->m_attempts)).c_str(), "goldFont.fnt");
-			attemptsLabel->setScale(0.8f);
-			attemptsLabel->setPosition(timeLabel->getPositionX(), timeLabel->getPositionY() + 40);
+			// attemptsLabel->setScale(0.8f);
+			// attemptsLabel->setPosition(timeLabel->getPositionX(), timeLabel->getPositionY() + 40);
 			attemptsLabel->setID("attempts-label"_spr);
 			m_mainLayer->getChildByID("summary-container")->addChild(attemptsLabel);
 			CCLabelBMFont* jumpsLabel = CCLabelBMFont::create(("Jumps: " + std::to_string(playLayer->m_jumps)).c_str(), "goldFont.fnt");
 			jumpsLabel->setScale(0.8f);
-			jumpsLabel->setPosition({timeLabel->getPositionX(), timeLabel->getPositionY() + 20});
+			// // jumpsLabel->setPosition({timeLabel->getPositionX(), timeLabel->getPositionY() + 20});
 			jumpsLabel->setID("jumps-label"_spr);
 			m_mainLayer->getChildByID("summary-container")->addChild(jumpsLabel);
 			m_mainLayer->getChildByID("summary-container")->updateLayout();
 		} else if (getModString("classicFlukedFrom") != "[Disabled]" && !isPlat && !playLayer->m_isTestMode && !playLayer->m_isPracticeMode && manager->lastFlukedPercent < 100) {
+			/*
 			const auto timeLabel = getChildByIDRecursive("time-label");
 			const auto jumpsLabel = getChildByIDRecursive("jumps-label");
 			if (!timeLabel || !jumpsLabel) return;
 			jumpsLabel->setPositionY(jumpsLabel->getPositionY() + 7.0f);
 			timeLabel->setPositionY(timeLabel->getPositionY() + 14.0f);
+			*/
 			CCLabelBMFont* flukedFromLabel = CCLabelBMFont::create(fmt::format("{}: {}%", getModString("classicFlukedFrom"), manager->lastFlukedPercent).c_str(), "goldFont.fnt");
-			flukedFromLabel->setPosition(jumpsLabel->getPositionX(), timeLabel->getPositionY() - 16.0f);
-			flukedFromLabel->setScale(timeLabel->getScale());
+			// flukedFromLabel->setPosition(jumpsLabel->getPositionX(), timeLabel->getPositionY() - 16.0f);
+			// flukedFromLabel->setScale(timeLabel->getScale());
 			flukedFromLabel->setID("fluked-from-label"_spr);
-			m_mainLayer->addChild(flukedFromLabel);
+			m_mainLayer->getChildByID("summary-container")->addChild(flukedFromLabel);
+			m_mainLayer->getChildByID("summary-container")->updateLayout();
 		}
 	}
 	void applyTotalAttemptAndJumpCount(GJGameLevel* level) {
