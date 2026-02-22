@@ -25,7 +25,7 @@ inline void addQuotes(const std::string& settingName) {
 	} else if (getModBool(settingName)) {
 		log::info("adding quotes from {}", settingName);
 		auto settingAsFileName = fmt::format("{}.txt", settingName);
-		auto filePath = (Mod::get()->getResourcesDir() / settingAsFileName).string();
+		auto filePath = geode::utils::string::pathToString(Mod::get()->getResourcesDir() / settingAsFileName);
 		std::ifstream fileStream(filePath);
 		std::string lineOfText;
 		while (std::getline(fileStream, lineOfText)) manager->quotes.push_back(lineOfText);

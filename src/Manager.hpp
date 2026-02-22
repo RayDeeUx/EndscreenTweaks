@@ -99,9 +99,9 @@ public:
 		log::info("customLCTMode: {}", customLCTMode);
 		if (customLCTMode == "Combined" || customLCTMode == "Images") {
 			if (!manager->customLevelCompleteSprites.empty()) manager->customLevelCompleteSprites.clear();
-			for (const auto& file : std::filesystem::directory_iterator((Mod::get()->getConfigDir() / R"(levelCompleteImages)").string())) {
-				if (isSupportedExtension(file.path().extension().string())) {
-					manager->customLevelCompleteSprites.push_back(file.path().string());
+			for (const auto& file : std::filesystem::directory_iterator((Mod::get()->getConfigDir() / R"(levelCompleteImages)"))) {
+				if (isSupportedExtension(geode::utils::string::pathToString(file.path().extension()))) {
+					manager->customLevelCompleteSprites.push_back(geode::utils::string::pathToString(file.path()));
 				}
 			}
 			std::string chosenSprite; // init sprite
