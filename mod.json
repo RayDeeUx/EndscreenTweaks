@@ -6,7 +6,7 @@
 		"ios": "2.2081",
 		"android": "2.2081"
 	},
-	"version": "v1.8.4",
+	"version": "v1.8.5",
 	"id": "raydeeux.endscreentweaks",
 	"name": "EndscreenTweaks",
 	"developers": [
@@ -84,6 +84,12 @@
 			"type": "bool",
 			"default": false,
 			"enable-if": "enabled && endTexts"
+		},
+		"noHyphens": {
+			"name": "No Hyphens in custom.txt Endscreen Texts",
+			"type": "bool",
+			"default": false,
+			"enable-if": "enabled && endTexts && custom"
 		},
 		"maxScale": {
 			"name": "Endscreen Text Max Scale",

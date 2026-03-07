@@ -18,7 +18,9 @@ inline void addQuotes(const std::string& settingName) {
 				str = str.replace(0, 1, "\'\'");
 			else if (str.starts_with("\'") && str.ends_with("\'"))
 				str = str.replace(0, 2, "\"");
-			if (!Mod::get()->getSavedValue<bool>("noHyphens")) str = fmt::format("- {} -", str);
+			if (!Mod::get()->getSettingValue<bool>("noHyphens")) {
+				str = fmt::format("- {} -", str);
+			}
 			manager->quotes.push_back(str);
 			manager->customQuotes.push_back(str);
 		} // technically i can write two one-time use boolean variables to allow people to toggle these things on and off as they please without the quotes adding themselves multiple times into the vector, but i'd rather add the "restart required" barrier just to be extra safe
