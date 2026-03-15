@@ -18,7 +18,7 @@ inline void addQuotes(const std::string& settingName) {
 				str = str.replace(0, 1, "\'\'");
 			else if (str.starts_with("\'") && str.ends_with("\'"))
 				str = str.replace(0, 2, "\"");
-			if (!Mod::get()->getSettingValue<bool>("noHyphens")) {
+			if (!Mod::get()->getSettingValue<bool>("noHyphens") && !Mod::get()->getSavedValue<bool>("noHyphens")) {
 				str = fmt::format("- {} -", str);
 			}
 			manager->quotes.push_back(str);
