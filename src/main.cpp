@@ -86,6 +86,10 @@ migration failed, womp womp)";
 		managerReset();
 	});
 
+	listenForSettingChanges<bool>("noHyphens", [](bool) {
+		managerReset();
+	});
+
 	listenForSettingChanges<bool>("hideEndLevelLayer", [](const bool hideEndLevelLayerNew) {
 		Manager::getSharedInstance()->hideEndLevelLayer = hideEndLevelLayerNew;
 	});
