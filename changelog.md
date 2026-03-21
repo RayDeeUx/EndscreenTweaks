@@ -1,5 +1,5 @@
 # EndscreenTweaks Changelog
-## v1.8.6
+## v1.8.6 and v1.8.7
 - Basic housekeeping and refactoring.
 ## v1.8.5
 - Added  `No Hyphens`  setting.

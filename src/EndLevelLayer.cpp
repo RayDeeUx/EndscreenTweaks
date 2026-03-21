@@ -216,11 +216,11 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		CCLabelBMFont* attemptLabel = nullptr;
 		CCLabelBMFont* jumpsLabel = nullptr;
 		if (isPlat) {
-			attemptLabel = static_cast<CCLabelBMFont*>(m_mainLayer->getChildByID("attempts-label"_spr));
-			jumpsLabel = static_cast<CCLabelBMFont*>(m_mainLayer->getChildByID("jumps-label"_spr));
+			attemptLabel = static_cast<CCLabelBMFont*>(m_mainLayer->getChildByID("summary-container")->getChildByID("attempts-label"_spr));
+			jumpsLabel = static_cast<CCLabelBMFont*>(m_mainLayer->getChildByID("summary-container")->getChildByID("jumps-label"_spr));
 		} else {
-			attemptLabel = static_cast<CCLabelBMFont*>(m_mainLayer->getChildByID("attempts-label"));
-			jumpsLabel = static_cast<CCLabelBMFont*>(m_mainLayer->getChildByID("jumps-label"));
+			attemptLabel = static_cast<CCLabelBMFont*>(m_mainLayer->getChildByID("summary-container")->getChildByID("attempts-label"));
+			jumpsLabel = static_cast<CCLabelBMFont*>(m_mainLayer->getChildByID("summary-container")->getChildByID("jumps-label"));
 		}
 
 		if (!attemptLabel || !jumpsLabel) return;
