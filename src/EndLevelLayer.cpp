@@ -361,9 +361,10 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	void showModsList(CCObject* sender) {
 		if (!getModBool("enabled") || !sender) return;
 		Manager* manager = Manager::getSharedInstance();
-		MDPopup::create(manager->formattedTitle, manager->formattedList, "Copy", "Close", [formattedTitle, formattedList](const bool btn2){
+		MDPopup::create(manager->formattedTitle, manager->formattedList, "Copy", "Close", [](const bool btn2){
 			if (btn2) return;
-			geode::utils::clipboard::write(fmt::format("{}\n{}", manager->formattedTitle, manager->formattedList));
+			Manager* managerLambda = Manager::getSharedInstance();
+			geode::utils::clipboard::write(fmt::format("{}\n{}", managerLambda->formattedTitle, managerLambda->formattedList));
 			Notification::create("Copied mods list")->show();
 		})->show();
 	}
