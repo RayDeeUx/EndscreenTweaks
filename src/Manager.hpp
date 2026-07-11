@@ -142,9 +142,10 @@ public:
 				manager->sharedReplacementLabel = fmt::format("RESULT: {} EXP, ${} MONEY, {} {}", utils::numToString(level->m_stars.value()), utils::numToString(getRandInt(500)), numItems, numItems == 1 ? "ITEM" : "ITEMS");
 			} else if (replacementLabelText == "SPONSORED BY YOUR LOCAL MOD MENU" && !manager->loadedModMenus.empty() && manager->modIDToModMenu.contains(chosenModID)) {
 				manager->sharedReplacementLabel = fmt::format("SPONSORED BY {}", manager->modIDToModMenu.find(chosenModID)->second);
+			} else {
+				manager->sharedReplacementLabel = replacementLabelText;
 			}
-			log::info("replacementLabelText after changes: {}", replacementLabelText);
-			manager->sharedReplacementLabel = replacementLabelText;
+			log::info("replacementLabelText after changes: {}", manager->sharedReplacementLabel);
 		}
 		if (customLCTMode == "Combined") customLCTMode = manager->grabRandomString(manager->knownCLCTModesBesidesCombined);
 		log::info("customLCTMode: {} (should not be Combined)", customLCTMode);
