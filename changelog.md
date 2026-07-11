@@ -1,4 +1,6 @@
 # EndscreenTweaks Changelog
+## v1.8.8
+- Ugh fine, I'll use $on_game(ModsLoaded).
 ## v1.8.6 and v1.8.7
 - Basic housekeeping and refactoring.
 ## v1.8.5

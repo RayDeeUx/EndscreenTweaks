@@ -359,16 +359,11 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		this->m_mainLayer->addChild(modsListMenu);
 	}
 	void showModsList(CCObject* sender) {
+		if (!getModBool("enabled") || !sender) return;
 		Manager* manager = Manager::getSharedInstance();
-		std::string formattedList;
-		for (const std::string& modListEntry : manager->formattedModsListVector) {
-			formattedList += modListEntry;
-			formattedList += '\n';
-		}
-		const std::string& formattedTitle = fmt::format("{} Total ({} Loaded, {} Disabled, of which {} w/Problems)", manager->totalMods, manager->loadedMods, manager->disabledMods, manager->problemMods);
-		MDPopup::create(formattedTitle, formattedList, "Copy", "Close", [formattedTitle, formattedList](const bool btn2){
+		MDPopup::create(manager->formattedTitle, manager->formattedList, "Copy", "Close", [formattedTitle, formattedList](const bool btn2){
 			if (btn2) return;
-			geode::utils::clipboard::write(fmt::format("{}\n{}", formattedTitle, formattedList));
+			geode::utils::clipboard::write(fmt::format("{}\n{}", manager->formattedTitle, manager->formattedList));
 			Notification::create("Copied mods list")->show();
 		})->show();
 	}

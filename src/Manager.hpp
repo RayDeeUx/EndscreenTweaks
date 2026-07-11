@@ -72,6 +72,9 @@ public:
 	int backdropOpacity = 100;
 	bool shouldEditTransition = false;
 
+	std::string formattedList;
+	std::string formattedTitle;
+
 	static Manager* getSharedInstance() {
 		if (!instance) {
 			instance = new Manager();

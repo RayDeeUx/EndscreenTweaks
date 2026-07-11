@@ -1,4 +1,3 @@
-#include <Geode/modify/MenuLayer.hpp>
 #include "Manager.hpp"
 
 #define managerMacro Manager::getSharedInstance()
@@ -43,4 +42,11 @@ $on_game(ModsLoaded) {
 
 		manager->formattedModsListVector.push_back(formattedModListItem);
 	});
+
+	if (!manager->formattedList.empty()) manager->formattedList = "";
+	for (const std::string& modListEntry : manager->formattedModsListVector) {
+		manager->formattedList += modListEntry;
+		manager->formattedList += '\n';
+	}
+	manager->formattedTitle = fmt::format("{} Total ({} Loaded, {} Disabled, of which {} w/Problems)", manager->totalMods, manager->loadedMods, manager->disabledMods, manager->problemMods);
 }
