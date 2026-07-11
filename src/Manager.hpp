@@ -128,20 +128,20 @@ public:
 			GJGameLevel* level = playLayer->m_level;
 			std::string chosenModID = grabRandomString(manager->loadedModMenus);
 			if (replacementLabelText == "DOWNWELL-0 CLEARED") {
-				replacementLabelText = fmt::format("{}-{} CLEARED", grabRandomString(manager->downwellStages), utils::numToString(getRandInt()));
+				manager->sharedReplacementLabel = fmt::format("{}-{} CLEARED", grabRandomString(manager->downwellStages), utils::numToString(getRandInt()));
 			} else if (replacementLabelText == "SONIC MADE IT THROUGH ACT 0") {
 				std::string sonicName = grabRandomString(manager->sonicNames);
 				if (sonicName == "PLAYER") sonicName = utils::string::toUpper(GameManager::get()->m_playerName);
-				replacementLabelText = fmt::format("{} MADE IT THROUGH ACT {}", sonicName, utils::numToString(getRandInt(7)));
+				manager->sharedReplacementLabel = fmt::format("{} MADE IT THROUGH ACT {}", sonicName, utils::numToString(getRandInt(7)));
 			} else if (replacementLabelText == "U RAPPIN' RESULT!") {
-				replacementLabelText = fmt::format("U RAPPIN' {}!", grabRandomString(manager->parappaResults));
+				manager->sharedReplacementLabel = fmt::format("U RAPPIN' {}!", grabRandomString(manager->parappaResults));
 			} else if (replacementLabelText == "A KNOCKOUT!" && level->m_stars.value() != 0) {
-				replacementLabelText = grabRandomString(manager->cupheadResults);
+				manager->sharedReplacementLabel = grabRandomString(manager->cupheadResults);
 			} else if (replacementLabelText == "RESULT: -1 EXP, $-2 MONEY, -3 ITEMS") {
 				const int numItems = getRandInt();
-				replacementLabelText = fmt::format("RESULT: {} EXP, ${} MONEY, {} {}", utils::numToString(level->m_stars.value()), utils::numToString(getRandInt(500)), numItems, numItems == 1 ? "ITEM" : "ITEMS");
+				manager->sharedReplacementLabel = fmt::format("RESULT: {} EXP, ${} MONEY, {} {}", utils::numToString(level->m_stars.value()), utils::numToString(getRandInt(500)), numItems, numItems == 1 ? "ITEM" : "ITEMS");
 			} else if (replacementLabelText == "SPONSORED BY YOUR LOCAL MOD MENU" && !manager->loadedModMenus.empty() && manager->modIDToModMenu.contains(chosenModID)) {
-				replacementLabelText = fmt::format("SPONSORED BY {}", manager->modIDToModMenu.find(chosenModID)->second);
+				manager->sharedReplacementLabel = fmt::format("SPONSORED BY {}", manager->modIDToModMenu.find(chosenModID)->second);
 			}
 			log::info("replacementLabelText after changes: {}", replacementLabelText);
 			manager->sharedReplacementLabel = replacementLabelText;
