@@ -113,7 +113,7 @@ public:
 			manager->sharedReplacementSprite = chosenSprite;
 		}
 		if (customLCTMode == "Combined" || customLCTMode == "Oxygene One") {
-			std::string replacementLabelText = Mod::get()->getSettingValue<bool>("customLevelCompleteTextsOnly") ? grabRandomString(manager->customLevelCompleteQuotes) : grabRandomString(manager->levelCompleteQuotes);
+			std::string replacementLabelText = geode::utils::string::trim(Mod::get()->getSettingValue<bool>("customLevelCompleteTextsOnly") ? grabRandomString(manager->customLevelCompleteQuotes) : grabRandomString(manager->levelCompleteQuotes));
 			/*
 			CAVERN-0 CLEARED [RANDOM NUMBER, 1-3]
 			SONIC MADE IT THROUGH ACT 0 [RANDOM NUMBER, 1-3]
