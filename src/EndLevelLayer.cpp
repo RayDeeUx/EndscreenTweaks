@@ -150,18 +150,18 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	void applyHideChainsBackground() {
 		if (!m_mainLayer) return;
 		if (getModBool("hideChains")) {
-			if (CCNode* left = m_mainLayer->getChildByID("chain-left")) static_cast<CCSprite*>(left)->setOpacity(0);
-			if (CCNode* right = m_mainLayer->getChildByID("chain-right")) static_cast<CCSprite*>(right)->setOpacity(0);
+			if (CCSprite* left = static_cast<CCSprite*>(m_mainLayer->getChildByID("chain-left"))) left->setOpacity(0);
+			if (CCSprite* right = static_cast<CCSprite*>(m_mainLayer->getChildByID("chain-right"))) right->setOpacity(0);
 		}
 		if (getModBool("hideBackground")) {
 			if (GJListLayer* bg = static_cast<GJListLayer*>(m_mainLayer->getChildByID("background"))) {
 				bg->setCascadeOpacityEnabled(false);
 				bg->setOpacity(0);
-				if (CCNode* left = static_cast<CCSprite*>(bg->getChildByID("left-border"))) left->setOpacity(0);
-				if (CCNode* right = static_cast<CCSprite*>(bg->getChildByID("right-border"))) right->setOpacity(0);
-				if (CCNode* top = static_cast<CCSprite*>(bg->getChildByID("top-border"))) top->setOpacity(0);
-				if (CCNode* bottom = static_cast<CCSprite*>(bg->getChildByID("bottom-border"))) bottom->setOpacity(0);
-				if (CCNode* title = static_cast<CCLabelBMFont*>(bg->getChildByID("title"))) title->setOpacity(0);
+				if (CCSprite* left = static_cast<CCSprite*>(bg->getChildByID("left-border"))) left->setOpacity(0);
+				if (CCSprite* right = static_cast<CCSprite*>(bg->getChildByID("right-border"))) right->setOpacity(0);
+				if (CCSprite* top = static_cast<CCSprite*>(bg->getChildByID("top-border"))) top->setOpacity(0);
+				if (CCSprite* bottom = static_cast<CCSprite*>(bg->getChildByID("bottom-border"))) bottom->setOpacity(0);
+				if (CCLabelBMFont* title = static_cast<CCLabelBMFont*>(bg->getChildByID("title"))) title->setOpacity(0);
 			}
 		}
 	}
