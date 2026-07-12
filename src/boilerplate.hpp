@@ -21,8 +21,8 @@ inline void addQuotes(const std::string& settingName) {
 			if (!Mod::get()->getSettingValue<bool>("noHyphens") && !Mod::get()->getSavedValue<bool>("noHyphens")) {
 				str = fmt::format("- {} -", str);
 			}
-			manager->quotes.push_back(str);
-			manager->customQuotes.push_back(str);
+			manager->quotes.push_back(geode::utils::string::trim(str));
+			manager->customQuotes.push_back(geode::utils::string::trim(str));
 		} // technically i can write two one-time use boolean variables to allow people to toggle these things on and off as they please without the quotes adding themselves multiple times into the vector, but i'd rather add the "restart required" barrier just to be extra safe
 	} else if (getModBool(settingName)) {
 		log::info("adding quotes from {}", settingName);
@@ -30,7 +30,7 @@ inline void addQuotes(const std::string& settingName) {
 		auto filePath = geode::utils::string::pathToString(Mod::get()->getResourcesDir() / settingAsFileName);
 		std::ifstream fileStream(filePath);
 		std::string lineOfText;
-		while (std::getline(fileStream, lineOfText)) manager->quotes.push_back(lineOfText);
+		while (std::getline(fileStream, lineOfText)) manager->quotes.push_back(geode::utils::string::trim(lineOfText));
 	}
 }
 
@@ -42,7 +42,7 @@ inline void setupLevelCompleteTexts() {
 	std::ifstream defaultLCQuoteFile(pathDefaultLevelComplete);
 	std::string defaultLCQuote;
 	while (std::getline(defaultLCQuoteFile, defaultLCQuote)) {
-		manager->levelCompleteQuotes.push_back(defaultLCQuote);
+		manager->levelCompleteQuotes.push_back(geode::utils::string::trim(defaultLCQuote));
 		log::info("added default levelcomplete quote: {}", defaultLCQuote);
 	}
 	auto pathCustomLvlCompleteQuotes = (configDir / "customLevelCompleteQuotes.txt");
@@ -51,8 +51,8 @@ inline void setupLevelCompleteTexts() {
 		std::string customLCQuote;
 		while (std::getline(customLCQuoteFile, customLCQuote)) {
 			const std::string toAdd = geode::utils::string::toUpper(geode::utils::string::replace(customLCQuote, "\"", "\'\'"));
-			manager->levelCompleteQuotes.push_back(toAdd);
-			manager->customLevelCompleteQuotes.push_back(toAdd);
+			manager->levelCompleteQuotes.push_back(geode::utils::string::trim(toAdd));
+			manager->customLevelCompleteQuotes.push_back(geode::utils::string::trim(toAdd));
 			log::info("added custom levelcomplete quote: {}", toAdd);
 		}
 	} else {

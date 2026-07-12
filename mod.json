@@ -1,12 +1,12 @@
 {
-	"geode": "5.7.0",
+	"geode": "5.8.2",
 	"gd": {
 		"win": "2.2081",
 		"mac": "2.2081",
 		"ios": "2.2081",
 		"android": "2.2081"
 	},
-	"version": "v1.8.8",
+	"version": "v1.8.9",
 	"id": "raydeeux.endscreentweaks",
 	"name": "EndscreenTweaks",
 	"developers": [

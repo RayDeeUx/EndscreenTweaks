@@ -50,7 +50,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		return CCEaseBounceOut::create(action);
 	}
 	void applyEditedTransitionsInitialFallDown() {
-		if (!managerMacro->shouldEditTransition || !m_mainLayer) return;
+		if (!managerMacro->shouldEditTransition || !m_mainLayer || !m_playLayer || !m_playLayer->m_level) return;
 
 		this->stopAllActions();
 		this->m_mainLayer->stopAllActions();
@@ -81,7 +81,9 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		this->m_mainLayer->runAction(moveDownSequence);
 	}
 	CCSprite* getHideButtonSprite() {
-		return typeinfo_cast<CCSprite*>(getChildByIDRecursive("hide-button")->getChildren()->objectAtIndex(0));
+		CCNode* hideButton = this->getChildByIDRecursive("hide-button");
+		if (!hideButton || hideButton->getChildrenCount() < 1) return nullptr;
+		return typeinfo_cast<CCSprite*>(hideButton->getChildren()->objectAtIndex(0));
 	}
 	void toggleMainLayerVisibility(cocos2d::CCObject* sender) {
 		if (!getModBool("hideEndLevelLayer")) return;
@@ -90,13 +92,11 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			if (m_mainLayer->isVisible()) this->setOpacity(managerMacro->originalOpacity);
 			else this->setOpacity(0);
 		}
-		if (const auto hideButtonSprite = MyEndLevelLayer::getHideButtonSprite()) {
-			if (getModBool("hideHideEndscreen")) {
+		if (getModBool("hideHideEndscreen")) {
+			if (const auto hideButtonSprite = MyEndLevelLayer::getHideButtonSprite()) {
 				hideButtonSprite->setVisible(!hideButtonSprite->isVisible());
 			}
-		}
-		if (const auto hideELLSprite = getChildByIDRecursive("hide-endlevellayer-sprite"_spr)) {
-			if (getModBool("hideHideEndscreen")) {
+			if (const auto hideELLSprite = this->getChildByIDRecursive("hide-endlevellayer-sprite"_spr)) {
 				hideELLSprite->setVisible(!hideELLSprite->isVisible());
 			}
 		}
@@ -115,10 +115,12 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		auto levelCompleteText = getChildByIDRecursive("level-complete-text");
 		if (!levelCompleteText) levelCompleteText = getChildByIDRecursive("practice-complete-text"); // grab practice mode complete text as fallback node
 		if (!levelCompleteText) return;
+		/*
 		if (manager->isCompactEndscreen) {
 			levelCompleteText->setVisible(true);
 			levelCompleteText->setPositionX(manager->compactEndscreenFallbackPosition);
 		}
+		*/
 		levelCompleteText->setScale(0.8f * (940.f / 1004.f)); // original scale of this node is 0.8 according to logs. hardcoding it here in case other mods decide to scale it to whatever else
 	}
 	void applyHideEndLevelLayerHideBtn() {
@@ -152,19 +154,19 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			if (CCNode* right = m_mainLayer->getChildByID("chain-right")) static_cast<CCSprite*>(right)->setOpacity(0);
 		}
 		if (getModBool("hideBackground")) {
-			if (CCNode* bg = m_mainLayer->getChildByID("background")) {
-				GJListLayer* background = static_cast<GJListLayer*>(bg);
-				background->setCascadeOpacityEnabled(false);
-				background->setOpacity(0);
-				if (CCNode* left = bg->getChildByID("left-border")) static_cast<CCSprite*>(left)->setOpacity(0);
-				if (CCNode* right = bg->getChildByID("right-border")) static_cast<CCSprite*>(right)->setOpacity(0);
-				if (CCNode* top = bg->getChildByID("top-border")) static_cast<CCSprite*>(top)->setOpacity(0);
-				if (CCNode* bottom = bg->getChildByID("bottom-border")) static_cast<CCSprite*>(bottom)->setOpacity(0);
-				if (CCNode* title = bg->getChildByID("title")) static_cast<CCLabelBMFont*>(title)->setOpacity(0);
+			if (GJListLayer* bg = static_cast<GJListLayer*>(m_mainLayer->getChildByID("background"))) {
+				bg->setCascadeOpacityEnabled(false);
+				bg->setOpacity(0);
+				if (CCNode* left = static_cast<CCSprite*>(bg->getChildByID("left-border"))) left->setOpacity(0);
+				if (CCNode* right = static_cast<CCSprite*>(bg->getChildByID("right-border"))) right->setOpacity(0);
+				if (CCNode* top = static_cast<CCSprite*>(bg->getChildByID("top-border"))) top->setOpacity(0);
+				if (CCNode* bottom = static_cast<CCSprite*>(bg->getChildByID("bottom-border"))) bottom->setOpacity(0);
+				if (CCNode* title = static_cast<CCLabelBMFont*>(bg->getChildByID("title"))) title->setOpacity(0);
 			}
 		}
 	}
 	void applyPlatAttemptsAndJumpsOrFlukedFromPercent(GJGameLevel* theLevel) {
+		if (!theLevel || !m_playLayer) return;
 		Manager* manager = managerMacro;
 		// manager->isCompactEndscreen = Loader::get()->isModLoaded("suntle.compactendscreen");
 		const auto playLayer = m_playLayer;
@@ -178,14 +180,14 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 			if (!manager->isCompactEndscreen) timeLabel->setPositionY(timeLabel->getPositionY() - 20);
 			if (pointsLabel) pointsLabel->setPositionY(timeLabel->getPositionY() - 18);
 			*/
-			CCLabelBMFont* attemptsLabel = CCLabelBMFont::create(("Attempts: " + std::to_string(playLayer->m_attempts)).c_str(), "goldFont.fnt");
+			CCLabelBMFont* attemptsLabel = CCLabelBMFont::create(("Attempts: " + geode::utils::numToString(playLayer->m_attempts)).c_str(), "goldFont.fnt");
 			// attemptsLabel->setScale(0.8f);
 			// attemptsLabel->setPosition(timeLabel->getPositionX(), timeLabel->getPositionY() + 40);
 			attemptsLabel->setID("attempts-label"_spr);
 			m_mainLayer->getChildByID("summary-container")->addChild(attemptsLabel);
-			CCLabelBMFont* jumpsLabel = CCLabelBMFont::create(("Jumps: " + std::to_string(playLayer->m_jumps)).c_str(), "goldFont.fnt");
+			CCLabelBMFont* jumpsLabel = CCLabelBMFont::create(("Jumps: " + geode::utils::numToString(playLayer->m_jumps)).c_str(), "goldFont.fnt");
 			jumpsLabel->setScale(0.8f);
-			// // jumpsLabel->setPosition({timeLabel->getPositionX(), timeLabel->getPositionY() + 20});
+			// jumpsLabel->setPosition({timeLabel->getPositionX(), timeLabel->getPositionY() + 20});
 			jumpsLabel->setID("jumps-label"_spr);
 			m_mainLayer->getChildByID("summary-container")->addChild(jumpsLabel);
 			m_mainLayer->getChildByID("summary-container")->updateLayout();
@@ -206,9 +208,12 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		}
 	}
 	void applyTotalAttemptAndJumpCount(GJGameLevel* level) {
+		if (!level) return;
+
 		const std::string& showTotalAttemptsAndJumps = geode::utils::string::toLower(getModString("showTotalAttemptsAndJumps"));
 		if (showTotalAttemptsAndJumps != "fully replace" && showTotalAttemptsAndJumps != "show as addt'l info") return;
 		if (!getModBool("enabled") || showTotalAttemptsAndJumps == "disabled" || !level) return;
+		if (!m_mainLayer || !m_mainLayer->getChildByID("summary-container")) return;
 
 		const bool isPlat = level->isPlatformer() && m_playLayer->m_isPlatformer;
 		if (isPlat && !getModBool("platAttemptsAndJumps")) return;
@@ -237,7 +242,7 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 	}
 	void applyCustomLevelCompleteText(const std::string_view matchPlayLayer) {
 		if (!getModBool("customLevelCompleteText") || !getModBool("enabled") || !m_playLayer) return;
-		const auto lvlCompleteText = typeinfo_cast<CCSprite*>(getChildByIDRecursive("level-complete-text"));
+		const auto lvlCompleteText = typeinfo_cast<CCSprite*>(this->getChildByIDRecursive("level-complete-text"));
 		if (!lvlCompleteText) return;
 		Manager* manager = managerMacro;
 		auto origOpacity = lvlCompleteText->getOpacity();
@@ -287,7 +292,9 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 		}
 	}
 	void applyRandomQuoteAndFont(PlayLayer* playLayer, GJGameLevel* theLevel) {
-		CCLabelBMFont* endTextLabel = typeinfo_cast<CCLabelBMFont*>(getChildByIDRecursive("end-text"));
+		if (!playLayer || !theLevel) return;
+
+		CCLabelBMFont* endTextLabel = typeinfo_cast<CCLabelBMFont*>(this->getChildByIDRecursive("end-text"));
 		if (!endTextLabel) return;
 
 		const int64_t fontID = Mod::get()->getSettingValue<int64_t>("customFont");
