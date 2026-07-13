@@ -1,4 +1,6 @@
 # EndscreenTweaks Changelog
+## v1.8.9
+- It's actually kind of ridiculous how far behind iOS is when it comes to a basic task like adding commas when formatting numbers based on locale. Over twenty years of mediocre software development headed by both Steve Jobs and Tim Apple (and now John Ternus) and yet not a single iOS engineer has stopped to think "Hmm, I think now might be a good time to allow developers to use  `std::locale`  as the C++ standard originally intended", forcing unsuspecting developers to find out about freezes the hard way. Absolutely shameful, Cupertino.
 ## v1.8.8
 - Ugh fine, I'll use $on_game(ModsLoaded).
 ## v1.8.6 and v1.8.7
