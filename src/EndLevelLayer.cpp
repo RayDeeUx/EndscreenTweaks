@@ -232,11 +232,11 @@ class $modify(MyEndLevelLayer, EndLevelLayer) {
 
 		constexpr bool timAppleFuckingSucks = GEODE_IOS(true) GEODE_ANDROID(false) GEODE_DESKTOP(false);
 
-		const std::string& totalAttemptsString = getModBool("totalAttemptsAndJumpsCommas") ? (timAppleFuckingSucks ? static_cast<std::string>(GameToolbox::pointsToString(level->m_attempts.value())) : fmt::format(std::locale("en_US.UTF-8"), "{:L}", level->m_attempts.value())) : geode::utils::numToString(level->m_attempts.value());
-		const std::string& totalJumpsString = getModBool("totalAttemptsAndJumpsCommas") ? (timAppleFuckingSucks ? static_cast<std::string>(GameToolbox::pointsToString(level->m_jumps.value())) : fmt::format(std::locale("en_US.UTF-8"), "{:L}", level->m_jumps.value())) : geode::utils::numToString(level->m_jumps.value());
+		const std::string& totalAttemptsString = getModBool("totalAttemptsAndJumpsCommas") ? static_cast<std::string>(GameToolbox::pointsToString(level->m_attempts.value())) : geode::utils::numToString(level->m_attempts.value());
+		const std::string& totalJumpsString = getModBool("totalAttemptsAndJumpsCommas") ? static_cast<std::string>(GameToolbox::pointsToString(level->m_jumps.value())) : geode::utils::numToString(level->m_jumps.value());
 		if (showTotalAttemptsAndJumps == "fully replace") {
-			attemptLabel->setString(timAppleFuckingSucks ? fmt::format("Total Attempts: {}", totalAttemptsString).c_str() : fmt::format(std::locale("en_US.UTF-8"), "Total Attempts: {}", totalAttemptsString).c_str());
-			jumpsLabel->setString(timAppleFuckingSucks ? fmt::format("Total Jumps: {}", totalJumpsString).c_str() : fmt::format(std::locale("en_US.UTF-8"), "Total Jumps: {}", totalJumpsString).c_str());
+			attemptLabel->setString(fmt::format("Total Attempts: {}", totalAttemptsString).c_str());
+			jumpsLabel->setString(fmt::format("Total Jumps: {}", totalJumpsString).c_str());
 		} else if (showTotalAttemptsAndJumps == "show as addt'l info") {
 			attemptLabel->setString(fmt::format("{} ({})", static_cast<std::string>(attemptLabel->getString()), totalAttemptsString).c_str());
 			jumpsLabel->setString(fmt::format("{} ({})", static_cast<std::string>(jumpsLabel->getString()), totalJumpsString).c_str());
